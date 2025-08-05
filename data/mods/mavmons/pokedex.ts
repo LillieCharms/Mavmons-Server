@@ -46,4 +46,13 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "Battle Armor", 1: "Halal Trip", H: "Anticipated Strikes"},
 		weightkg: 75,
 	},
+	zey2: {
+		num: 2004,
+		name: "Zeya",
+		types: ["Steel"],
+		gender: "M",
+		baseStats: {hp: 135, atk: 105, def: 110, spa: 95, spd: 110, spe: 110},
+		abilities: {0: "Battle Armor", 1: "Halal Trip", H: "Anticipated Strikes"},
+		weightkg: 75,
+	},
 };
