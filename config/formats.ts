@@ -27,6 +27,24 @@ export const Formats: FormatList = [
 		// name: "gen9petmods",
 	},
 	{
+		name: "[Gen 9] Maverick* Mons",
+		desc: `Maverick* Mons, a micrometa designed to use Maverick* Server Fakemons.`,
+		mod: 'mavmons',
+		teambuilderFormat: "National Dex",
+		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Data Mod', 'Sleep Clause Mod', 'Terastal Clause', /* 'Mega Data Mod' */],
+		onValidateTeam(team, format) {
+			/**@type {{[k: string]: true}}*/
+			let speciesTable = {};
+			let allowedTiers = ['MV Ubers', 'Uber', 'OU', 'UU', 'RU', 'PU', 'NU'];
+			for (const set of team) {
+				let template = this.dex.species.get(set.species);
+				if (!allowedTiers.includes(template.tier)) {
+					return [set.species + ' is not legal in [Gen 9] Maverick* Mons.'];
+				}
+			}
+		},
+	},
+	{
 		name: "[Gen 9] Alternatium EX",
 		desc: `<b>Alternatium EX</b>: A metagame made up of only Pokemon with alternate forms exist, with all of them being seperate and unique Pokemon.`,
 		threads: [
