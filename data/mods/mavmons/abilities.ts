@@ -118,99 +118,36 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -5,
 	},
-	cageddemon: {
-		shortDesc: "When the user is hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, and the user slowly perishes. ",
-		onModifyTypePriority: -1,
-			onTryHit(target, source, move) {
-				if (target !== source && move.type === 'Poison','Steel') {
-					if (!this.boost({spa: 2, atk: 2, def: -2, spd: -2})) 
-					source.addVolatile('perishsong');
-					this.add('-start', source, 'perish3', '[silent]');
-					return null;
-				}
-			},
-		name: "Crystallize",
-		rating: 4,
+	colorpulse: {
+		shortDesc: "When this Pokemon is hit by an attack, the effect of Psychic Terrain begins.",
+		onDamagingHit(damage, target, source, move) {
+			this.field.setTerrain('psychicterrain');
+		},
+		flags: {},
+		name: "Color Pulse",
+		rating: 2.5,
 		num: -6,
 	},
-	spectralleech: {
-		shortDesc: "This Pokemon heals 1/4 of its max HP when hit by a foe with stat boosts. Eliminates the target's boosts after receiving damage.",
-		onFoePrepareHit(target, source, move) {
-			let activate = false;
-			if (target.positiveBoosts() > 0) {
-				source.addVolatile('spectralleech');
+	serenity: {
+		onModifyTypePriority: -1,
+		onModifyType(move, pokemon) {
+			const noModifyType = [
+				'judgment', 'multiattack', 'naturalgift', 'revelationdance', 'technoblast', 'terrainpulse', 'weatherball',
+			];
+			if (move.type === 'Normal' && !noModifyType.includes(move.id) &&
+				!(move.isZ && move.category !== 'Status') && !(move.name === 'Tera Blast' && pokemon.terastallized)) {
+				move.type = 'Psychic';
+				move.typeChangerBoosted = this.effect;
 			}
 		},
-		condition: {
-			duration: 1,
-			onDamagingHit(damage, target, source, effect) {
-				let activate = false;
-				let statName: BoostID;
-				const boosts: SparseBoostsTable = {};
-				for (statName in source.boosts) {
-					const stage = source.boosts[statName];
-					if (stage > 0) {
-						boosts[statName] = stage;
-						activate = true;
-					}
-				}
-				if (activate) {
-					this.attrLastMove('[still]');
-					this.add('-clearpositiveboost', source, target, 'ability: Spectral Leech');
-
-					let statName2: BoostID;
-					for (statName2 in boosts) {
-						boosts[statName2] = 0;
-					}
-					source.setBoost(boosts);
-					this.heal(target.maxhp / 4);
-				}
-				target.removeVolatile('spectralleech');
-			},
+		onBasePowerPriority: 23,
+		onBasePower(basePower, pokemon, target, move) {
+			if (move.typeChangerBoosted === this.effect) return this.chainModify([4915, 4096]);
 		},
-		name: "Spectral Leech",
+		flags: {},
+		name: "Serenity",
 		rating: 4,
 		num: -7,
-	},
-	relentless: {
-		shortDesc: "Damage of moves used on consecutive turns is increased. Max 2x after 5 turns.",
-		onStart(pokemon) {
-			pokemon.addVolatile('metronome');
-		},
-		condition: {
-			onStart(pokemon) {
-				this.effectState.lastMove = '';
-				this.effectState.numConsecutive = 0;
-			},
-			onTryMovePriority: -2,
-			onTryMove(pokemon, target, move) {
-				if (!pokemon.hasItem('metronome')) {
-					pokemon.removeVolatile('metronome');
-					return;
-				}
-				if (this.effectState.lastMove === move.id && pokemon.moveLastTurnResult) {
-					this.effectState.numConsecutive++;
-				} else if (pokemon.volatiles['twoturnmove']) {
-					if (this.effectState.lastMove !== move.id) {
-						this.effectState.numConsecutive = 1;
-					} else {
-						this.effectState.numConsecutive++;
-					}
-				} else {
-					this.effectState.numConsecutive = 0;
-				}
-				this.effectState.lastMove = move.id;
-			},
-			onModifyDamage(damage, source, target, move) {
-				const dmgMod = [4096, 4915, 5734, 6553, 7372, 8192];
-				const numConsecutive = this.effectState.numConsecutive > 5 ? 5 : this.effectState.numConsecutive;
-				this.debug(`Current Metronome boost: ${dmgMod[numConsecutive]}/4096`);
-				return this.chainModify([dmgMod[numConsecutive], 4096]);
-			},
-		},
-		name: "Relentless",
-		rating: 3.5,
-		num: -8,
 	},
 	medicinalbackground: {
 		name: "Medicinal Background",

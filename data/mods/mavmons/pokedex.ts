@@ -46,4 +46,13 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "Battle Armor", 1: "Halal Trip", H: "Anticipated Strikes"},
 		weightkg: 75,
 	},
+	vince: {
+		num: 2004,
+		name: "Vince",
+		types: ["Water", "Psychic"],
+		gender: "M",
+		baseStats: {hp: 90, atk: 100, def: 100, spa: 150, spd: 95, spe: 135},
+		abilities: {0: "Adaptability", 1: "Color Pulse", H: "Serenity"},
+		weightkg: 75,
+	},
 };

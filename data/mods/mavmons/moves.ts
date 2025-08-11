@@ -95,6 +95,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {contact: 1, protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
+			this.add('-anim', source, "Lunar Blessing", target);
 			this.add('-anim', source, "Surf", target);
 		},
 		onHit() {
@@ -149,6 +150,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Focus Blast", target);
+		},
 		onAfterHit(target, source, move) {
 			if (!move.hasSheerForce && source.hp) {
 				for (const side of source.side.foeSidesWithConditions()) {
@@ -178,6 +183,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Close Combat", target);
+		},
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Dragon') return 1;
 		},
@@ -206,6 +215,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 5,
 		priority: 1,
 		flags: {protect: 1, mirror: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Charm", target);
+		},
 		onHit(target, source, move) {
 			const success = this.boost({atk: -1, spa: -1}, target, source);
 		},
@@ -379,7 +392,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		ignoreAbility: true,
 		target: "normal",
-		type: "Electric",
+		type: "Steel",
 		contestType: "Cool",
 	},
 	coins: {
@@ -394,7 +407,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Inferno Overdrive", target);
+			this.add('-anim', source, "Rapid Spin", target);
 		},
 		self: {
 			onHit(source) {
@@ -536,70 +549,107 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Electric",
 		contestType: "Cool",
 	},
-	rudebuster: {
+	Trizooka: {
 		num: -13,
-		accuracy: 100,
-		basePower: 80,
-		category: "Physical",
-		defensiveCategory: "Physical",
-		shortDesc: "Special if user's SpA is higher.",
-		name: "Rude Buster",
-		pp: 10,
+		accuracy: 90,
+		basePower: 120,
+		category: "Special",
+		name: "Trizooka",
+		pp: 5,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
- 		onPrepareHit(target, source, move) {
-		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Dark Pulse", target);
-		  this.add('-anim', source, "Air Slash", target);
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Fighting') return 1;
 		},
-		onModifyMove(move, pokemon) {
-			if (pokemon.getStat('atk', false, true) < pokemon.getStat('spa', false, true)) move.category = 'Special';
-		},
+		critRatio: true,
+		infiltrates: true,
+		ignoreEvasion: true,
+		ignoreDefensive: true,
 		secondary: null,
 		target: "normal",
-		type: "Dark",
-		contestType: "Beautiful",
+		type: "Water",
+		contestType: "Cool",
 	},
-	centipedeassault: {
+	bullethell: {
 		num: -14,
 		accuracy: 100,
-		basePower: 85,
-		category: "Physical",
-		overrideOffensiveStat: 'spe',
-		shortDesc: "Uses user's Spe stat as Atk in damage calculation.",
-		name: "Centipede Assault",
+		basePower: 70,
+		category: "Special",
+		name: "Bullet Hell",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, contact: 1},
- 		onPrepareHit(target, source, move) {
-		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Flare Blitz", target);
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		secondary: {
+			chance: 10,
+			self: {
+				boosts: {
+					spa: 1,
+					spe: 1,
+				},
+			},
 		},
-		secondary: null,
 		target: "normal",
-		type: "Fire",
-		contestType: "Cool",
+		type: "Psychic",
+		contestType: "Smart",
 	},
-	luciolacruciata: {
+	deepbreath: {
 		num: -15,
 		accuracy: true,
-		basePower: 180,
-		category: "Physical",
-		overrideOffensiveStat: 'spe',
-		shortDesc: "Uses user's Spe stat as Atk in damage calculation.",
-		name: "Luciola Cruciata",
-		pp: 1,
+		basePower: 0,
+		category: "Status",
+		name: "Deep Breath",
+		pp: 5,
 		priority: 0,
-		flags: {contact: 1},
- 		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Inferno Overdrive", target);
+		flags: {snatch: 1, metronome: 1},
+		heal: [3, 10],
+		sideCondition: 'safeguard',
+		condition: {
+			duration: 5,
+			durationCallback(target, source, effect) {
+				if (source?.hasAbility('persistent')) {
+					this.add('-activate', source, 'ability: Persistent', '[move] Safeguard');
+					return 2;
+				}
+				return 2;
+			},
+			onSetStatus(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.id === 'yawn') return;
+				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
+				if (target !== source) {
+					this.debug('interrupting setStatus');
+					if (effect.name === 'Synchronize' || (effect.effectType === 'Move' && !effect.secondaries)) {
+						this.add('-activate', target, 'move: Safeguard');
+					}
+					return null;
+				}
+			},
+			onTryAddVolatile(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
+				if ((status.id === 'confusion' || status.id === 'yawn') && target !== source) {
+					if (effect.effectType === 'Move' && !effect.secondaries) this.add('-activate', target, 'move: Safeguard');
+					return null;
+				}
+			},
+			onSideStart(side, source) {
+				if (source?.hasAbility('persistent')) {
+					this.add('-sidestart', side, 'Safeguard', '[persistent]');
+				} else {
+					this.add('-sidestart', side, 'Safeguard');
+				}
+			},
+			onSideResidualOrder: 26,
+			onSideResidualSubOrder: 3,
+			onSideEnd(side) {
+				this.add('-sideend', side, 'Safeguard');
+			},
 		},
-		isZ: "wriggliumz",
 		secondary: null,
-		target: "normal",
-		type: "Fire",
-		contestType: "Cool",
+		target: "allySide",
+		type: "Normal",
+		zMove: {boost: {spe: 1}},
+		contestType: "Beautiful",
 	},
 	icebreak: {
 		num: -16,
