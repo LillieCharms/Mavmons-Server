@@ -676,7 +676,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 					const source = this.effectState.source;
 					if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
 					this.boost({def: -1, spd: -1}, pokemon, source, this.dex.getActiveMove('killerwail'));
-				},
+				}
 			},
 		},
 		secondary: null,
