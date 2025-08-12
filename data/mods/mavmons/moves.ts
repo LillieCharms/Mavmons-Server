@@ -680,7 +680,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				const source = this.effectState.source;
 				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
 					delete pokemon.volatiles['Killer Wail 5.1'];
-					this.add('-end', pokemon, 'Octolock', '[silent]');
+					this.add('-end', pokemon, 'Killer Wail 5.1', '[silent]');
 					return;
 				}
 				this.boost({def: -1, spd: -1}, pokemon, source, this.dex.getActiveMove('Killer Wail 5.1'));
