@@ -666,8 +666,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 65,
 		category: "Special",
-		name: "Killer Wail 5.1",
-		pp: 15,
+		name: "Killer Wail 5 Point 1",
+		pp: 10,
 		priority: 0,
 		flags: {mirror: 1, metronome: 1, sound: 1, bypasssub: 1},
 		condition: {
