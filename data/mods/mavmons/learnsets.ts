@@ -183,7 +183,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			craftyshield: ["9L1"],
 			protect: ["9L1"],
 			anxietypills: ["9L1"],
-			killerwail: ["9L1"],
+			killerwail51: ["9L1"],
 		},
 	},
 };

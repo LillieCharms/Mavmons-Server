@@ -661,12 +661,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		zMove: {boost: {spe: 1}},
 		contestType: "Beautiful",
 	},
-	killerwail: {
+	killerwail51: {
 		num: -16,
 		accuracy: 100,
 		basePower: 65,
 		category: "Special",
-		name: "Killer Wail 5 Point 1",
+		name: "Killer Wail 5.1",
 		pp: 10,
 		priority: 0,
 		flags: {mirror: 1, metronome: 1, sound: 1, bypasssub: 1},
