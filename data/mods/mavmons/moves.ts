@@ -689,7 +689,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				this.add('-end', target, 'move: Killer Wail 5.1');
 			},
 		},
-		secondary: null,
+		secondary: {
+			chance: 100,
+			volatileStatus: 'killerwail51',
+		},
 		target: "normal",
 		type: "Normal",
 	},
