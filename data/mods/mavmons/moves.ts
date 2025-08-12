@@ -671,12 +671,22 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		priority: 0,
 		flags: {mirror: 1, metronome: 1, sound: 1, bypasssub: 1},
 		condition: {
-				onResidualOrder: 14,
-				onResidual(pokemon) {
-					const source = this.effectState.source;
-					if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
-					this.boost({def: -1, spd: -1}, pokemon, source, this.dex.getActiveMove('killerwail'));
+			duration: 3,
+			onStart(target) {
+				if (target.activeTurns && !this.queue.willMove(target)) {
+					this.effectState.duration++;
 				}
+				this.add('-start', target, 'move: Killer Wail 5.1');
+			},
+			onResidualOrder: 14,
+			onResidual(pokemon) {
+				const source = this.effectState.source;
+				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
+				this.boost({def: -1, spd: -1}, pokemon, source, this.dex.getActiveMove('Killer Wail 5.1'));
+				}
+			},
+			onEnd(target) {
+				this.add('-end', target, 'move: Killer Wail 5.1');
 			},
 		},
 		secondary: null,
