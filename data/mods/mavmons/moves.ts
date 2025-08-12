@@ -152,7 +152,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Focus Blast", target);
+			this.add('-anim', source, "Moonblast", target);
 		},
 		onAfterHit(target, source, move) {
 			if (!move.hasSheerForce && source.hp) {
@@ -185,7 +185,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Close Combat", target);
+			this.add('-anim', source, "Secret Sword", target);
 		},
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Dragon') return 1;
@@ -407,6 +407,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
+			this.add('-anim', source, "Make it Rain", target);
 			this.add('-anim', source, "Rapid Spin", target);
 		},
 		self: {
@@ -549,7 +550,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Electric",
 		contestType: "Cool",
 	},
-	Trizooka: {
+	trizooka: {
 		num: -13,
 		accuracy: 90,
 		basePower: 120,
@@ -579,6 +580,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Tri Attack", target);
+			this.add('-anim', source, "Hyper Beam", target);
+		},
 		secondary: {
 			chance: 10,
 			self: {
@@ -600,7 +606,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Deep Breath",
 		pp: 5,
 		priority: 0,
-		flags: {snatch: 1, metronome: 1},
+		flags: {heal: 1, snatch: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Bulk Up", target);
+		},
 		heal: [3, 10],
 		sideCondition: 'safeguard',
 		condition: {
@@ -651,51 +661,85 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		zMove: {boost: {spe: 1}},
 		contestType: "Beautiful",
 	},
-	icebreak: {
+	killerwail: {
 		num: -16,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 65,
 		category: "Special",
-		shortDesc: "2x power against resists.",
-		name: "Ice Break",
+		name: "Killer Wail 5.1",
 		pp: 15,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		onBasePower(basePower, source, target, move) {
-			if (target.runEffectiveness(move) < 0) {
-				this.debug(`ice break resist buff`);
-				return this.chainModify(2);
-			}
-		},
- 		onPrepareHit(target, source, move) {
-		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Sheer Cold", target);
+		flags: {mirror: 1, metronome: 1, sound: 1, bypasssub: 1},
+		condition: {
+			onResidualOrder: 14,
+			onResidual(pokemon) {
+				const source = this.effectState.source;
+				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
+				this.boost({def: -1, spd: -1}, pokemon, source, this.dex.getActiveMove('killerwail'));
+			},
 		},
 		secondary: null,
 		target: "normal",
-		type: "Ice",
-		contestType: "Cool",
+		type: "Normal",
 	},
-	arrowshot: {
+	anxietypills: {
 		num: -17,
-		accuracy: 100,
-		basePower: 80,
-		category: "Physical",
-		shortDesc: "High critical hit ratio. Cannot be redirected.",
-		name: "Arrow Shot",
-		pp: 15,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Anxiety Pills",
+		pp: 5,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		critRatio: 2,
-		tracksTarget: true,
-		onPrepareHit(target, source, move) {
-		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Snipe Shot", target);
+		flags: {snatch: 1, heal: 1, metronome: 1},
+		heal: [1, 2],
+		sideCondition: 'safeguard',
+		condition: {
+			duration: 5,
+			durationCallback(target, source, effect) {
+				if (source?.hasAbility('persistent')) {
+					this.add('-activate', source, 'ability: Persistent', '[move] Safeguard');
+					return 2;
+				}
+				return 2;
+			},
+			onSetStatus(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.id === 'yawn') return;
+				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
+				if (target !== source) {
+					this.debug('interrupting setStatus');
+					if (effect.name === 'Synchronize' || (effect.effectType === 'Move' && !effect.secondaries)) {
+						this.add('-activate', target, 'move: Safeguard');
+					}
+					return null;
+				}
+			},
+			onTryAddVolatile(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
+				if ((status.id === 'confusion' || status.id === 'yawn') && target !== source) {
+					if (effect.effectType === 'Move' && !effect.secondaries) this.add('-activate', target, 'move: Safeguard');
+					return null;
+				}
+			},
+			onSideStart(side, source) {
+				if (source?.hasAbility('persistent')) {
+					this.add('-sidestart', side, 'Safeguard', '[persistent]');
+				} else {
+					this.add('-sidestart', side, 'Safeguard');
+				}
+			},
+			onSideResidualOrder: 26,
+			onSideResidualSubOrder: 3,
+			onSideEnd(side) {
+				this.add('-sideend', side, 'Safeguard');
+			},
 		},
 		secondary: null,
-		target: "normal",
-		type: "Rock",
-		contestType: "Cool",
+		target: "self",
+		type: "Normal",
+		zMove: {effect: 'clearnegativeboost'},
+		contestType: "Clever",
 	},
 	mountainrangeshakingfirewoodofvenus: {
 		num: -18,

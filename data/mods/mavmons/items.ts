@@ -10,16 +10,16 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		num: -1,
 		gen: 9,
 	},
-	wriggliumz: {
-		name: "Wrigglium Z",
-		desc: "If held by Wriggle Nightbug with Centipede Assault, it can use Luciola Cruciata.",
-		spritenum: 642,
-		onTakeItem: false,
-		zMove: "Luciola Cruciata",
-		zMoveFrom: "Centipede Assault",
-		itemUser: ["Wriggle Nightbug-Altered"],
-		num: -3,
+	earthlooplet: {
+		name: "Earth Looplet",
+		spritenum: 715,
+		fling: {
+			basePower: 80,
+		},
+		num: -2,
 		gen: 9,
+		rating: 3,
+		// Hazard Immunity implemented in moves.ts
 	},
 	maannaniumz: {
 		name: "Maannanium Z",

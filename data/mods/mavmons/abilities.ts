@@ -149,19 +149,20 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -7,
 	},
-	medicinalbackground: {
-		name: "Medicinal Background",
-		shortDesc: "This Pokemon gains 1.2x HP from draining/Aqua Ring/Ingrain/Leech Seed/Strength Sap; 1.4x at half HP or less.",
-		onTryHealPriority: 1,
-		onTryHeal(damage, target, source, effect) {
-			const heals = ['drain', 'leechseed', 'ingrain', 'aquaring', 'strengthsap'];
-			if (heals.includes(effect.id)) {
-				if (target.hp <= target.maxhp / 2) return this.chainModify([5734, 4096]);
-				return this.chainModify([4915, 4096]);
-			}
-		},
-		rating: 3.5,
-		num: -9,
+	cageddemon: {
+		shortDesc: "When the user is hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, and the user slowly perishes. ",
+		onModifyTypePriority: -1,
+			onTryHit(target, source, move) {
+				if (target !== source && move.type === 'Poison','Steel') {
+					if (!this.boost({spa: 2, atk: 2, def: -2, spd: -2})) 
+					source.addVolatile('perishsong');
+					this.add('-start', source, 'perish3', '[silent]');
+					return null;	
+				}
+			},
+		name: "Caged Demon",
+		rating: 4,
+		num: -8,
 	},
 	chameleon: {
 		shortDesc: "This Pokemon's type changes to match the type of the move it is about to use.",
