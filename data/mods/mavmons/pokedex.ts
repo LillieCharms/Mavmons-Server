@@ -38,6 +38,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		baseStats: {hp: 80, atk: 151, def: 100, spa: 135, spd: 94, spe: 151},
 		abilities: {0: "Ben Mode"},
 		requiredAbility: "Ben Mode",
+		battleOnly: "Ben",
 		weightkg: 75,
 	},
 	zeya: {

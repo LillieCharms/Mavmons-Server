@@ -46,42 +46,40 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -1,
 	},
-	benmode: {
-		shortDesc: "When Ben reaches 50% HP, he transforms into Ben Mode",
+	benMode: {
+		shortDesc: "When at 50% or less HP Ben transforms into his Ben Mode.",
+		onStart(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies !== 'Minior' || pokemon.transformed) return;
+			if (pokemon.hp > pokemon.maxhp / 2) {
+				if (pokemon.species.forme !== 'Ben-Mode') {
+					pokemon.formeChange('Ben-BenMode');
+				}
+			} else {
+				if (pokemon.species.forme === 'Ben-Mode') {
+					pokemon.formeChange(pokemon.set.species);
+				}
+			}
+		},
 		onResidualOrder: 29,
 		onResidual(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed) {
-				return;
-			}
-			if (pokemon.hp <= pokemon.maxhp / 2 && !['Ben Mode'].includes(pokemon.species.forme)) {
-				pokemon.addVolatile('benmode');
-			} else if (pokemon.hp > pokemon.maxhp / 2 && ['Ben Mode'].includes(pokemon.species.forme)) {
-				pokemon.addVolatile('benmode'); // in case of base Darmanitan-Zen
-				pokemon.removeVolatile('benmode');
-			}
-		},
-		onEnd(pokemon) {
-			if (!pokemon.volatiles['benmode'] || !pokemon.hp) return;
-			pokemon.transformed = false;
-			delete pokemon.volatiles['benmode'];
-			if (pokemon.species.baseSpecies === 'Ben' && pokemon.species.battleOnly) {
-				pokemon.formeChange(pokemon.species.battleOnly as string, this.effect, false, '[silent]');
-			}
-		},
-		condition: {
-			onEnd(pokemon) {
-				if (['Ben Mode'].includes(pokemon.species.forme)) {
-					pokemon.formeChange(pokemon.species.battleOnly as string);
+			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed || !pokemon.hp) return;
+			if (pokemon.hp > pokemon.maxhp / 2) {
+				if (pokemon.species.forme !== 'Ben Mode') {
+					pokemon.formeChange('Ben-BenMode');
 				}
-			},
+			} else {
+				if (pokemon.species.forme === 'Ben-Mode') {
+					pokemon.formeChange(pokemon.set.species);
+				}
+			}
 		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
-		rating: 0,
+		rating: 3,
 		num: -2,
 	},
 	harmfulmental: {
-		shortDesc: "The user’s attacks are powered up by 20%, but they take 10% recoil after landing an attack.",
+		shortDesc: "The users attacks are powered up by 20%, but they take 10% recoil after landing an attack.",
 		onModifyDamage(damage, source, target, move) {
 			return this.chainModify([1200, 1000]);
 		},
