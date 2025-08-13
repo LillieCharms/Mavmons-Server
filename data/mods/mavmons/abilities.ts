@@ -46,7 +46,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -1,
 	},
-	benMode: {
+	benmode: {
 		shortDesc: "When at 50% or less HP Ben transforms into his Ben Mode.",
 		onStart(pokemon) {
 			if (pokemon.baseSpecies.baseSpecies !== 'Minior' || pokemon.transformed) return;
