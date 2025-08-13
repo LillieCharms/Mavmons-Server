@@ -20,21 +20,24 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 	ben: {
 		num: 2002,
 		name: "Ben",
+		baseForme: "Masked",
 		types: ["Electric", "Dark"],
 		gender: "M",
 		baseStats: {hp: 80, atk: 135, def: 95, spa: 130, spd: 89, spe: 151},
 		abilities: {0: "Anger Point", 1: "Harmful Mental", H: "Ben Mode"},
+		otherFormes: ["Ben Mode"],
 		weightkg: 80,
 	},
-	benmode: {
+	benbenmode: {
 		num: 2002,
-		name: "Ben-Ben",
+		name: "Ben-BenMode",
     	baseSpecies: "Ben",
-		forme: "Ben Mode",
+		forme: "Ben-Mode",
 		types: ["Electric", "Psychic"],
     	gender: "M",
 		baseStats: {hp: 80, atk: 151, def: 100, spa: 135, spd: 94, spe: 151},
 		abilities: {0: "Ben Mode"},
+		requiredAbility: "Ben Mode",
 		weightkg: 75,
 	},
 	zeya: {

@@ -555,6 +555,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 90,
 		basePower: 120,
 		category: "Special",
+		shortDesc: "Super Effective on Fighting types. High Crit Ratio. Ignores all defensive bonuses",
 		name: "Trizooka",
 		pp: 5,
 		priority: 0,
@@ -562,7 +563,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Fighting') return 1;
 		},
-		critRatio: true,
+		critRatio: 2,
 		infiltrates: true,
 		ignoreEvasion: true,
 		ignoreDefensive: true,
@@ -576,6 +577,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 70,
 		category: "Special",
+		shortDesc: "10% chance to increase the users Special Attack and Speed by 1.5x",
 		name: "Bullet Hell",
 		pp: 10,
 		priority: 0,
@@ -603,6 +605,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
+		shortDesc: "Heals 50% of HP, user is immune to status for the 2 turns.",
 		name: "Deep Breath",
 		pp: 5,
 		priority: 0,
@@ -611,7 +614,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Bulk Up", target);
 		},
-		heal: [3, 10],
+		heal: [1, 2],
 		sideCondition: 'safeguard',
 		condition: {
 			duration: 5,
@@ -666,6 +669,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 65,
 		category: "Special",
+		shortDesc: "At the end of the next 3 turns, lowers the foes Defense/Special Defense by 1 stage.",
 		name: "Killer Wail 5.1",
 		pp: 10,
 		priority: 0,
@@ -1353,7 +1357,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 130,
 		category: "Special",
 		name: "Final Strike",
-		shortDesc: "Lowers the user's Sp. Atk by 1.",
+		shortDesc: "Lowers the user's Special Attack by 1.",
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},

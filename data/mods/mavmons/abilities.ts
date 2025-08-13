@@ -47,6 +47,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -1,
 	},
 	benmode: {
+		shortDesc: "When Ben reaches 50% HP, he transforms into Ben Mode",
 		onResidualOrder: 29,
 		onResidual(pokemon) {
 			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed) {
@@ -129,6 +130,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -6,
 	},
 	serenity: {
+		shortDesc: "This Pokemon’s Normal type moves become Psychic type and have 1.2x power",
 		onModifyTypePriority: -1,
 		onModifyType(move, pokemon) {
 			const noModifyType = [
