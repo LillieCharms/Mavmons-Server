@@ -126,35 +126,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -1,
 	},
 	benmode: {
-		shortDesc: "When at 50% or less HP Ben transforms into his Ben Mode.",
-		onStart(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Minior' || pokemon.transformed) return;
-			if (pokemon.hp > pokemon.maxhp / 2) {
-				if (pokemon.species.forme !== 'Ben-Mode') {
-					pokemon.formeChange('Ben-BenMode');
-				}
-			} else {
-				if (pokemon.species.forme === 'Ben-Mode') {
-					pokemon.formeChange(pokemon.set.species);
-				}
-			}
-		},
 		onResidualOrder: 29,
 		onResidual(pokemon) {
 			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.hp > pokemon.maxhp / 2) {
-				if (pokemon.species.forme !== 'Ben Mode') {
-					pokemon.formeChange('Ben-BenMode');
-				}
-			} else {
-				if (pokemon.species.forme === 'Ben-Mode') {
-					pokemon.formeChange(pokemon.set.species);
-				}
-			}
+			if (pokemon.species.id === 'ben-benmode' || pokemon.hp > pokemon.maxhp / 2) return;
+			this.add('-activate', pokemon, 'ability: Ben Mode');
+			pokemon.formeChange('Ben-BenMode', this.effect, true);
 		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
-		rating: 3,
+		rating: 5,
 		num: -2,
 	},
 	harmfulmental: {
