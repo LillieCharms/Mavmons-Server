@@ -130,12 +130,17 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Moonlight", target);
 		},
 		selfSwitch: true,
-		secondary: {
-			chance: 30,
-			boosts: {
-				spd: -1,
+		secondaries: [
+			{
+				chance: 50,
+				boosts: {
+					spd: -1,
+				},
+			}, {
+				chance: 50,
+				status: 'brn',
 			},
-		},
+		],
 		target: "normal",
 		type: "Fire",
 		contestType: "Clever",
@@ -759,81 +764,68 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Clever",
 	},
-	mountainrangeshakingfirewoodofvenus: {
+	phantom: {
 		num: -18,
-		accuracy: true,
-		basePower: 190,
+		accuracy: 100,
+		basePower: 120,
 		category: "Special",
-		shortDesc: "Increases user's Special Attack by 1.",
-		name: "Mountain Range-Shaking Firewood of Venus",
-		pp: 1,
+		shortDesc: "Deals damage two turns after use.",
+		name: "Phantom",
+		pp: 5,
 		priority: 0,
 		flags: {},
  		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-message', source.name + " is overflowing with space power!");
-			this.add('-anim', source, "Continental Crush", target);
+			this.add('-message', source.name + " is setting up Phantom!");
+			this.add('-anim', source, "Future Sight", target);
 		},
-		isZ: "maannaniumz",
-		secondary: {
-			chance: 100,
-			self: {
-				boosts: {
-					spa: 1,
-				},
-			},
+		onHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Secret Sword", target);
 		},
+		secondary: null,
 		target: "normal",
-		type: "Rock",
+		type: "Ghost",
 		contestType: "Tough",
 	},
-	lifesoup: {
+	starshatter: {
 		num: -19,
-		accuracy: 100,
-		basePower: 80,
-		category: "Physical",
-		shortDesc: "On hit: user heals 1/10 max HP.",
-		name: "Life Soup",
-		pp: 10,
+		accuracy: 95,
+		basePower: 30,
+		category: "Special",
+		shortDesc: "Hits 2-5 times.",
+		name: "Starshatter",
+		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, heal: 1},
 		onPrepareHit(target, source, move) {
 		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Whirlpool", target);
-		  this.add('-anim', source, "Giga Drain", target);
-		},
-		onHit(pokemon, source, target) {
-			this.heal(source.maxhp / 10, source);
+		  this.add('-anim', source, "Rock Blast", target);
 		},
 		secondary: null,
 		target: "normal",
-		type: "Water",
+		type: "Rock",
 		contestType: "Cute",
 	},
-	waterplanet: {
+	lightningkick: {
 		num: -20,
-		accuracy: true,
-		basePower: 150,
-		category: "Physical",
-		shortDesc: "Lowers target's Def and SpD by 1.",
-		name: "Water Planet",
-		pp: 1,
+		accuracy: 90,
+		basePower: 90,
+		category: "Special",
+		overrideDefensiveStat: 'def',
+		shortDesc: "Damages target based on defense. High critical hit ratio.",
+		name: "Lightning Kick",
+		pp: 10,
 		priority: 0,
 		flags: {},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Oceanic Operetta", target);
+			this.add('-anim', source, "Thunderous Kick", target);
 		},
-		isZ: "hecatiumz",
-		secondary: {
-			chance: 100,
-			boosts: {
-				def: -1,
-				spd: -1,
-			},
-		},
+		
+		critRatio: 2,
 		target: "normal",
-		type: "Water",
+		type: "Electric",
 		contestType: "Beautiful",
 	},
 	shakalakamaracas: {
@@ -2102,6 +2094,37 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		zMove: {boost: {def: 1}},
 		contestType: "Clever",
 	},
+	wish: {
+		num: 273,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Wish",
+		pp: 5,
+		priority: 0,
+		flags: {snatch: 1, heal: 1, metronome: 1},
+		slotCondition: 'Wish',
+		condition: {
+			duration: 2,
+			onStart(pokemon, source) {
+				this.effectState.hp = source.maxhp / 2;
+			},
+			onResidualOrder: 4,
+			onEnd(target) {
+				if (target && !target.fainted) {
+					const damage = this.heal(this.effectState.hp, target, target);
+					if (damage) {
+						this.add('-heal', target, target.getHealth, '[from] move: Wish', '[wisher] ' + this.effectState.source.name);
+					}
+				}
+			},
+		},
+		secondary: null,
+		target: "self",
+		type: "Normal",
+		zMove: {boost: {spd: 1}},
+		contestType: "Cute",
+	},
 	stealthrock: {
 		num: 446,
 		accuracy: true,
@@ -2219,7 +2242,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				this.add('-sidestart', side, 'move: G-Max Steelsurge');
 			},
 			onEntryHazard(pokemon) {
-				if (pokemon.hasItem('heavydutyboots') || pokemon.hasAbility('autobuild')) return;
+				if (pokemon.hasItem('heavydutyboots') || pokemon.hasItem('earthcirclet') || pokemon.hasAbility('autobuild')) return;
 				// Ice Face and Disguise correctly get typed damage from Stealth Rock
 				// because Stealth Rock bypasses Substitute.
 				// They don't get typed damage from Steelsurge because Steelsurge doesn't,
@@ -2234,6 +2257,38 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "adjacentFoe",
 		type: "Steel",
 		contestType: "Cool",
+	},
+	saltcure: {
+		num: 864,
+		accuracy: 100,
+		basePower: 40,
+		category: "Physical",
+		name: "Salt Cure",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		condition: {
+			noCopy: true,
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Salt Cure');
+			},
+			onResidualOrder: 13,
+			onResidual(pokemon) {
+				this.damage(pokemon.baseMaxhp / (pokemon.hasType(['Water'+ 'Steel']) ? 1 : 2));
+			},
+			onResidual(pokemon) {
+				this.damage(pokemon.baseMaxhp / (pokemon.hasType(['Water', 'Steel']) ? 4 : 8));
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'Salt Cure');
+			},
+		},
+		secondary: {
+			chance: 100,
+			volatileStatus: 'saltcure',
+		},
+		target: "normal",
+		type: "Rock",
 	},
 	grassyterrain: {
 		num: 580,
