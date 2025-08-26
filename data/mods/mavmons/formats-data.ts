@@ -27,4 +27,8 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
+	lewyn: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
 };

@@ -246,53 +246,47 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -10,
 	},
-	callofdarkness: {
-		shortDesc: "At the end of each turn, if this Pokémon’s HP is at half or lower, causes all opposing Pokemon to lose 1/8 of their maximum HP, rounded down.",
-		onResidualOrder: 28,
-		onResidualSubOrder: 2,
-		onResidual(pokemon) {
-			if (!pokemon.hp) return;
-			for (const target of pokemon.foes()) {
-				if (pokemon.hp <= pokemon.maxhp / 2) {
-					this.add('-anim', pokemon, "Dark Pulse", target);
-					this.damage(target.baseMaxhp / 8, target, pokemon);
-				}
-			}
+	laserpressure: {
+		onStart(pokemon) {
+			if (this.suppressingAbility(pokemon)) return;
+			this.add('-ability', pokemon, 'Laser Pressure');
 		},
-		name: "Call of Darkness",
-		rating: 4,
+		onAnyModifyAtk(atk, target, source, move) {
+			const abilityHolder = this.effectState.target;
+			if (target.hasAbility('Laser Pressure')) return;
+			if (!move.ruinedAtk?.hasAbility('Laser Pressure')) move.ruinedAtk = abilityHolder;
+			if (move.ruinedAtk !== abilityHolder) return;
+			this.debug('Laser Pressure Atk drop');
+			return this.chainModify(0.20);
+		},
+		onAnyModifySpa(spa, target, source, move) {
+			const abilityHolder = this.effectState.target;
+			if (target.hasAbility('Laser Pressure')) return;
+			if (!move.ruinedSpa?.hasAbility('Laser Pressure')) move.ruinedSpa = abilityHolder;
+			if (move.ruinedSpa !== abilityHolder) return;
+			this.debug('Laser Pressure Spa drop');
+			return this.chainModify(0.20);
+		},
+		flags: {},
+		name: "Laser Pressure",
+		rating: 5,
 		num: -11,
 	},
-	colorfilter: {
-		name: "Color Filter",
-		shortDesc: "Limber + Keen Eye",
-		onTryBoost(boost, target, source, effect) {
-			if (source && target === source) return;
-			if (boost.accuracy && boost.accuracy < 0) {
-				delete boost.accuracy;
-				if (!(effect as ActiveMove).secondaries) {
-					this.add("-fail", target, "unboost", "accuracy", "[from] ability: Keen Eye", "[of] " + target);
-				}
+	chargingego: {
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.boost({atk: length}, source);
+			}
+			if (effect && effect.effectType === 'Move') {
+				this.boost({spa: length}, source);
+			}
+			if (effect && effect.effectType === 'Move') {
+				this.boost({accuracy: length}, source);
 			}
 		},
-		onModifyMove(move) {
-			move.ignoreEvasion = true;
-		},
-		onUpdate(pokemon) {
-			if (pokemon.status === 'par') {
-				this.add('-activate', pokemon, 'ability: Limber');
-				pokemon.cureStatus();
-			}
-		},
-		onSetStatus(status, target, source, effect) {
-			if (status.id !== 'par') return;
-			if ((effect as Move)?.status) {
-				this.add('-immune', target, '[from] ability: Limber');
-			}
-			return false;
-		},
-		flags: {breakable: 1},
-		rating: 2.5,
+		flags: {},
+		name: "Charging Ego",
+		rating: 4,
 		num: -12,
 	},
 	blackoutcurtain: {

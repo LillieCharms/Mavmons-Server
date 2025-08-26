@@ -14,7 +14,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fairy"],
 		gender: "F",
 		baseStats: {hp: 105, atk: 80, def: 90, spa: 165, spd: 104, spe: 136},
-		abilities: {0: "Cute Charm"},
+		abilities: {0: "Cute Charm", 1: "Raging Demon"},
 		weightkg: 50,
 	},
 	ben: {
@@ -75,6 +75,15 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		gender: "F",
 		baseStats: {hp: 92, atk: 70, def: 110, spa: 128, spd: 88, spe: 162},
 		abilities: {0: "Competitive", 1: "Katie Luck", H: "Set-Up Combo"},
+		weightkg: 75,
+	},
+	lewyn: {
+		num: 2007,
+		name: "Lewyn",
+		types: ["Water", "Steel"],
+		gender: "M",
+		baseStats: {hp: 100, atk: 103, def: 103, spa: 163, spd: 103, spe: 83},
+		abilities: {0: "Sniper", 1: "Charging Ego", H: "Laser Pressure"},
 		weightkg: 75,
 	},
 	wochien: {

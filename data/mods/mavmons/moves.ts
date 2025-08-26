@@ -803,6 +803,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		  this.add('-anim', source, "Rock Blast", target);
 		},
 		secondary: null,
+		multihit: [2, 5],
 		target: "normal",
 		type: "Rock",
 		contestType: "Cute",
@@ -828,50 +829,37 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Electric",
 		contestType: "Beautiful",
 	},
-	shakalakamaracas: {
+	fullchargeshot: {
 		num: -21,
-		accuracy: 90,
-		basePower: 65,
-		category: "Physical",
-		name: "Shakalaka Maracas",
-		shortDesc: "Sets up a layer of Spikes on the opposing side.",
-		pp: 15,
+		accuracy: 80,
+		basePower: 180,
+		category: "Special",
+		name: "Full-Charge Shot",
+		shortDesc: "Ignores effects of abilities and moves, has a high critical hit ratio, the move can't be used twice in a row. ",
+		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Teeter Dance", target);
-			this.add('-anim', source, "Hyper Voice", target);
-			this.add('-anim', source, "Grassy Glide", target);
+			this.add('-anim', source, "Sparkling Aria", target);
+			this.add('-anim', source, "Hyper Beam", target);
 		},
-		onAfterHit(target, source, move) {
-			if (!move.hasSheerForce && source.hp) {
-				for (const side of source.side.foeSidesWithConditions()) {
-					side.addSideCondition('spikes');
-				}
-			}
-		},
-		onAfterSubDamage(damage, target, source, move) {
-			if (!move.hasSheerForce && source.hp) {
-				for (const side of source.side.foeSidesWithConditions()) {
-					side.addSideCondition('spikes');
-				}
-			}
-		},
-		secondary: {}, // Sheer Force-boosted
+		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1},
+		critRatio: 2,
+		ignoreAbility: true,
 		target: "normal",
-		type: "Grass",
+		type: "???",
 		contestType: "Cute",
 	},
-	doubledynamite: {
+	quicksuperjump: {
 		num: -22,
-		accuracy: 100,
-		basePower: 90,
-		category: "Special",
-		name: "Double Dynamite",
-		shortDesc: "Type varies based on the user's primary type.",
-		pp: 15,
-		priority: 0,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Quick Super Jump",
+		shortDesc: "Switches the user out and passes all of the user's stat changes to the next Pokemon. Fully heals the user's HP and restores any status conditions.",
+		pp: 1,
+		noPPBoosts: true,
+		priority: 4,
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
@@ -880,39 +868,70 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			if (type == "Ice") this.add('-anim', source, "Ice Beam", target);
 			this.add('-anim', source, "Psychic", target);
 		},
-		onModifyType(move, pokemon) {
-			let type = pokemon.getTypes()[0];
-			if (type === "Bird") type = "???";
-			if (type === "Stellar") type = pokemon.getTypes(false, true)[0];
-			move.type = type;
+		onHit(target) {
+			if (!this.canSwitch(target.side) || target.volatiles['commanded']) {
+				this.attrLastMove('[still]');
+				this.add('-fail', target);
+				return this.NOT_FAIL;
+			}
 		},
+		self: {
+			onHit(source) {
+				source.skipBeforeSwitchOutEventFlag = true;
+			},
+		},
+		condition: {
+			onSwap(target) {
+				if (!target.fainted && (target.hp < target.maxhp || target.status)) {
+					target.heal(target.maxhp);
+					target.clearStatus();
+					this.add('-heal', target, target.getHealth, '[from] move: Quick Super Jump');
+					target.side.removeSlotCondition(target, 'quicksuperjump');
+				}
+			},
+		},
+		selfSwitch: 'copyvolatile',
 		secondary: null,
-		target: "normal",
-		type: "Ice",
+		target: "self",
+		type: "Water",
 		contestType: "Cool",
 	},
-	treeoceanofhourai: {
+	inkmine: {
 		num: -23,
 		accuracy: true,
-		basePower: 180,
+		basePower: 0,
 		category: "Special",
 		shortDesc: "Drains 75% of damage dealt.",
-		name: "Tree-Ocean of Hourai",
-		pp: 1,
-		priority: 0,
-		flags: {bullet: 1, heal: 1},
+		name: "Ink Mine",
+		pp: 10,
+		priority: 1,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onTry(source, target) {
+			const action = this.queue.willMove(target);
+			const move = action?.choice === 'move' ? action.move : null;
+			if (!move || (move.category === 'Status' && move.id !== 'mefirst') || target.volatiles['mustrecharge']) {
+				return false;
+			}
+		},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Surf", target);
 			this.add('-anim', source, "Muddy Water", target);
 			this.add('-anim', source, "Giga Drain", target);
 		},
-		isZ: "kaguyiumz",
-		drain: [3, 4],
-		secondary: null,
+		damageCallback(pokemon, target) {
+			return this.clampIntRange(target.getUndynamaxedHP() / 20, 7);
+		},
+		secondary: {
+			chance: 100,
+			boosts: {
+				spd: -1,
+				def: -1,
+			},
+		},
 		target: "normal",
-		type: "Grass",
-		contestType: "Beautiful",
+		type: "Steel",
+		contestType: "Clever",
 	},
 	poltergust: {
 		num: -24,
