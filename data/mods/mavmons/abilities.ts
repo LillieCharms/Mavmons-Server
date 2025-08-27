@@ -247,6 +247,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -10,
 	},
 	laserpressure: {
+		shortDesc: "Decreases Atk and Sp.Atk of all opponents on the field by 20% each."
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
 			this.add('-ability', pokemon, 'Laser Pressure');
@@ -273,6 +274,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -11,
 	},
 	chargingego: {
+		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy stats by two stages the first time it KOs an opponent."
 		onSourceAfterFaint(length, target, source, effect) {
 			if (effect && effect.effectType === 'Move') {
 				this.boost({atk: length}, source);

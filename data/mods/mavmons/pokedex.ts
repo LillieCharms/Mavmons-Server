@@ -14,7 +14,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fairy"],
 		gender: "F",
 		baseStats: {hp: 105, atk: 80, def: 90, spa: 165, spd: 104, spe: 136},
-		abilities: {0: "Cute Charm", 1: "Raging Demon"},
+		abilities: {0: "Cute Charm", 1: "Caged Demon"},
 		weightkg: 50,
 	},
 	ben: {
@@ -25,7 +25,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		gender: "M",
 		baseStats: {hp: 80, atk: 135, def: 95, spa: 130, spd: 89, spe: 151},
 		abilities: {0: "Anger Point", 1: "Harmful Mental", H: "Ben Mode"},
-		otherFormes: ["Ben Mode"],
+		otherFormes: ["Ben-Mode"],
 		weightkg: 80,
 	},
 	benbenmode: {

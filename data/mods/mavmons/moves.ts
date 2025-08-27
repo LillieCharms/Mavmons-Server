@@ -773,7 +773,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Phantom",
 		pp: 5,
 		priority: 0,
-		flags: {},
+		flags: {allyanim: 1, metronome: 1, futuremove: 1},
+		ignoreImmunity: true,
  		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-message', source.name + " is setting up Phantom!");
@@ -782,6 +783,28 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		onHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Secret Sword", target);
+		},
+		onTry(source, target) {
+			if (!target.side.addSlotCondition(target, 'futuremove')) return false;
+			Object.assign(target.side.slotConditions[target.position]['futuremove'], {
+				duration: 3,
+				move: 'phantom',
+				source: source,
+				moveData: {
+					id: 'phantom',
+					name: "Phantom",
+					accuracy: 100,
+					basePower: 120,
+					category: "Special",
+					priority: 0,
+					flags: {allyanim: 1, metronome: 1, futuremove: 1},
+					ignoreImmunity: false,
+					effectType: 'Move',
+					type: 'Ghost',
+				},
+			});
+			this.add('-start', source, 'move: Phantom');
+			return this.NOT_FAIL;
 		},
 		secondary: null,
 		target: "normal",
@@ -860,26 +883,19 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 1,
 		noPPBoosts: true,
 		priority: 4,
-		flags: {protect: 1, mirror: 1, metronome: 1},
+		flags: {snatch: 1, heal: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			let type = source.getTypes()[0];
-			if (type == "Fire") this.add('-anim', source, "Flamethrower", target);
-			if (type == "Ice") this.add('-anim', source, "Ice Beam", target);
-			this.add('-anim', source, "Psychic", target);
+			this.add('-anim', source, "Bounce", target);
 		},
-		onHit(target) {
-			if (!this.canSwitch(target.side) || target.volatiles['commanded']) {
+		onTryHit(source) {
+			if (!this.canSwitch(source.side)) {
 				this.attrLastMove('[still]');
-				this.add('-fail', target);
+				this.add('-fail', source);
 				return this.NOT_FAIL;
 			}
 		},
-		self: {
-			onHit(source) {
-				source.skipBeforeSwitchOutEventFlag = true;
-			},
-		},
+		slotCondition: 'quicksuperjump',
 		condition: {
 			onSwap(target) {
 				if (!target.fainted && (target.hp < target.maxhp || target.status)) {
@@ -901,7 +917,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Special",
-		shortDesc: "Drains 75% of damage dealt.",
+		shortDesc: "Deals damage equal to 35% of the opponent's max HP and lowers its Def and Sp.Def by one stage, but fails if the opponent isn't about to use an attacking move.",
 		name: "Ink Mine",
 		pp: 10,
 		priority: 1,
