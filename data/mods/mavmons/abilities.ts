@@ -247,7 +247,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -10,
 	},
 	laserpressure: {
-		shortDesc: "Decreases Atk and Sp.Atk of all opponents on the field by 20% each."
+		shortDesc: "Decreases Atk and Sp.Atk of all opponents on the field by 20% each.",
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
 			this.add('-ability', pokemon, 'Laser Pressure');
