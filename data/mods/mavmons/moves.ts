@@ -2311,9 +2311,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onResidual(pokemon) {
 				this.damage(pokemon.baseMaxhp / (pokemon.hasType(['Water'+ 'Steel']) ? 1 : 2));
 			},
-			onResidual(pokemon) {
-				this.damage(pokemon.baseMaxhp / (pokemon.hasType(['Water', 'Steel']) ? 4 : 8));
-			},
 			onEnd(pokemon) {
 				this.add('-end', pokemon, 'Salt Cure');
 			},
