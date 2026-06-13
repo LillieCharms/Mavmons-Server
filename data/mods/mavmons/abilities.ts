@@ -274,7 +274,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -11,
 	},
 	chargingego: {
-		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy stats by two stages the first time it KOs an opponent."
+		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy stats by two stages the first time it KOs an opponent.",
 		onSourceAfterFaint(length, target, source, effect) {
 			if (effect && effect.effectType === 'Move') {
 				this.boost({atk: length}, source);
