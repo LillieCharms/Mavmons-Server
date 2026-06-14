@@ -65,16 +65,16 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fairy", "Ice"],
 		gender: "F",
 		baseStats: {hp: 104, atk: 99, def: 105, spa: 110, spd: 125, spe: 101},
-		abilities: {0: "Refrigerate", 1: "Color Pulse", H: "Serenity"},
+		abilities: {0: "Refrigerate", 1: "Color Pulse", H: "Solidarity"},
 		weightkg: 75,
 	},
-	katiesorte: {
+	katie: {
 		num: 2006,
-		name: "Katie Sorte",
-		types: ["Electric", "Psychic"],
+		name: "Katie",
+		types: ["Electric", "Grass"],
 		gender: "F",
-		baseStats: {hp: 92, atk: 70, def: 110, spa: 128, spd: 88, spe: 162},
-		abilities: {0: "Competitive", 1: "Katie Luck", H: "Set-Up Combo"},
+		baseStats: {hp: 200, atk: 80, def: 105, spa: 80, spd: 105, spe: 80},
+		abilities: {0: "Cheek Pouch", 1: "Transistor", H: "CTE Distributor"},
 		weightkg: 9999,
 	},
 	lewyn: {

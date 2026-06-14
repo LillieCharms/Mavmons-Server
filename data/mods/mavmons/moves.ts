@@ -497,9 +497,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	},
 	shockbubble: {
 		num: -12,
-		accuracy: 100,
-		basePower: 100,
-		category: "Physical",
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
 		shortDesc: "Protects user, if a move is blocked sets up Electric Terrain.",
 		name: "Shock Bubble",
 		pp: 15,
@@ -551,7 +551,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				}
 			},
 		},
-		target: "normal",
+		target: "self",
 		type: "Electric",
 		contestType: "Cool",
 	},
@@ -1066,76 +1066,77 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Ghost",
 		contestType: "Beautiful",
 	},
-	desiccation: {
+		electricfence: {
 		num: -27,
-		accuracy: 90,
-		basePower: 65,
-		category: "Physical",
-		name: "Desiccation",
-		shortDesc: "Applies Leech Seed on the target.",
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Electric Fence",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Salt Cure", target);
-		},
-		onHit(target, source) {
-			if (target.hasType('Grass')) return null;
-			target.addVolatile('leechseed', source);
-		},
-		secondary: {}, // Sheer Force-boosted
-		target: "normal",
-		type: "Rock",
-		contestType: "Cute",
-	},
-	dollswar: {
-		num: -28,
-		accuracy: 100,
-		basePower: 100,
-		category: "Physical",
-		name: "Doll\'s War",
-		shortDesc: "Special if user's SpA is higher. 50% chance to raise Defense by 1.",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		onPrepareHit(target, source, move) {
-		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Photon Geyser", target);
-		},
-		onModifyMove(move, pokemon) {
-			if (pokemon.getStat('atk', false, true) < pokemon.getStat('spa', false, true)) move.category = 'Special';
-		},
-		ignoreAbility: true,
-		secondary: {
-			chance: 50,
-			self: {
-				boosts: {
-					def: 1,
-				},
+		flags: {},
+		self: {
+			onHit(source) {
+				for (const side of source.side.foeSidesWithConditions()) {
+					side.addSideCondition('electricfense');
+				}
 			},
 		},
-		target: "normal",
-		type: "Normal",
+		condition: {
+			onSideStart(side) {
+				this.add('-sidestart', side, 'move: Electric Fence');
+			},
+			onEntryHazard(pokemon) {
+				if (pokemon.hasItem('heavydutyboots') || pokemon.hasItem('earthlooplet') || pokemon.hasAbility('autobuild')) return;
+				// Ice Face and Disguise correctly get typed damage from Stealth Rock
+				// because Stealth Rock bypasses Substitute.
+				// They don't get typed damage from Steelsurge because Steelsurge doesn't,
+				// so we're going to test the damage of a Steel-type Stealth Rock instead.
+				const electricHazard = this.dex.getActiveMove('Stealth Rock');
+				electricHazard.type = 'Electric';
+				const typeMod = this.clampIntRange(pokemon.runEffectiveness(electricHazard), -6, 6);
+				this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+			},
+		},
+		secondary: null,
+		target: "adjacentFoe",
+		type: "Steel",
 		contestType: "Cool",
 	},
-	dollsphalanx: {
+	canopyhunter: {
+			num: -28,
+			accuracy: 100,
+			basePower: 80,
+			category: "Special",
+			name: "Canopy Hunter",
+			pp: 20,
+			priority: 0,
+			flags: {protect: 1, mirror: 1, metronome: 1},
+			onEffectiveness(typeMod, target, type) {
+				if (type === 'Fire') return 1;
+			},
+			target: "normal",
+			type: "Grass",
+			contestType: "Beautiful",
+		},
+	thirdeye: {
 		num: -29,
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		name: "Doll\'s Phalanx",
-		shortDesc: "Protects from moves. Contact: loses 1/8 max HP.",
-		pp: 10,
+		shortDesc: "Protects user, if a move is blocked reduces Spa by 1.",
+		name: "Third Eye",
+		pp: 15,
 		priority: 4,
-		flags: {noassist: 1, failcopycat: 1},
-		stallingMove: true,
-		volatileStatus: 'dollsphalanx',
-		onPrepareHit(pokemon) {
+		flags: {contact: 1, slicing: 1, heal: 1, protect: 1, mirror: 1},
+		onPrepareHit(target, source, pokemon) {
 			this.attrLastMove('[still]');
-		  this.add('-anim', source, "Spiky Shield", target);
+			this.add('-anim', source, "Tail Glow", target);
+			this.add('-anim', source, "Protect", target);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
+		stallingMove: true,
+		volatileStatus: 'thirdeye',
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
 		},
@@ -1164,21 +1165,19 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 					}
 				}
 				if (this.checkMoveMakesContact(move, source, target)) {
-					this.damage(source.baseMaxhp / 8, source, target);
+					this.field.setTerrain('electricterrain');
 				}
 				return this.NOT_FAIL;
 			},
 			onHit(target, source, move) {
-				if (move.isZOrMaxPowered && this.checkMoveMakesContact(move, source, target)) {
-					this.damage(source.baseMaxhp / 8, source, target);
-				}
-			},
+							if (move.isZOrMaxPowered && this.checkMoveMakesContact(move, source, target)) {
+								this.boost({spa: -1}, source, target, this.dex.getActiveMove("Third Eye"));
+							}
+						},
 		},
-		secondary: null,
 		target: "self",
-		type: "Normal",
-		zMove: {boost: {def: 1}},
-		contestType: "Tough",
+		type: "Psychic",
+		contestType: "Cool",
 	},
 	artfulsacrifice: {
 		num: -30,
@@ -2336,7 +2335,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				this.add('-sidestart', side, 'move: G-Max Steelsurge');
 			},
 			onEntryHazard(pokemon) {
-				if (pokemon.hasItem('heavydutyboots') || pokemon.hasItem('earthcirclet') || pokemon.hasAbility('autobuild')) return;
+				if (pokemon.hasItem('heavydutyboots') || pokemon.hasItem('earthlooplet') || pokemon.hasAbility('autobuild')) return;
 				// Ice Face and Disguise correctly get typed damage from Stealth Rock
 				// because Stealth Rock bypasses Substitute.
 				// They don't get typed damage from Steelsurge because Steelsurge doesn't,
