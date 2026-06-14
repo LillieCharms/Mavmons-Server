@@ -27,11 +27,11 @@ export const Formats: FormatList = [
 		// name: "gen9petmods",
 	},
 	{
-		name: "[Gen 9] Maverick* Mons",
+		name: "[Gen 9] National Dex Maverick* Mons",
 		desc: `Maverick* Mons, a micrometa designed to use Maverick* Server Fakemons.`,
 		mod: 'mavmons',
-		teambuilderFormat: "National Dex",
-		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Data Mod', 'Sleep Clause Mod', 'Terastal Clause', /* 'Mega Data Mod' */],
+		teambuilderFormat: "National Dex Ubers",
+		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Data Mod', 'Sleep Clause Mod', 'Terastal Clause', '+lgpe', '+unreleased', '! Obtainable Formes',  /* 'Mega Data Mod' */],
 		onValidateTeam(team, format) {
 			/**@type {{[k: string]: true}}*/
 			let speciesTable = {};
@@ -39,7 +39,7 @@ export const Formats: FormatList = [
 			for (const set of team) {
 				let template = this.dex.species.get(set.species);
 				if (!allowedTiers.includes(template.tier)) {
-					return [set.species + ' is not legal in [Gen 9] Maverick* Mons.'];
+					return [set.species + ' is not legal in [Gen 9] National Dex Maverick* Mons.'];
 				}
 			}
 		},
