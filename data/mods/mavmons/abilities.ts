@@ -212,8 +212,8 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	cageddemon: {
 		shortDesc: "When the user is hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, and the user slowly perishes. ",
 		onModifyTypePriority: -1,
-			onTryHit(target, source, move) {
-				if (target !== source && move.type === 'Poison','Steel') {
+			onHit(target, source, move) {
+				if (move && target.getMoveHitData(move).typeMod > 0) {
 					if (!this.boost({spa: 2, atk: 2, def: -2, spd: -2})) 
 					source.addVolatile('perishsong');
 					this.add('-start', source, 'perish3', '[silent]');
@@ -293,27 +293,27 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	solidarity: {
         onStart(pokemon) {
-            let Solid = 0;
+            let FairyBoost = 0;
                 this.add('-activate', pokemon, 'ability: Solidarity');
                 { 
                     for(let i = 0; i < pokemon.side.pokemon.length; i++){
                         if (pokemon.side.pokemon[i].hasType('Fairy')) {
-                            Solid += 1;    
+                            FairyBoost += 1;    
                         }
                     }
                 }
-                this.add('-start', pokemon, `SOLID (${Solid})`, '[silent]');
-                this.effectState.Fairy = Solid;
+                this.add('-start', pokemon, `FAIRYBOOST (${FairyBoost})`, '[silent]');
+                this.effectState.Fairy = FairyBoost;
         },
         onEnd(pokemon) {
-            this.add('-end', pokemon, `SOLID (${this.effectState.Solid})`, '[silent]');
+            this.add('-end', pokemon, `FAIRYBOOST (${this.effectState.FairyBoost})`, '[silent]');
         },
         onBasePowerPriority: 21,
         onBasePower(basePower, attacker, defender, move) {
-            if (this.effectState.Solid) {
+            if (this.effectState.FairyBoost) {
                 const powMod = [4096, 4300.8, 4505.6, 4710.4, 4915.2, 5120, 5324.8];
-                this.debug(`Solidarity boost: ${powMod[this.effectState.Solid]}/4096`);
-                return this.chainModify([powMod[this.effectState.Solid], 4096]);
+                this.debug(`Solidarity boost: ${powMod[this.effectState.FairyBoost]}/4096`);
+                return this.chainModify([powMod[this.effectState.FairyBoost], 4096]);
             }
         },
         name: "Solidarity",
@@ -323,27 +323,27 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
     },
 	dragonfucker: {
         onStart(pokemon) {
-            let Solid = 0;
+            let DragonBoost = 0;
                 this.add('-activate', pokemon, 'ability: Dragonfucker');
                 { 
                     for(let i = 0; i < pokemon.side.pokemon.length; i++){
                         if (pokemon.side.pokemon[i].hasType('Dragon')) {
-                            Solid += 1;    
+                            DragonBoost += 1;    
                         }
                     }
                 }
-                this.add('-start', pokemon, `SOLID (${Solid})`, '[silent]');
-                this.effectState.Dragon = Solid;
+                this.add('-start', pokemon, `DRAGONBOOST (${Solid})`, '[silent]');
+                this.effectState.Dragon = DragonBoost;
         },
         onEnd(pokemon) {
-            this.add('-end', pokemon, `SOLID (${this.effectState.Solid})`, '[silent]');
+            this.add('-end', pokemon, `DRAGONBOOST (${this.effectState.DragonBoost})`, '[silent]');
         },
         onBasePowerPriority: 21,
         onBasePower(basePower, attacker, defender, move) {
             if (this.effectState.Solid) {
                 const powMod = [4096, 4300.8, 4505.6, 4710.4, 4915.2, 5120, 5324.8];
-                this.debug(`Solidarity boost: ${powMod[this.effectState.Solid]}/4096`);
-                return this.chainModify([powMod[this.effectState.Solid], 4096]);
+                this.debug(`Dragonfucker boost: ${powMod[this.effectState.DragonBoost]}/4096`);
+                return this.chainModify([powMod[this.effectState.DragonBoost], 4096]);
             }
         },
         name: "Dragonfucker",

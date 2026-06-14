@@ -12,6 +12,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	earthlooplet: {
 		name: "Earth Looplet",
+		desc: "Ignores Hazards Like Boots",
 		spritenum: 715,
 		fling: {
 			basePower: 80,

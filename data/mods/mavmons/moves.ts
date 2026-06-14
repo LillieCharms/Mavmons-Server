@@ -209,8 +209,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	},
 	disarm: {
 		num: -6,
-		accuracy: 90,
-		basePower: 10,
+		accuracy: 100,
+		basePower: 0,
 		basePowerCallback(pokemon, target, move) {
 			return 10 * move.hit;
 		},
