@@ -211,9 +211,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -6,
 		accuracy: 100,
 		basePower: 0,
-		basePowerCallback(pokemon, target, move) {
-			return 10 * move.hit;
-		},
 		category: "Status",
 		shortDesc: "The foes Attack and Special Attack are lowered by 1, and taunts foe for 3 turns.",
 		name: "Disarm",
