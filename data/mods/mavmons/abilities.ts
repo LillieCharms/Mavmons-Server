@@ -291,65 +291,72 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -12,
 	},
-	blackoutcurtain: {
-		onDamagingHit(damage, target, source, effect) {
-			this.boost({atk: 1});
-		},
-		name: "Blackout Curtain",
-		shortDesc: "When this Pokemon is damaged by an attack, its Atk is raised by 1.",
-		rating: 4.5,
-		num: -13,
-	},
-	frigidbloodline: {
-		onTryHit(target, source, move) {
-			if (target !== source && move.type === 'Ice') {
-				if (!this.heal(target.baseMaxhp / 4)) {
-					this.add('-immune', target, '[from] ability: Frigid Bloodline');
-				}
-				return null;
-			}
-		},
-		flags: {breakable: 1},
-		name: "Frigid Bloodline",
-		shortDesc: "This Pokemon heals 1/4 of its max HP when hit by Ice moves; Ice immunity.",
-		rating: 3.5,
-		num: -14,
-	},
-	// Curse Weaver utilizing Ghost-type curse is handled within moves.ts
-	curseweaver: {
-		onModifyAtkPriority: 5,
-		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Ghost') {
-				this.debug('Curse Weaver boost');
-				return this.chainModify(1.5);
-			}
-		},
-		onModifySpAPriority: 5,
-		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Ghost') {
-				this.debug('Curse Weaver boost');
-				return this.chainModify(1.5);
-			}
-		},
-		onSourceModifyAtkPriority: 6,
-		onSourceModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Ghost') {
-				this.debug('Curse Weaver weaken');
-				return this.chainModify(0.5);
-			}
-		},
-		onSourceModifySpAPriority: 5,
-		onSourceModifySpA(spa, attacker, defender, move) {
-			if (move.type === 'Ghost') {
-				this.debug('Curse Weaver weaken');
-				return this.chainModify(0.5);
-			}
-		},
-		flags: {breakable: 1},
-		name: "Curse Weaver",
-		shortDesc: "Attacking stat multiplied by 1.5 while using a Ghost-type attack; halves damage received from Ghost attacks. Curse becomes Ghost-type version.",
-		rating: 3.5,
-		num: -16,
+	solidarity: {
+        onStart(pokemon) {
+            let Solid = 0;
+                this.add('-activate', pokemon, 'ability: Solidarity');
+                { 
+                    for(let i = 0; i < pokemon.side.pokemon.length; i++){
+                        if (pokemon.side.pokemon[i].hasType('Fairy')) {
+                            Solid += 1;    
+                        }
+                    }
+                }
+                this.add('-start', pokemon, `SOLID (${Solid})`, '[silent]');
+                this.effectState.Fairy = Solid;
+        },
+        onEnd(pokemon) {
+            this.add('-end', pokemon, `SOLID (${this.effectState.Solid})`, '[silent]');
+        },
+        onBasePowerPriority: 21,
+        onBasePower(basePower, attacker, defender, move) {
+            if (this.effectState.Solid) {
+                const powMod = [4096, 4300.8, 4505.6, 4710.4, 4915.2, 5120, 5324.8];
+                this.debug(`Solidarity boost: ${powMod[this.effectState.Solid]}/4096`);
+                return this.chainModify([powMod[this.effectState.Solid], 4096]);
+            }
+        },
+        name: "Solidarity",
+		shortDesc: "For each Fairy type Pokemon on the team, raise non-speed stats by 5%.",
+        rating: 4,
+        num: -13,
+    },
+	dragonfucker: {
+        onStart(pokemon) {
+            let Solid = 0;
+                this.add('-activate', pokemon, 'ability: Dragonfucker <3');
+                { 
+                    for(let i = 0; i < pokemon.side.pokemon.length; i++){
+                        if (pokemon.side.pokemon[i].hasType('Dragon')) {
+                            Solid += 1;    
+                        }
+                    }
+                }
+                this.add('-start', pokemon, `SOLID (${Solid})`, '[silent]');
+                this.effectState.Dragon = Solid;
+        },
+        onEnd(pokemon) {
+            this.add('-end', pokemon, `SOLID (${this.effectState.Solid})`, '[silent]');
+        },
+        onBasePowerPriority: 21,
+        onBasePower(basePower, attacker, defender, move) {
+            if (this.effectState.Solid) {
+                const powMod = [4096, 4300.8, 4505.6, 4710.4, 4915.2, 5120, 5324.8];
+                this.debug(`Solidarity boost: ${powMod[this.effectState.Solid]}/4096`);
+                return this.chainModify([powMod[this.effectState.Solid], 4096]);
+            }
+        },
+        name: "Dragonfucker <3",
+		shortDesc: "For each Dragon type Pokemon on the team, raise non-speed Stats by 5%.",
+        rating: 4,
+        num: -14,
+    },
+	todaysbrew: {
+		// Multitype's type-changing itself is implemented in statuses.js
+		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
+		name: "Today's Brew",
+		rating: 4,
+		num: -15,
 	},
 	jellydessertqueen: {
 		onResidual(pokemon) {

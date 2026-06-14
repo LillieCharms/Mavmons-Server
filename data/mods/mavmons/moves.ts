@@ -215,7 +215,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			return 10 * move.hit;
 		},
 		category: "Status",
-		shortDesc: "The foes Attack and Special Attack are lowered by 1, and taunts foe for 2 turns.",
+		shortDesc: "The foes Attack and Special Attack are lowered by 1, and taunts foe for 3 turns.",
 		name: "Disarm",
 		pp: 5,
 		priority: 1,
@@ -229,7 +229,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		volatileStatus: 'taunt',
 		condition: {
-			duration: 2,
+			duration: 3,
 			onStart(target) {
 				if (target.activeTurns && !this.queue.willMove(target)) {
 					this.effectState.duration++;
@@ -949,62 +949,122 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Steel",
 		contestType: "Clever",
 	},
-	poltergust: {
+	nextonesonme: {
 		num: -24,
-		accuracy: 95,
-		basePower: 110,
-		category: "Special",
-		name: "Poltergust",
-		shortDesc: "20% chance to make the target flinch.",
-		pp: 20,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Next One's On Me",
+		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, distance: 1, metronome: 1},
+		flags: {heal: 1, bypasssub: 1, allyanim: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Aeroblast", target);
+			this.add('-anim', source, "Milk Drink", target);
+			this.add('-anim', source, "Ultra Burst", target);
 		},
-		secondary: {
-			chance: 20,
-			volatileStatus: 'flinch',
+		onHit(pokemon) {
+			const success = !!this.heal(this.modify(pokemon.maxhp, 0.25));
+			return pokemon.cureStatus() || success;
 		},
-		target: "any",
-		type: "Flying",
-		contestType: "Cute",
+		boosts: {
+			spe: 1,
+		},
+		heal: [1, 4],
+		secondary: null,
+		target: "allies",
+		type: "Ground",
 	},
-	// Negative Zone has no valid means of use due to using an invalid move as base, not implementing unless this is resolved
-	heavenlysphere: {
+	ashesanddust: {
+		num: -25,
+		accuracy: 100,
+		basePower: 20,
+		category: "Special",
+		name: "Ashes and Dust",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		multihit: [5],
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Hyperspace Fury", target);
+			this.add('-anim', source, "Spacial Rend", target);
+		},
+		onModifyMove(move, pokemon) {
+			if (pokemon.getStat('atk', false, true) > pokemon.getStat('spa', false, true)) move.category = 'Physical';
+		},
+		secondary: null,
+		target: "normal",
+		type: "Steel",
+		zMove: {basePower: 140},
+		maxMove: {basePower: 130},
+		contestType: "Tough",
+	},
+	maintainingtheagenda: {
 		num: -26,
 		accuracy: true,
-		basePower: 200,
-		category: "Special",
-		shortDesc: "If Marle-Parasite: Electric-type",
-		name: "Heavenly Sphere",
-		pp: 1,
+		basePower: 0,
+		category: "Status",
+		shortDesc: "Defog, Healing Wish, next Pokemon's speed raised by 2 stages and accuracy raised by 6 stages.",
+		name: "MAINTAINING THE AGENDA IS OUR TOP PRIORITY",
+		pp: 10,
 		priority: 0,
 		flags: {},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			if (pokemon.species.name === 'Marle-Parasite') {
-				this.add('-anim', source, "Charge", source);
-				this.add('-anim', source, "Geomancy", source);
-				this.add('-anim', source, "Electro Ball", target);
-			} else {
-				this.add('-anim', source, "Calm Mind", source);
-				this.add('-anim', source, "Geomancy", source);
-				this.add('-anim', source, "Aura Sphere", target);
+			this.add('-anim', source, "Clangorous Soul", target);
+			this.add('-anim', source, "Doom Desire", target);
+		},
+		onTryHit(source) {
+			if (!this.canSwitch(source.side)) {
+				this.attrLastMove('[still]');
+				this.add('-fail', source);
+				return this.NOT_FAIL;
 			}
 		},
-		isZ: "marliumz",
+		onHit(target, source, move) {
+			let success = false;
+			if (!target.volatiles['substitute'] || move.infiltrates) success = !!this.boost({evasion: -1});
+			const removeTarget = [
+				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			const removeAll = [
+				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			for (const targetCondition of removeTarget) {
+				if (target.side.removeSideCondition(targetCondition)) {
+					if (!removeAll.includes(targetCondition)) continue;
+					this.add('-sideend', target.side, this.dex.conditions.get(targetCondition).name, '[from] move: Defog', '[of] ' + source);
+					success = true;
+				}
+			}
+			for (const sideCondition of removeAll) {
+				if (source.side.removeSideCondition(sideCondition)) {
+					this.add('-sideend', source.side, this.dex.conditions.get(sideCondition).name, '[from] move: Defog', '[of] ' + source);
+					success = true;
+				}
+			}
+			this.field.clearTerrain();
+			return success;
+		},
+		selfdestruct: "ifHit",
+		slotCondition: 'healingwish',
+		condition: {
+			onSwap(target) {
+				if (!target.fainted && (target.hp < target.maxhp || target.status)) {
+					target.heal(target.maxhp);
+					target.clearStatus();
+					this.boost({spe: 4}, target);
+					this.boost({evasion: 12}, target);
+
+					this.add('-heal', target, target.getHealth, '[from] move: Healing Wish');
+					target.side.removeSlotCondition(target, 'healingwish');
+				}
+			},
+		},
 		secondary: null,
-		onModifyType(move, pokemon) {
-			if (pokemon.species.name === 'Marle-Parasite') {
-				move.type = 'Electric';
-			} else {
-				move.type = 'Flying';
-			}
-		},
 		target: "normal",
-		type: "Flying",
+		type: "Ghost",
 		contestType: "Beautiful",
 	},
 	desiccation: {

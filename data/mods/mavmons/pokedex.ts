@@ -30,7 +30,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 	},
 	benbenmode: {
 		num: 2002,
-		name: "Ben-BenMode",
+		name: "Ben-Ben",
     	baseSpecies: "Ben",
 		forme: "Ben-Mode",
 		types: ["Electric", "Psychic"],
@@ -75,7 +75,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		gender: "F",
 		baseStats: {hp: 92, atk: 70, def: 110, spa: 128, spd: 88, spe: 162},
 		abilities: {0: "Competitive", 1: "Katie Luck", H: "Set-Up Combo"},
-		weightkg: 75,
+		weightkg: 9999,
 	},
 	lewyn: {
 		num: 2007,
@@ -84,6 +84,15 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		gender: "M",
 		baseStats: {hp: 100, atk: 103, def: 103, spa: 163, spd: 103, spe: 83},
 		abilities: {0: "Sniper", 1: "Charging Ego", H: "Laser Pressure"},
+		weightkg: 75,
+	},
+	randeez: {
+		num: 2008,
+		name: "Randeez",
+		types: ["Dragon", "Steel"],
+		gender: "M",
+		baseStats: {hp: 115, atk: 120, def: 100, spa: 120, spd: 100, spe: 125},
+		abilities: {0: "Truant", 1: "Today's Brew", H: "Dragonfucker <3"},
 		weightkg: 75,
 	},
 	wochien: {
