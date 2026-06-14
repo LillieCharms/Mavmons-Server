@@ -31,7 +31,7 @@ export const Formats: FormatList = [
 		desc: `Maverick* Mons, a micrometa designed to use Maverick* Server Fakemons.`,
 		mod: 'mavmons',
 		teambuilderFormat: "National Dex Ubers",
-		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Data Mod', 'Sleep Clause Mod', 'Terastal Clause', '+lgpe', '+unreleased', '! Obtainable Formes',  /* 'Mega Data Mod' */],
+		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Data Mod', 'Sleep Clause Mod', 'Terastal Clause', '+ lgpe', '+ unreleased', '+ unobtainable',  /* 'Mega Data Mod' */],
 		onValidateTeam(team, format) {
 			/**@type {{[k: string]: true}}*/
 			let speciesTable = {};
