@@ -66,7 +66,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			gigaimpact: ["9L1"],
 			playrough: ["9L1"],
 			spiritbreak: ["9L1"],
-			vaccumwave: ["9L1"],
+			vacuumwave: ["9L1"],
 			confusion: ["9L1"],
 			leer: ["9L1"],
 			toxic: ["9L1"],

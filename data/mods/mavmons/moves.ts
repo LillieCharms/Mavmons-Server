@@ -970,7 +970,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		boosts: {
 			spe: 1,
 		},
-		heal: [1, 4],
 		secondary: null,
 		target: "allies",
 		type: "Ground",
@@ -984,7 +983,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
-		multihit: [5],
+		multihit: 5,
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Hyperspace Fury", target);
@@ -1006,7 +1005,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 0,
 		category: "Status",
 		shortDesc: "Defog, Healing Wish, next Pokemon's speed raised by 2 stages and accuracy raised by 6 stages.",
-		name: "MAINTAINING THE AGENDA IS OUR TOP PRIORITY",
+		name: "Maintaining The Agenda",
 		pp: 10,
 		priority: 0,
 		flags: {},

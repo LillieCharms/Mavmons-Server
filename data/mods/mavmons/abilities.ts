@@ -324,7 +324,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	dragonfucker: {
         onStart(pokemon) {
             let Solid = 0;
-                this.add('-activate', pokemon, 'ability: Dragonfucker <3');
+                this.add('-activate', pokemon, 'ability: Dragonfucker');
                 { 
                     for(let i = 0; i < pokemon.side.pokemon.length; i++){
                         if (pokemon.side.pokemon[i].hasType('Dragon')) {
@@ -346,7 +346,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
                 return this.chainModify([powMod[this.effectState.Solid], 4096]);
             }
         },
-        name: "Dragonfucker <3",
+        name: "Dragonfucker",
 		shortDesc: "For each Dragon type Pokemon on the team, raise non-speed Stats by 5%.",
         rating: 4,
         num: -14,
@@ -355,6 +355,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		// Multitype's type-changing itself is implemented in statuses.js
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Today's Brew",
+		shortDesc: "User's secondary typing/forme changes based on Coffee held.",
 		rating: 4,
 		num: -15,
 	},

@@ -5,7 +5,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Water", "Fairy"],
 		gender: "F",
 		baseStats: {hp: 120, atk: 80, def: 100, spa: 130, spd: 107, spe: 143},
-		abilities: {0: "Victory Star", H: "Starstruck Veil"},
+		abilities: {0: "Victory Star", 1: "Solidarity", H: "Starstruck Veil"},
 		weightkg: 70,
 	},
 	diantha: {
@@ -14,7 +14,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fairy"],
 		gender: "F",
 		baseStats: {hp: 105, atk: 80, def: 90, spa: 165, spd: 104, spe: 136},
-		abilities: {0: "Cute Charm", 1: "Caged Demon"},
+		abilities: {0: "Cute Charm", 1: "Caged Demon", H: "Solidarity"}, 
 		weightkg: 50,
 	},
 	ben: {
@@ -92,7 +92,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Dragon", "Steel"],
 		gender: "M",
 		baseStats: {hp: 115, atk: 120, def: 100, spa: 120, spd: 100, spe: 125},
-		abilities: {0: "Truant", 1: "Today's Brew", H: "Dragonfucker <3"},
+		abilities: {0: "Truant", 1: "Today's Brew", H: "Dragonfucker"},
 		weightkg: 75,
 	},
 	wochien: {
