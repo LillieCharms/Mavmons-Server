@@ -212,14 +212,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	cageddemon: {
 		shortDesc: "When the user is hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, and the user slowly perishes. ",
 		onModifyTypePriority: -1,
-			onHit(target, source, move) {
-				if (move && target.getMoveHitData(move).typeMod > 0) {
-					if (!this.boost({spa: 2, atk: 2, def: -2, spd: -2})) 
-					source.addVolatile('perishsong');
-					this.add('-start', source, 'perish3', '[silent]');
-					return null;	
-				}
+			condition: 
+			{
+			onTrapPokemon(pokemon) {
+				pokemon.tryTrap();
 			},
+		},
+		boosts: {
+			atk: 2,
+			spa: 2,
+		},
 		name: "Caged Demon",
 		rating: 4,
 		num: -8,
