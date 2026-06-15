@@ -241,6 +241,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			taunt: ["9L1"],
 			snaptrap: ["9L1"],
 			electricfence: ["9L1"],
+			canopyhunter: ["9L1"],
 			thirdeye: ["9L1"],
 		},
 	},
@@ -308,7 +309,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			willowisp: ["9L1"],
 			nextonesonme: ["9L1"],
 			ashesanddust: ["9L1"],
-			maintainingtheagenda: ["9L1"],
+			recuerdame: ["9L1"],
 
 		},
 	},
