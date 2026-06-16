@@ -930,7 +930,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Giga Drain", target);
 		},
 		damageCallback(pokemon, target) {
-			return this.clampIntRange(target.getUndynamaxedHP() / 20, 7);
+			return this.clampIntRange(target.getUndynamaxedHP() / 7, 20);
 		},
 		secondary: {
 			chance: 100,
@@ -1212,25 +1212,19 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	burstbomb: {
 		num: -32,
 		accuracy: 100,
-		basePower: 25,
-		category: "Physical",
+		basePower: 55,
+		category: "Special",
 		name: "Burst Bomb",
-		shortDesc: "Hits 2 to 5 times. 10% chance to lower the target's Defense by 1 stage.",
+		shortDesc: "Usually hits first.",
 		pp: 10,
-		priority: 0,
+		priority: 1,
 		flags: {protect: 1, mirror: 1, bullet: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Metal Burst", target);
-		},
-		secondary: {
-			chance: 10,
-			boosts: {
-				def: -1,
-			},
+			this.add('-anim', source, "Snipe Shot", target);
 		},
 		target: "normal",
-		type: "Steel",
+		type: "Water",
 		contestType: "Cool",
 	},
 	cargothrow: {
@@ -1274,7 +1268,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "Hits 4 times, each successful hit, damage increases. Super effective on Dark types.",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, bullet: 1, metronome: 1},
 		multihit: 4,
 		multiaccuracy: true,
 		secondary: null,
@@ -1291,13 +1285,13 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			// You can't get here unless the pursuit succeeds
 			if (target.beingCalledBack || target.switchFlag) {
 				this.debug('swoon damage boost');
-				return move.basePower * 3;
+				return move.basePower * 2;
 			}
 			return move.basePower;
 		},
 		category: "Physical",
 		name: "Swoon",
-		shortDesc: "if opponent is attempting to switch out, this attack does 150 and hits before switching.",
+		shortDesc: "if opponent is attempting to switch out, this attack does 100 and hits before switching.",
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
@@ -1370,32 +1364,23 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		contestType: "Beautiful",
 	},
 	godoflightstyrfing: {
-        num: -37,
+        num: -1,
         accuracy: 100,
         basePower: 40,
         category: "Physical",
         name: "God of Lights Tyrfing",
         pp: 5,
-        priority: -3,
+        priority: 0,
         flags: { protect: 1, failmefirst: 1, nosleeptalk: 1, noassist: 1, failcopycat: 1},
-        priorityChargeCallback(pokemon) {
-            pokemon.addVolatile('godoflightstyrfing');
-        },
-        condition: {
-            duration: 1,
-            onStart(pokemon) {
-                this.add('-singleturn', pokemon, 'move: God of Lights Tyrfing');
-            },
-            onTryMove(attacker, defender, move) {
+        onTryMove(attacker, defender, move) {
                 if (attacker.removeVolatile(move.id)) {
                     return;
                 }
                 this.add('-prepare', attacker, move.name);
                 this.boost({ atk: 3, def: 3, spd: 3}, attacker, attacker, move);
-                }
-            },
-        onAfterMove(pokemon) {
-            pokemon.removeVolatile('godoflightstyrfing');
+                },
+        onAfterMove(pokemon, target, move) {
+                    this.damage(Math.round(pokemon.maxhp / 8), pokemon, pokemon, this.dex.conditions.get('Steel Beam'), true);
         },
         self: {
             boosts: {

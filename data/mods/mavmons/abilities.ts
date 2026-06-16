@@ -129,9 +129,9 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onResidualOrder: 29,
 		onResidual(pokemon) {
 			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.species.id === 'ben-benmode' || pokemon.hp > pokemon.maxhp / 2) return;
+			if (pokemon.species.id === 'benbenmode' || pokemon.hp > pokemon.maxhp / 2) return;
 			this.add('-activate', pokemon, 'ability: Ben Mode');
-			pokemon.formeChange('Ben-BenMode', this.effect, true);
+			pokemon.formeChange('benbenmode', this.effect, true);
 		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
@@ -393,13 +393,14 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onStart(pokemon) {
 			if (pokemon.m.guardBroken === undefined) {
 				pokemon.m.guardBroken = false;
-				this.field.addPseudoWeather('darkness');
+				
 			}
+			this.field.addPseudoWeather('darkness');
 		},
 
 		onSourceModifyDamage(damage, source, target, move) {
 			if (!target.m.guardBroken) {
-				return this.chainModify(0.5);
+				return this.chainModify(0.75);
 			}
 		},
 
@@ -415,31 +416,27 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {},
 		name: "Yet Darker",
-		shortDesc: "Sets Darkness upon switch in, half damage from attacks until Super Effective hit.",
+		shortDesc: "Sets Darkness upon switch in, 3/4 damage from attacks until Super Effective hit.",
 		rating: 4,
 		num: -17,
 	},
-	perplexinggaze: {
-		onModifyAtkPriority: 5,
-		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Psychic') {
-				this.debug('Perplexing Gaze boost');
-				return this.chainModify(1.5);
-			}
-		},
-		onModifySpAPriority: 5,
-		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Psychic') {
-				this.debug('Perplexing Gaze boost');
-				return this.chainModify(1.5);
-			}
-		},
-		flags: {},
-		name: "Perplexing Gaze",
-		shortDesc: "This Pokemon's Psychic moves have 1.5x power.",
-		rating: 3.5,
-		num: -19,
-	},
+	wecantaffordnottotry: {
+        onPrepareHit(source, target, move) {
+            if (this.randomChance(21, 100)) {
+            move.multihit = 2;
+            }
+        },
+        onSourceModifyAccuracyPriority: -1,
+            onSourceModifyAccuracy(accuracy, target, source, move) {
+                if (typeof accuracy === 'number') {
+                    return this.chainModify([79, 100]);
+                }
+        },
+        flags: {},
+        name: "We Cant Afford Not To Try",
+        rating: 4.5,
+        num: -1,
+    },
 	rainbowpuppeteer: {
 		onModifyMove(move) {
 			move.forceSTAB = true;

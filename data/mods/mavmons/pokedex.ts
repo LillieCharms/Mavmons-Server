@@ -123,6 +123,15 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "Sharpness", 1: "Yet Darker"},
 		weightkg: 75,
 	},
+	ryuko: {
+		num: 2013,
+		name: "Ryuko Matoi",
+		types: ["Fire"],
+		gender: "F",
+		baseStats: {hp: 74, atk: 94, def: 72, spa: 42, spd: 78, spe: 110},
+		abilities: {0: "Life Fiber Syncronize"},
+		weightkg: 75,
+	},
 	wochien: {
 		num: 1001,
 		name: "Wo-Chien",

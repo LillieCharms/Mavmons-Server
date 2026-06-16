@@ -14,7 +14,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		},
 		onBasePower(basePower, attacker, defender, move) {
 			if (move.type === 'Dark') {
-				return this.chainModify(1.5);
+				return this.chainModify(1.3);
 			}
 		},
 	},
