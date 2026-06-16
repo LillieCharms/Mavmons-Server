@@ -368,6 +368,10 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.debug('Multi-Faceted boost');
 				return this.chainModify(1.5);
 			}
+			if (move.type === 'Psychic') {
+				this.debug('Multi-Faceted boost');
+				return this.chainModify(1.5);
+			}
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender, move) {
@@ -375,16 +379,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.debug('Multi-Faceted boost');
 				return this.chainModify(1.5);
 			}
-		},
-		onModifyAtkPriority: 5,
-		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'psychic') {
-				this.debug('Multi-Faceted boost');
-				return this.chainModify(1.5);
-			}
-		},
-		onModifySpAPriority: 5,
-		onModifySpA(atk, attacker, defender, move) {
 			if (move.type === 'Psychic') {
 				this.debug('Multi-Faceted boost');
 				return this.chainModify(1.5);
