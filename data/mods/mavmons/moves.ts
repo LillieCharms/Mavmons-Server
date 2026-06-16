@@ -1209,12 +1209,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "normal",
 		type: "Fighting",
 	},
-	bulletburst: {
+	burstbomb: {
 		num: -32,
-		accuracy: 85,
+		accuracy: 100,
 		basePower: 25,
 		category: "Physical",
-		name: "Bullet Burst",
+		name: "Burst Bomb",
 		shortDesc: "Hits 2 to 5 times. 10% chance to lower the target's Defense by 1 stage.",
 		pp: 10,
 		priority: 0,
@@ -1223,7 +1223,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Metal Burst", target);
 		},
-		multihit: [2, 5],
 		secondary: {
 			chance: 10,
 			boosts: {
@@ -1370,35 +1369,46 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Dark",
 		contestType: "Beautiful",
 	},
-	breechburst: {
-		num: -37,
-		accuracy: 95,
-		basePower: 30,
-		category: "Physical",
-		name: "Breech Burst",
-		shortDesc: "Hits 3 times. 10% chance to give user -1 Spe, +1 Atk, and +1 Def.",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Scale Shot", target);
-		},
-		multihit: 3,
-		secondary: {
-			chance: 10,
-			self: {
-				boosts: {
-					atk: 1,
-					def: 1,
-					spd: -1,
-				},
-			},
-		},
-		target: "normal",
-		type: "Dragon",
-		contestType: "Beautiful",
-	},
+	godoflightstyrfing: {
+        num: -37,
+        accuracy: 100,
+        basePower: 40,
+        category: "Physical",
+        name: "God of Lights Tyrfing",
+        pp: 5,
+        flags: { protect: 1, failmefirst: 1, nosleeptalk: 1, noassist: 1, failcopycat: 1},
+        priorityChargeCallback(pokemon) {
+            pokemon.addVolatile('godoflightstyrfing');
+        },
+        condition: {
+            duration: 1,
+            onStart(pokemon) {
+                this.add('-singleturn', pokemon, 'move: God of Lights Tyrfing');
+            },
+            onTryMove(attacker, defender, move) {
+                if (attacker.removeVolatile(move.id)) {
+                    return;
+                }
+                this.add('-prepare', attacker, move.name);
+                this.boost({ atk: 3, def: 3, spd: 3}, attacker, attacker, move);
+                }
+            },
+        },
+        onAfterMove(pokemon) {
+            pokemon.removeVolatile('godoflightstyrfing');
+        },
+        self: {
+            boosts: {
+                atk: -3,
+                def: -3,
+				spd: -3,
+            },
+        },
+        secondary: null,
+        target: "normal",
+        type: "Steel",
+        contestType: "Tough",
+    },
 	godslayersword: {
 		num: -38,
 		accuracy: 100,
