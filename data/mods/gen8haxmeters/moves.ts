@@ -49,11 +49,36 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			},
 			onBeforeMovePriority: 2,
 			onBeforeMove(pokemon, target, move) {
-				this.add('-activate', pokemon, 'move: Attract', '[of] ' + this.effectState.source);
+				//this.add('-activate', pokemon, 'move: Attract', '[of] ' + this.effectState.source);
 			},
 			onEnd(pokemon) {
 				this.add('-end', pokemon, 'Attract', '[silent]');
 			},
 		},
 	},
+	ficklebeam: {
+		inherit: true,
+		onBasePower(basePower, pokemon) {
+			this.add('-message', `(Fickle Beam Double Damage: 30)`);
+			pokemon.side.addEffect(30);
+			if (pokemon.side.effect >= 100) {
+				pokemon.side.subtractEffect(100);		
+				this.attrLastMove('[anim] Fickle Beam All Out');
+				this.add('-activate', pokemon, 'move: Fickle Beam');
+				return this.chainModify(2);
+			}					
+		},
+	},
+	rest: {
+		inherit: true,
+		onHit(target, source, move) {
+			const result = target.setStatus('slp', source, move);
+			if (!result) return result;
+			target.statusState.time = 3;
+			target.statusState.startTime = 3;
+			this.heal(target.maxhp); // Aesthetic only as the healing happens after you fall asleep in-game
+			target.sleepFromRest = true;
+			target.sleepTurns = 0;
+		},
+	}
 };

@@ -14,67 +14,84 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 	brambleghastmega3: {},
 	brambleghastmega4: {},
 	brambleghastmegatangled: {},
-	farigirafmega: {},
-	farigirafmeganocturnal: {},
-	// manual tiering for Hisui mons
-	growlithehisui: {
-		tier: "Heat!",
+	perrserkermega: {},
+	perrserkermegabusted: {},
+	miniormega: {},
+	miniormegameteor: {},
+	// Champions
+	clefablemega: {
+		isNonstandard: null,
 	},
-	arcaninehisui: {
-		tier: "Heat!",
+	victreebelmega: {
+		isNonstandard: null,
 	},
-	voltorbhisui: {
-		tier: "Heat!",
+	starmiemega: {
+		isNonstandard: null,
 	},
-	electrodehisui: {
-		tier: "Heat!",
+	dragonitemega: {
+		isNonstandard: null,
 	},
-	typhlosionhisui: {
-		tier: "Heat!",
+	meganiummega: {
+		isNonstandard: null,
 	},
-	sneaselhisui: {
-		tier: "Heat!",
+	feraligatrmega: {
+		isNonstandard: null,
 	},
-	samurotthisui: {
-		tier: "Heat!",
+	skarmorymega: {
+		isNonstandard: null,
 	},
-	braviaryhisui: {
-		tier: "Heat!",
+	chimechomega: {
+		isNonstandard: null,
 	},
-	sliggoohisui: {
-		tier: "Heat!",
+	froslassmega: {
+		isNonstandard: null,
 	},
-	goodrahisui: {
-		tier: "Heat!",
+	emboarmega: {
+		isNonstandard: null,
 	},
-	decidueyehisui: {
-		tier: "Heat!",
+	excadrillmega: {
+		isNonstandard: null,
 	},
-	wyrdeer: {
-		tier: "Heat!",
+	chandeluremega: {
+		isNonstandard: null,
 	},
-	kleavor: {
-		tier: "Heat!",
+	golurkmega: {
+		isNonstandard: null,
 	},
-	ursaluna: {
-		tier: "Heat!",
+	chesnaughtmega: {
+		isNonstandard: null,
 	},
-	basculegion: {
-		tier: "Heat!",
+	delphoxmega: {
+		isNonstandard: null,
 	},
-	basculegionf: {
-		tier: "Heat!",
+	greninjamega: {
+		isNonstandard: null,
 	},
-	sneasler: {
-		tier: "Heat!",
+	floetteeternal: {
+		isNonstandard: null,
 	},
-	overqwil: {
-		tier: "Heat!",
+	floettemega: {
+		isNonstandard: null,
 	},
-	enamorus: {
-		tier: "Heat!",
+	/**meowsticmmega: {
+		isNonstandard: null,
 	},
-	enamorustherian: {
-		tier: "Heat!",
+	meowsticfmega: {
+		isNonstandard: null,
+	},*/
+	hawluchamega: {
+		isNonstandard: null,
+	},
+	crabominablemega: {
+		isNonstandard: null,
+	},
+	drampamega: {
+		isNonstandard: null,
+	},
+	scovillainmega: {
+		isNonstandard: null,
+	},
+	glimmoramega: {
+		isNonstandard: null,
 	},
 };

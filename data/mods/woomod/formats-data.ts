@@ -1,122 +1,195 @@
 export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 	krokorok: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	qwilfishhisui: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	snivy: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	dragonair: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	wimpod: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	toxelhisui: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	tadbulb: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	pikipek: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	chingling: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	baltoygearrider: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	baltoywaterrider: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	charmander: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	nymble: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	vanillite: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	spheal: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	anorith: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
-	},
-	ditto: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	jigglypuff: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	bronzor: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	wiglett: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	gible: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	vulpix: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	shuppet: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	golett: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	elgyem: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	farfetchd: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	amaura: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	wailmer: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	pikachu: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 	morelull: {
-		tier: "woomod",
-		doublesTier: "dwoomod",
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	ditto: {
+		tier: "woober",
+		doublesTier: "dwoober",
+	},
+	// Slate 2
+	amauramega: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	pikachumega: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	dragonairmega: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	houndour: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	koffing: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	maushold: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	hakamoo: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	kartana: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	ledyba: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	wooperpaldea: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	hoothoot: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	rabootsinnoh: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	honedge: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	roselia: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	skiploom: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	spritzee: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	helioptile: {
+		tier: "woo",
+		doublesTier: "dwoo",
+	},
+	piplup: {
+		tier: "woo",
+		doublesTier: "dwoo",
 	},
 };

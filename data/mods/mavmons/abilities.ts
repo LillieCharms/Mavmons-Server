@@ -361,29 +361,63 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -15,
 	},
-	jellydessertqueen: {
-		onResidual(pokemon) {
-			// this.add('-heal', pokemon, pokemon.getHealth, '[from] ability: Jelly Dessert Queen');
-			this.heal(pokemon.baseMaxhp / 16);
+	multifaceted: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Fighting') {
+				this.debug('Multi-Faceted boost');
+				return this.chainModify(1.5);
+			}
 		},
-		name: "Jelly Dessert Queen",
-		shortDesc: "This Pokemon recovers 1/16 max HP at the end of each turn.",
-		rating: 4,
-		num: -17,
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Fighting') {
+				this.debug('Multi-Faceted boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'psychic') {
+				this.debug('Multi-Faceted boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Psychic') {
+				this.debug('Multi-Faceted boost');
+				return this.chainModify(1.5);
+			}
+		},
+		flags: {},
+		name: "Multi-Faceted",
+		rating: 3.5,
+		num: -16,
 	},
-	binarysoul: {
-		onResidualOrder: 29,
-		onResidual(pokemon) {
-			if (pokemon.species.baseSpecies !== 'Twinrova' || pokemon.terastallized) return;
-			const targetForme = pokemon.species.name === 'Twinrova' ? 'Twinrova-Fire' : 'Twinrova';
-			pokemon.formeChange(targetForme);
+	multiscale: {
+		onSourceModifyDamage(damage, source, target, move) {
+			if (target.hp >= target.maxhp) {
+				this.debug('Multiscale weaken');
+				return this.chainModify(0.5);
+			}
 		},
-		// I have no clue what's going on here, all I know is that this is how Morpeko was coded
-		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, notransform: 1},
-		name: "Binary Soul",
-		shortDesc: "If Twinrova, it changes between Fire and Ice at the end of each turn.",
-		rating: 1,
-		num: -18,
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.type === 'Fighting' && target.getMoveHitData(move).typeMod > 0) {
+				const hitSub = target.volatiles['substitute'] && !move.flags['bypasssub'] && !(move.infiltrates && this.gen >= 6);
+				if (hitSub) return;
+
+				if (target.eatItem()) {
+					this.debug('-50% reduction');
+					this.add('-enditem', target, this.effect, '[weaken]');
+					return this.chainModify(0.5);
+				}
+			}
+		},
+		flags: {breakable: 1},
+		name: "Multiscale",
+		rating: 3.5,
+		num: 136,
 	},
 	perplexinggaze: {
 		onModifyAtkPriority: 5,

@@ -3,6 +3,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		inherit: true,
 		isNonstandard: null,
 	},
+	dragonrage: {
+		inherit: true,
+		isNonstandard: null,
+	},
 	boneclub: {
 		inherit: true,
 		isNonstandard: null,
@@ -12,6 +16,22 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		isNonstandard: null,
 	},
 	blazingtorque: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	camouflage: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	synchronoise: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	miracleeye: {
+		inherit: true,
+		isNonstandard: null,
+	},
+	gearup: {
 		inherit: true,
 		isNonstandard: null,
 	},

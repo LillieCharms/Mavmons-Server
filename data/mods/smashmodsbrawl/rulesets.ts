@@ -60,4 +60,34 @@ export const Rulesets: import('../../../sim/dex-formats').ModdedFormatDataTable 
 			pokemon.switchedIn = true;
 		},
 	},
+	terastalclause: {
+		effectType: 'Rule',
+		name: 'Terastal Clause',
+		desc: "Only Pok&eacute;mon from Iron Fist, TeraForming, and TeraMax can Terastallize",
+		onBegin() {
+			for (const pokemon of this.getAllPokemon()) {
+			  if (pokemon.species.baseSpecies !== 'Centiskorch' &&
+					pokemon.species.baseSpecies !== 'Zapdos' &&
+					pokemon.species.baseSpecies !== 'Big Crammer' &&
+				  	pokemon.species.baseSpecies !== 'Houndoom' &&
+				  	pokemon.species.baseSpecies !== 'Gyarados' &&
+				  	pokemon.species.baseSpecies !== 'Iron Leaves' &&
+					pokemon.species.baseSpecies !== 'Clodsire' &&
+					pokemon.species.baseSpecies !== 'Chesnaught' &&
+				  	pokemon.species.baseSpecies !== 'Garbodor') {
+				  pokemon.canTerastallize = null;
+				}
+			}
+			this.add('rule', 'Terastal Clause: Only Pokemon from Tera-related mods can Terastallize');
+		},
+		onSwitchIn(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies === 'Iron Leaves') {
+	  			if (pokemon.side.sideConditions['teraused'] || pokemon.hasItem('grassgem')) {
+	  				pokemon.canTerastallize = null;
+	  			} else {
+	        		pokemon.canTerastallize = this.actions.canTerastallize(pokemon);
+	  			}
+      	}
+		},
+	},
 };

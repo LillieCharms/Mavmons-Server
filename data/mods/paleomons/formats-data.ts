@@ -211,6 +211,14 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
+	timburrconch: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
+	gurdurrconch: {
+		tier: "Paleomons NFE",
+		doublesTier: "Daleomons",
+	},
 	conkeldurrconch: {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
@@ -239,12 +247,28 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
+	mudkipancient: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
+	marshtompancient: {
+		tier: "Paleomons NFE",
+		doublesTier: "Daleomons",
+	},
 	swampertancient: {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
+	tadbulbtwisted: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
 	bellibolttwisted: {
 		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	salanditancient: {
+		tier: "Paleomons LC",
 		doublesTier: "Daleomons",
 	},
 	salazzleancient: {
@@ -259,9 +283,96 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
+	fernodon: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
 	carriguana: {
 		tier: "Paleomons",
 		doublesTier: "Daleomons",
 	},
-
+	nymphamane: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	combysa: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	magnestone: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	nochummer: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	chewtleabyss: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
+	drednawabyss: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	flittlenasir: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
+	espathranasir: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	rhyhorngenerator: {
+		tier: "Paleomons LC",
+		doublesTier: "Daleomons",
+	},
+	rhydongenerator: {
+		tier: "Paleomons NFE",
+		doublesTier: "Daleomons",
+	},
+	rhyperiorgenerator: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	woolefant: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	felice: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	letherium: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	chimeragon: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	vulcaneast: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	stratusaur: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	thundurusestival: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	tornadushibernal: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	landorushourglass: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
+	enamorusgenbu: {
+		tier: "Paleomons",
+		doublesTier: "Daleomons",
+	},
 };

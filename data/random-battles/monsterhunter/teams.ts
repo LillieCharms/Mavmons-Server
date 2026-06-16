@@ -1150,6 +1150,7 @@ export class RandomTeams {
 		if (species.id === 'pikachu') return 'Light Ball';
 		if (species.id === 'regieleki') return 'Magnet';
 		if (species.id === 'yiankutku' && moves.has('facade') || species.id === 'bluekutku' && moves.has('facade')) return 'Frost Orb';
+		if (species.id === 'xenojiiva' && ability === 'Quark Drive') return 'Booster Energy';
 		if (species.id === 'smeargle') return 'Focus Sash';
 		if (
 			species.id === 'froslass' || moves.has('populationbomb') ||
@@ -1195,15 +1196,18 @@ export class RandomTeams {
 		if ((ability === 'Guts' || moves.has('facade')) && !moves.has('sleeptalk')) {
 			return (types.includes('Fire') || ability === 'Toxic Boost') ? 'Toxic Orb' : 'Flame Orb';
 		}
-		if (ability === 'Magic Guard' || (ability === 'Sheer Force' && counter.get('sheerforce'))) return 'Life Orb';
+		if (ability === 'Magic Guard' || ability === 'Fervent Scales' || (ability === 'Sheer Force' && counter.get('sheerforce'))) return 'Life Orb';
 		if (ability === 'Anger Shell') return this.sample(['Rindo Berry', 'Passho Berry', 'Scope Lens', 'Sitrus Berry']);
 		if (moves.has('dragondance') && isDoubles) return 'Clear Amulet';
 		if (counter.get('skilllink') && ability !== 'Skill Link' && species.id !== 'breloom') return 'Loaded Dice';
 		if (ability === 'Unburden') {
 			return (moves.has('closecombat') || moves.has('leafstorm')) ? 'White Herb' : 'Sitrus Berry';
 		}
-		if (moves.has('devour') && ability !== 'Unburden') return 'Liechi Berry';
+		if (moves.has('devour') && ability === 'Unburden') return 'Liechi Berry';
+		if (moves.has('virulentvolley')) return 'Loaded Dice';
 		if (moves.has('shellsmash') && ability !== 'Weak Armor') return 'White Herb';
+		if (moves.has('magnalance') && ability === 'Reactive Core') return 'Flame Orb';
+		if (moves.has('dragondance') && ability === 'Reactive Core') return 'Frost Orb';
 		if (moves.has('geomancy') || moves.has('meteorbeam') || (moves.has('electroshot') && !teamDetails.rain)) return 'Power Herb';
 		if (moves.has('acrobatics') && ability !== 'Protosynthesis') return '';
 		if (moves.has('auroraveil') || moves.has('lightscreen') && moves.has('reflect')) return 'Light Clay';
@@ -1388,7 +1392,8 @@ export class RandomTeams {
 		return 'Leftovers';
 	}
 
-	getLevel(
+	
+		getLevel(
 		species: Species,
 		isDoubles: boolean,
 	): number {
@@ -1413,6 +1418,7 @@ export class RandomTeams {
 		return tierScale[tier] || 80;
 	}
 
+	
 	getForme(species: Species): string {
 		if (typeof species.battleOnly === 'string') {
 			// Only change the forme. The species has custom moves, and may have different typing and requirements.

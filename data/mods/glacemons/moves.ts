@@ -165,6 +165,16 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 			this.add('-anim', source, "Revelation Dance", source);
 			this.add('-anim', source, "Psychic Noise", target);
 		},
+		basePowerCallback(pokemon, target, move) {
+			const item = pokemon.getItem();
+			if(item.id === 'protector') {
+				return move.basePower * 2;
+			}
+			if (item.id === 'assaultvest') {
+				return move.basePower * 1.5;
+			}
+			return move.basePower;
+		},
 		overrideOffensiveStat: 'spd',
 		secondary: null,
 		target: "normal",
@@ -519,6 +529,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 	},
 	spectralthief: {
 		inherit: true,
+		isViable: true,
 		basePower: 60,
 		rating: 4,
 		flags: { contact: 1, protect: 1, mirror: 1 },
@@ -979,7 +990,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 	wildboltstorm: {
 		inherit: true,
 		basePower: 110,
-		category: "Physical",
+		category: "Special",
 		onModifyMove(move, pokemon, target) {
 			if (target && ['raindance', 'primordialsea', 'snowscape', 'hail'].includes(target.effectiveWeather())) {
 				move.accuracy = true;
@@ -1068,15 +1079,8 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 		priority: 0,
 		multihit: 2,
 		flags: { contact: 1, protect: 1, mirror: 1, metronome: 1 },
-		self: {
-			boosts: {
-				atk: -1,
-			},
-		},
-		onModifyMove(move, pokemon, defender) {
-			if (!defender.activeTurns) {
-				move.self.boosts = {atk: 0};
-			}
+		onAfterMoveSecondarySelf(pokemon, target, move) {
+			if (target.activeTurns) this.boost({atk: -1}, pokemon, pokemon, move);
 		},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
@@ -1323,7 +1327,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 			duration: 5,
 			durationCallback(target, source, effect) {
 				if (effect?.name === "Millstone") {
-					return 2;
+					return 3;
 				}
 				return 5;
 			},
@@ -1418,6 +1422,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 	// Slate 7
 	triplekick: {
 		inherit: true,
+		isViable: true,
 		basePower: 20,
 		basePowerCallback(pokemon, target, move) {
 			return 20 * move.hit;
@@ -1583,6 +1588,13 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 		inherit: true,
 		pp: 5,
 		onTryImmunity(target, source) {},
+		onModifyType(move, pokemon) {
+			const types = pokemon.getTypes();
+			let type = types[0];
+			if (type === 'Bird') type = '???';
+			if (type === '???' && types[1]) type = types[1];
+			move.type = type;
+		},
 		onHit(target, source) {
 			const types = target.getTypes();
 			var type1 = types[0];
@@ -1732,7 +1744,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 	dragonrend: {
 		num: -27,
 		accuracy: 100,
-		basePower: 85,
+		basePower: 70,
 		category: "Physical",
 		name: "Dragon Rend",
 		pp: 15,
@@ -1740,8 +1752,10 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, bite: 1},
 		secondaries: [
 			{
-				chance: 30,
-				volatileStatus: 'flinch',
+				chance: 100,
+				boosts: {
+					def: -1,
+				},
 			},
 		],
 		onPrepareHit(target, source, move) {
@@ -1751,7 +1765,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 		target: "normal",
 		type: "Dragon",
 		contestType: "Cool",
-		shortDesc: "30% chance to flinch the target.",
+		shortDesc: "100% chance to lower the target's Defense by 1.",
 	},
 	imprison: { // WIP
 		inherit: true,
@@ -1770,7 +1784,7 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 			onFoeBeforeMovePriority: 4,
 			onFoeBeforeMove(attacker, defender, move, target) {
 				if (move.id !== 'struggle' && this.effectState.source.hasMove(move.id) && !move.isZ && !move.isMax) {
-					this.damage(Math.round(target.maxhp / 4), attacker, defender);
+					this.damage(Math.round(attacker.maxhp / 4), attacker, defender);
 					this.add('cant', attacker, 'move: Imprison', move);
 					return false;
 				}
@@ -1786,23 +1800,33 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 		category: "Physical",
 		name: "Powder Bomb",
 		pp: 10,
-		priority: 2,
+		priority: 0,
 		flags: {noassist: 1, failcopycat: 1, powder: 1, bullet: 1},
 		volatileStatus: 'powderbomb',
 		condition: {
-			onTryHit(target, source, move) {
-				if (target !== source && move.type === 'Fire') {
-					move.accuracy = true;
-					this.damage(Math.round(target.maxhp / 4), source, target);
-					return null;
-				}
+			noCopy: true,
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Powder Bomb');
+			},
+			onResidualOrder: 13,
+			onResidual(pokemon) {
+				this.damage(pokemon.baseMaxhp /  8 * ((pokemon.hasType(['Fire']) ? 1 : 0)));
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'Powder Bomb');
 			},
 		},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Rage Powder", target);
 		},
-		secondary: null,
+		onAfterHit(target, source) {
+			this.actions.useMove("Powder", source);
+		},
+		secondary: {
+			chance: 100,
+			volatileStatus: 'powderbomb',
+		},
 		target: "normal",
 		type: "Bug",
 		zMove: {effect: 'clearnegativeboost'},
@@ -2006,6 +2030,8 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 			chance: 10,
 			volatileStatus: 'confusion',
 		},
+		isViable: true,
+		flags: {contact: 0},
 		type: "Rock",
 		desc: "Has a 10% chance to confuse the target.",
 		shortDesc: "10% chance to confuse the target.",
@@ -2013,31 +2039,28 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 	bonfire: {
 		num: -36,
 		accuracy: 100,
-		basePower: 60,
+		basePower: 65,
 		category: 'Special',
 		name: 'Bonfire',
 		pp: 10,
 		priority: 0,
-		shortDesc: "+20 BP for each ally with this move.",
+		shortDesc: "Physical if user's Atk > SpA. 15 BP for each ally with this move.",
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		onModifyMove(move, pokemon) {
 			if (pokemon.getStat('atk', false, true) > pokemon.getStat('spa', false, true)) {
 				move.category = 'Physical';
 			}
 		},
-		basePowerCallback(basePower, attacker, defender, move) {
-			let bonfireBP = 40
+		basePowerCallback(attacker, defender, move) {
+			let bonfireBP = 50;
 			for (const ally of attacker.side.pokemon) {
 				for (const moveSlot of ally.moveSlots) {
 					if (moveSlot.id === 'bonfire') {
-						bonfireBP += 20;
+						bonfireBP += 15;
 					}
 				}
 			}
-
-			basePower = bonfireBP
-			
-			return basePower
+			return bonfireBP;
 		},
 		onPrepareHit(target, source) {
 			this.attrLastMove('[still]');
@@ -2058,8 +2081,8 @@ export const Moves: { [moveid: string]: ModdedMoveData; } = {
 		flags: {protect: 1, mirror: 1, metronome: 1, bullet: 1},
 		secondary: null,
 		target: "normal",
-		onAfterHit(pokemon) {
-			pokemon.useMove("Ki Blast 2", pokemon);
+		onAfterHit(target, source) {
+			this.actions.useMove("Ki Blast 2", source);
 		},
 		type: "Fighting",
 		shortDesc: "Damages user as much as it does to target.",

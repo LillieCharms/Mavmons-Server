@@ -388,40 +388,13 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 
 	farigiraf: {
 		inherit: true,
-		otherFormes: [
-			"Farigiraf-Mega", "Farigiraf-Mega-Nocturnal"
-		],
-		formeOrder: [
-			"Farigiraf", "Farigiraf-Mega", "Farigiraf-Mega-Nocturnal"
-		],
+		mega: "farigirafmega",
+		megaName: "Farigiraf-Mega",
+		megaType: ["Normal", "Psychic"],
+		megaAbility: {0: "Twin Heart"},
+		megaStats: {hp: 120, atk: 100, def: 100, spa: 140, spd: 100, spe: 60},
+		megaStone: "Farigirafite",
 		movepoolAdditions: ["superpower"],
-	},
-	farigirafmega: {
-		num: 981,
-		name: "Farigiraf-Mega",
-		baseSpecies: "Farigiraf",
-		forme: "Mega",
-		types: ["Normal", "Psychic"],
-		baseStats: {hp: 120, atk: 100, def: 100, spa: 140, spd: 100, spe: 60},
-		abilities: {0: "Twin Heart"},
-		heightm: 1.8,
-		weightkg: 50,
-		eggGroups: ["Field"],
-		megaCreator: "Lysion",
-	},
-	farigirafmeganocturnal: {
-		num: 981,
-		name: "Farigiraf-Mega-Nocturnal",
-		baseSpecies: "Farigiraf",
-		forme: "Mega-Nocturnal",
-		types: ["Normal", "Dark"],
-		baseStats: {hp: 120, atk: 100, def: 100, spa: 140, spd: 100, spe: 60},
-		abilities: {0: "Twin Heart"},
-		heightm: 1.8,
-		weightkg: 50,
-		eggGroups: ["Field"],
-		requiredAbility: "Twin Heart",
-		battleOnly: "Farigiraf-Mega",
 		megaCreator: "Lysion",
 	},
 
@@ -461,11 +434,11 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 
 	golurk: {
 		inherit: true,
-		mega: "golurkmega",
-		megaName: "Golurk-Mega",
+		mega: "golurkmegay",
+		megaName: "Golurk-Mega-Y",
 		megaAbility: {0: "Vengeful"},
 		megaStats: {hp: 89, atk: 144, def: 120, spa: 55, spd: 110, spe: 65},
-		megaStone: "Golurkite",
+		megaStone: "Golurkite-Y",
 		megaCreator: "okispokis",
 	},
 
@@ -473,11 +446,11 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 
 	emboar: {
 		inherit: true,
-		mega: "emboarmega",
-		megaName: "Emboar-Mega",
+		mega: "emboarmegay",
+		megaName: "Emboar-Mega-Y",
 		megaAbility: {0: "Inner Fortitude"},
 		megaStats: {hp: 110, atk: 143, def: 80, spa: 115, spd: 115, spe: 65},
-		megaStone: "Emboarite",
+		megaStone: "Emboarite-Y",
 		megaCreator: "War Incarnate",
 		megaWeight: 490,
 	},
@@ -662,19 +635,47 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		megaCreator: "War Incarnate",
 	},
 
+	//ihateformsihateformsihateforms
 	maushold: {
 		inherit: true,
-		mega: "mausholdmega",
-		megaName: "Maushold-Mega",
-		megaType: ["Normal", "Fairy"],
-		megaAbility: {0: "Prankster"},
-		megaStats: {hp: 74, atk: 95, def: 120, spa: 65, spd: 110, spe: 101},
-		megaStone: "Mausholdinite",
+		otherFormes: ["Maushold-Four", "Maushold-Mega", "Maushold-Four-Mega"],
+		formeOrder: ["Maushold", "Maushold-Four", "Maushold-Mega", "Maushold-Four-Mega"],
 		movepoolAdditions: ["moonlight"],
-		megaCreator: "LordThemberchaud",
+	},
+	mausholdmega: {
+		num: 925,
+		name: "Maushold-Mega",
+		baseSpecies: "Maushold",
+		forme: "Mega",
+		types: ["Normal", "Fairy"],
+		baseStats: {hp: 74, atk: 95, def: 120, spa: 65, spd: 110, spe: 101},
+		abilities: {0: "Prankster"},
+		heightm: 0.3,
+		weightkg: 2.3,
+		color: "White",
+		eggGroups: ["Field", "Fairy"],
+		requiredItem: "Mausholdinite",
+		battleOnly: "Maushold",
+		creator: "LordThemberchaud",
+	},
+	mausholdfourmega: {
+		num: 925,
+		name: "Maushold-Four-Mega",
+		baseSpecies: "Maushold",
+		forme: "Four-Mega",
+		types: ["Normal", "Fairy"],
+		baseStats: {hp: 74, atk: 95, def: 120, spa: 65, spd: 110, spe: 101},
+		abilities: {0: "Prankster"},
+		heightm: 0.3,
+		weightkg: 2.3,
+		color: "White",
+		eggGroups: ["Field", "Fairy"],
+		requiredItem: "Mausholdinite",
+		battleOnly: "Maushold-Four",
+		creator: "LordThemberchaud",
 	},
 
-	// slate 14
+	// slate 15
 
 	cloyster: {
 		inherit: true,
@@ -744,5 +745,38 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		megaStone: "Rabscanite",
 		movepoolAdditions: ["teleport"],
 		megaCreator: "BlueRay & Lysion",
+	},
+
+	// slate 16
+
+	kingdra: {
+		inherit: true,
+		mega: "kingdramega",
+		megaName: "Kingdra-Mega",
+		megaAbility: {0: "Super Luck"},
+		megaStats: {hp: 75, atk: 115, def: 105, spa: 115, spd: 105, spe: 125},
+		megaStone: "Kingdranite",
+		megaCreator: "PalpitoadChamp",
+	},
+
+	sandaconda: {
+		inherit: true,
+		mega: "sandacondamega",
+		megaName: "Sandaconda-Mega",
+		megaAbility: {0: "Dust Devil"},
+		megaStats: {hp: 72, atk: 142, def: 160, spa: 65, spd: 100, spe: 71},
+		megaStone: "Sandacondanite",
+		movepoolAdditions: ["wideguard"],
+		megaCreator: "War Incarnate",
+	},
+
+	screamtail: {
+		inherit: true,
+		mega: "screamtailmega",
+		megaName: "Scream Tail-Mega",
+		megaAbility: {0: "Roaring Scream"},
+		megaStats: {hp: 115, atk: 75, def: 119, spa: 85, spd: 135, spe: 141},
+		megaStone: "Screamtailite",
+		megaCreator: "BlueRay",
 	},
 };

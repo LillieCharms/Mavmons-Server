@@ -139,7 +139,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				if (result === 0) {
 					target.trySetStatus('brn', source);
 				} else if (result === 1) {
-					this.boost({spe: -1}, target, source);
+					this.boost({spd: -1}, target, source);
 				} else {
 					target.addVolatile('confusion', source);
 				}
@@ -570,7 +570,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Fighting') return 1;
 		},
-		critRatio: 2,
 		infiltrates: true,
 		ignoreEvasion: true,
 		ignoreDefensive: true,
@@ -1181,50 +1180,34 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Psychic",
 		contestType: "Cool",
 	},
-	artfulsacrifice: {
+	flameofideals: {
 		num: -30,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 130,
 		category: "Physical",
-		name: "Artful Sacrifice",
-		shortDesc: "Special if user's SpA is higher. 30% chance to burn the target.",
-		pp: 5,
+		name: "Flame of Ideals",
+		pp: 1,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		onPrepareHit(target, source, move) {
-		  this.attrLastMove('[still]');
-		  this.add('-anim', source, "Prismatic Laser", target);
-		},
-		onModifyMove(move, pokemon) {
-			if (pokemon.getStat('atk', false, true) < pokemon.getStat('spa', false, true)) move.category = 'Special';
-		},
-		ignoreAbility: true,
-		secondary: {
-			chance: 30,
-			status: 'brn',
-		},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		secondary: null,
 		target: "normal",
 		type: "Fire",
-		contestType: "Cool",
+		contestType: "Tough",
 	},
- 	// No need for this effect to be coded, given mod isn't a doubles format
-	chargedcannondive: {
+ 	shotgunspreadycross42: {
 		num: -31,
-		accuracy: 100,
-		basePower: 95,
+		accuracy: 99,
+		basePower: 28,
 		category: "Physical",
-		name: "Charged Cannon DiVE",
-		shortDesc: "Deals additional half damage to the target's ally.",
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Wild Charge", target);
-		},
+		name: "Shotgun Spread Y Cross 42",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, slicing: 1},
+		multihit: 4,
+		multiaccuracy: true,
+		secondary: null,
 		target: "normal",
-		type: "Steel",
-		contestType: "Tough",
+		type: "Fighting",
 	},
 	bulletburst: {
 		num: -32,
@@ -1251,70 +1234,119 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Steel",
 		contestType: "Cool",
 	},
-	redtruth: {
+	cargothrow: {
 		num: -33,
 		accuracy: 100,
-		basePower: 75,
-		category: "Special",
-		name: "Red Truth",
-		shortDesc: "Bypasses Ghost Immunity. If immunity is bypassed, then neutral effectiveness.",
-		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1, slicing: 1, sound: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Hyper Voice", target);
-			this.add('-anim', source, "Astral Barrage", target);
-		},
-		onEffectiveness(typeMod, target, type, move) {
-			if (move.type !== 'Normal') return;
-			if (!target.runImmunity('Ghost')) {
-				if (target.hasType('Normal')) return 0;
+		basePower: 60,
+		category: "Physical",
+		name: "Cargo Throw",
+		pp: 16,
+		priority: -6,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
+		onModifyMovePriority: -5,
+		onModifyMove(move) {
+			move.ignoreEvasion = true;
+			if (!move.ignoreImmunity) move.ignoreImmunity = {};
+			if (move.ignoreImmunity !== true) {
+				move.ignoreImmunity['Fighting'] = true;
 			}
 		},
-		ignoreImmunity: {'Normal': true},
+		onModifyCritRatio(critRatio, source, target) {
+			if (target.hp * 2 <= target.maxhp) return 5;
+		},
+		forceSwitch: true,
 		target: "normal",
-		type: "Ghost",
-		contestType: "Beautiful",
+		type: "Fighting",
+		contestType: "Cool",
 	},
-	nosferatu: {
+	crystalbarrage: {
 		num: -34,
-		accuracy: 100,
-		basePower: 75,
-		category: "Special",
-		name: "Nosferatu",
-		shortDesc: "User recovers 50% of the damage dealt.",
+		accuracy: 95,
+		basePower: 10,
+		basePowerCallback(pokemon, target, move) {
+			return 10 * move.hit;
+		},
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Dark') return 1;
+		},
+		category: "Physical",
+		name: "Crystal Barrage",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, heal: 1, metronome: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Shadow Ball", target);
-			this.add('-anim', source, "Giga Drain", target);
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		multihit: 4,
+		multiaccuracy: true,
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+		zMove: {basePower: 130},
+		maxMove: {basePower: 140},
+	},
+	swoon: {
+		num: -35,
+		accuracy: 100,
+		basePower: 50,
+		basePowerCallback(pokemon, target, move) {
+			// You can't get here unless the pursuit succeeds
+			if (target.beingCalledBack || target.switchFlag) {
+				this.debug('pursuit damage boost');
+				return move.basePower * 3;
+			}
+			return move.basePower;
 		},
-		drain: [1, 2],
+		category: "Physical",
+		name: "Swoon",
+		pp: 5,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		beforeTurnCallback(pokemon) {
+			for (const side of this.sides) {
+				if (side.hasAlly(pokemon)) continue;
+				side.addSideCondition('pursuit', pokemon);
+				const data = side.getSideConditionData('pursuit');
+				if (!data.sources) {
+					data.sources = [];
+				}
+				data.sources.push(pokemon);
+			}
+		},
+		onModifyMove(move, source, target) {
+			if (target?.beingCalledBack || target?.switchFlag) move.accuracy = true;
+		},
+		onTryHit(target, pokemon) {
+			target.side.removeSideCondition('pursuit');
+		},
+		condition: {
+			duration: 1,
+			onBeforeSwitchOut(pokemon) {
+				this.debug('Pursuit start');
+				let alreadyAdded = false;
+				pokemon.removeVolatile('destinybond');
+				for (const source of this.effectState.sources) {
+					if (!source.isAdjacent(pokemon) || !this.queue.cancelMove(source) || !source.hp) continue;
+					if (!alreadyAdded) {
+						this.add('-activate', pokemon, 'move: Pursuit');
+						alreadyAdded = true;
+					}
+					// Run through each action in queue to check if the Pursuit user is supposed to Mega Evolve this turn.
+					// If it is, then Mega Evolve before moving.
+					if (source.canMegaEvo || source.canUltraBurst) {
+						for (const [actionIndex, action] of this.queue.entries()) {
+							if (action.pokemon === source && action.choice === 'megaEvo') {
+								this.actions.runMegaEvo(source);
+								this.queue.list.splice(actionIndex, 1);
+								break;
+							}
+						}
+					}
+					this.actions.runMove('pursuit', source, source.getLocOf(pokemon));
+				}
+			},
+		},
+		secondary: null,
 		target: "normal",
 		type: "Dark",
 		contestType: "Clever",
-	},
-	waste: {
-		num: -35,
-		accuracy: 85,
-		basePower: 50,
-		category: "Special",
-		name: "Waste",
-		shortDesc: "Hits twice.",
-		pp: 15,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Hex", target);
-		},
-		multihit: 2,
-		target: "normal",
-		type: "Dark",
-		contestType: "Tough",
 	},
 	goetia: {
 		num: -36,

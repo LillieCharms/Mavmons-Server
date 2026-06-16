@@ -4,7 +4,7 @@ import {toID} from '../../../sim/dex-data';
 const ag9 = ["calyrexshadow", "gengarmega", "koraidon", "miraidon", "rayquazamega", "xerneas"];
 const uber9 = [
 	// M4A first
-	"dragapultmega", 
+	"butterfreemega", "delphoxmega", "dodriomega", "dragapultmega", "slowkinggalarmega",
 	// Natdex second
 	"alakazammega", "annihilape", "arceus", "arceusfire", "arceuswater", "arceuselectric", "arceusgrass", "arceusice", "arceusfighting", "arceuspoison", 
 	"arceusground", "arceusflying", "arceuspsychic", "arceusbug", "arceusrock", "arceusghost", "arceusdragon", "arceusdark", "arceussteel", "arceusfairy",
@@ -17,18 +17,18 @@ const uber9 = [
 	"terapagosstellar", "ursalunabloodmoon", "urshifu", "walkingwake", "yveltal", "zacian", "zaciancrowned", "zamazentacrowned", "zekrom", "zygarde", "zygardecomplete", 	
 ];
 const viabilityList9 = [
-	"alomomola", "clodsire", "corviknight", "dragonite", "ferrothorn", "garchomp", "gholdengo", "glimmora", 
-	"gliscor", "greattusk", "hatterene", "heatran", "ironcrown", "irontreads", "ironvaliant", "kartana", "kingambit", "kyurem", "landorustherian", "melmetal", 
-	"moltres", "nidoqueen", "ogerponwellspring", "pelipper", "ragingbolt", "rillaboom", "samurotthisui", "slowkinggalar", "tapulele", "tapukoko", 
-	"terapagos", "terapagosterastal", "toxapex", "urshifurapidstrike", "volcarona", "zamazenta", "zapdos", 
+	"alomomola", "clodsire", "corviknight", "dragonite", "ferrothorn", "garchomp", "gholdengo", "gliscor", "greattusk", "hatterene", "heatran", "irontreads", "ironvaliant", 
+	"kartana", "kingambit", "kyurem", "landorustherian", "melmetal", "moltres", "ogerponwellspring", "ragingbolt", "samurotthisui", "slowkinggalar", "tapufini", "tapulele", 
+	"tapukoko", "terapagos", "terapagosterastal", "tinglu", "toxapex", "urshifurapidstrike", "volcarona", "zamazenta", "zapdos", 
 ];
 const megaViabilityList9 = [
-	"araquanidmega", "bastiodonmega", "bibarelmega", "butterfreemega", "chandeluremega", "charizardmegay", "cinderacemega", "clefablemega", "conkeldurrmega", 
-	"corviknightmega", "dhelmisemega", "dianciemega", "dodriomega", "dragalgemega",	"eelektrossmega", "empoleonmega", "falinksmega", "flygonmega", 
-	"froslassmega", "garbodormega", "hawluchamega", "honchkrowmega", "hydreigonmega", "infernapemega", "inteleonmega", "krookodilemega", "lanturnmega", "lopunnymega", 
-	"lurantismega", "luxraymega", "lycanrocmega", "magmortarmega", "meowsticmega", "mimikyumega", "mimikyumegabusted", "nidoqueenmega", "noivernmega", "orbeetlemega", 
-	"raichumega", "regicemega", "reuniclusmega", "scizormega", "sirfetchdmega", "slowkingmega", "slowkinggalarmega", "staraptormega", "starmiemega", "stoutlandmega", 
-	"talonflamemega", "typhlosionmega", "tyranitarmega", "tyrantrummega", "vanilluxemega", "wailordmega",
+	"araquanidmega", "arbolivamega", "armarougemega", "bastiodonmega", "bibarelmega", "chandeluremegay", "charizardmegay", "cinderacemega", "clefablemegay", 
+	"conkeldurrmega", "corviknightmega", "dhelmisemega", "dianciemega", "dragalgemegay", "eelektrossmegay", "empoleonmega", "falinksmega", "flygonmega", 
+	"froslassmegay", "garbodormega", "grumpigmega", "hawluchamega", "honchkrowmega", "hydreigonmega", "infernapemega", "inteleonmega", "kleavormega", "krookodilemega", 
+	"lanturnmega", "latiosmega", "lopunnymega", "lurantismega", "luxraymega", "lycanrocmega", "magmortarmega", "mausholdfourmega", "mausholdmega", "meganiummega", /*"meowsticmega",*/
+	 "miloticmega", "mimikyumega", "mimikyumegabusted", "nidoqueenmega", "noivernmega", "orbeetlemega", "quaquavalmega", "rabscamega", "raichumega", "regicemega", "reuniclusmega", "scizormega", "sirfetchdmega", 
+	"skeledirgemega", "slowkingmega", "staraptormega", "starmiemega", "starmiemegay", "stoutlandmega", "sylveonmega", "talonflamemega", "typhlosionmega", "tyrantrummega", 
+	"vanilluxemega", "wailordmega",
 ];
 /*
 // doubles tiers (currently unused because the teambuilder doesn't support them well)
@@ -45,7 +45,6 @@ const c = ["aerodactyl", "marowakalola", "bronzong", "coalossal", "celesteela", 
 */
 
 export const Scripts: ModdedBattleScriptsData = {
-	inherit: 'm4av6',
 	gen: 9,
 	teambuilderConfig: {
 		excludeStandardTiers: true,
@@ -126,12 +125,13 @@ export const Scripts: ModdedBattleScriptsData = {
 
 	actions: {
 	canMegaEvo(pokemon) {
-		const altForme = pokemon.baseSpecies.otherFormes && this.dex.species.get(pokemon.baseSpecies.otherFormes[0]);
+		const species = pokemon.baseSpecies;
+		const altForme = species.otherFormes && this.dex.species.get(species.otherFormes[0]);
 		const item = pokemon.getItem();
-		if (
-		  altForme?.isMega && altForme?.requiredMove &&
-		  pokemon.baseMoves.includes(this.dex.toID(altForme.requiredMove)) && !item.zMove
-		) {
+		if ((this.battle.gen <= 7 || this.battle.ruleTable.has('+pokemontag:past') ||
+			this.battle.ruleTable.has('+pokemontag:future')) &&
+			altForme?.isMega && altForme?.requiredMove &&
+			pokemon.baseMoves.includes(toID(altForme.requiredMove)) && !item.zMove) {
 			return altForme.name;
 		}
 		if (item.name === "Lycanite" && pokemon.species.name === "Lycanroc-Midnight") return "Lycanroc-Midnight-Mega";
@@ -159,6 +159,7 @@ export const Scripts: ModdedBattleScriptsData = {
 			else return null;
 		}
 		if (item.name === "Hoopanite" && pokemon.species.name === "Hoopa-Unbound") return null;
+		if (item.name === "Arcanite" && pokemon.species.name === "Arcanine-Hisui") return null;
 		if (item.megaEvolves !== pokemon.species.name || item.megaStone === pokemon.species.name) {
 			return null;
 		}

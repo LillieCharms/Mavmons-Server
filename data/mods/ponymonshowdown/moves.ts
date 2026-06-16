@@ -330,24 +330,6 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		zMove: {boost: {spe: 1}},
 		contestType: "Clever",
 	},
-	corrosivevenom: {
-		num: 920,
-		accuracy: 100,
-		basePower: 85,
-		category: "Special",
-		name: "Corrosive Venom",
-		desc: "Super Effective on Steel types when paired with Corrosion.",
-		shortDesc: "x2 on Steel types if user has Corrosion.",
-		pp: 20,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
-		onEffectiveness(typeMod, target, type) {
-			if (type === 'Steel') return 1;
-		},
-		target: "normal",
-		type: "Poison",
-		contestType: "Beautiful",
-	},
 	spiritofharmony: {
 		num: -1,
 		accuracy: 100,
@@ -610,7 +592,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 	bouldertoss: {
 		num: -14,
 		accuracy: true,
-		basePower: 50,
+		basePower: 40,
 		category: "Physical",
 		name: "Boulder Toss",
 		desc: "Hits twice.",
@@ -647,12 +629,12 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		type: "Steel",
 		contestType: "Cool",
 	},
-	sunburstsweatherabjuration: {
+	sunburstsweatherspell: {
 		num: -16,
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		name: "Sunburst's Weather Abjuration",
+		name: "Sunburst's Weather Spell",
 		desc: "The user summons Sunny Day and vacates the field, allowing a party Pokemon/Pony to take their place.",
 		shortDesc: "Starts Sunny Day. User switches out.",
 		pp: 10,
@@ -758,7 +740,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		basePower: 70,
 		category: "Special",
 		name: "Scattered Sparks",
-		desc: "Power doubles if statused.",
+		desc: "Power doubles if user is statused.",
 		shortDesc: "Power doubles if statused.",
 		pp: 20,
 		priority: 0,
@@ -779,24 +761,22 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		basePower: 0,
 		category: "Status",
 		name: "Bellowing Whistle",
-		desc: "The user’s Attack is raised by one stage and the target’s Defense is lowered by one stage.",
-		shortDesc: "Raises the user's Atk by 1. Decreases target's Def by 1.",
-		pp: 40,
+		desc: "The user lowers the target's defense by one stage and switches out.",
+		shortDesc: "Lowers target's defense by 1, switches out the user.",
+		pp: 20,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1, sound: 1, bypasssub: 1, metronome: 1},
-		self: {
-			boosts: {
-				atk: 1,
-			},
+		onHit(target, source, move) {
+			const success = this.boost({def: -1}, target, source);
+			if (!success && !target.hasAbility('mirrorarmor')) {
+				delete move.selfSwitch;
+			}
 		},
-		secondary: {
-			chance: 100,
-			boosts: {
-				def: -1,
-			},
-		},
-		target: "allAdjacentFoes",
+		selfSwitch: true,
+		secondary: null,
+		target: "normal",
 		type: "Flying",
+		zMove: {effect: 'healreplacement'},
 		contestType: "Cool",
 	},
 	toolsofchaos: {
@@ -904,20 +884,22 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		type: "Fire",
 		contestType: "Cool",
 	},
-	blessingofthehive: {
+	hivesblessing: {
 		num: -29,
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		name: "Blessing of the Hive",
-		desc: "Boosts Attack and Speed by one stage. This move cures the user of any status conditions.",
-		shortDesc: "Cures user's status, raises Attack and Speed by 1.",
+		name: "Hive's Blessing",
+		desc: "Boosts attack and speed by one stage. This move cures the user of burn.",
+		shortDesc: "Cures user's burn, raises attack and speed by 1.",
 		pp: 15,
 		priority: 0,
 		flags: {snatch: 1, metronome: 1},
 		onHit(pokemon) {
 			const success = !!this.boost({atk: 1, spe: 1});
+			if (pokemon.status === 'brn') {
 			return pokemon.cureStatus() || success;
+			}
 		},
 		secondary: null,
 		target: "self",
@@ -929,14 +911,16 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		basePower: 0,
 		category: "Status",
 		name: "Draconic Soul",
-		desc: "Boosts Special Attack and Speed by one stage and the user is cured of status conditions.",
-		shortDesc: "Cures user's status, raises Sp. Atk and Speed by 1.",
+		desc: "Boosts special attack and speed by one stage and the user is cured of paralysis.",
+		shortDesc: "Cures user's paralysis, raises Sp. Atk and speed by 1.",
 		pp: 15,
 		priority: 0,
 		flags: {snatch: 1, metronome: 1},
 		onHit(pokemon) {
 			const success = !!this.boost({spa: 1, spe: 1});
+			if (pokemon.status === 'par') {
 			return pokemon.cureStatus() || success;
+			}
 		},
 		secondary: null,
 		target: "self",
@@ -948,18 +932,16 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		basePower: 0,
 		category: "Status",
 		name: "Ritual of Aris",
-		desc: "Highest attacking stat and speed is raised by one stage, the user is cured of status conditions.",
-		shortDesc: "Cures status, raises highest attacking stat and speed by 1.",
+		desc: "Attack and speed is raised by one stage, the user is cured of poison.",
+		shortDesc: "Cures poison, raises attack and speed by 1.",
 		pp: 15,
 		priority: 0,
 		flags: {snatch: 1, metronome: 1},
-		onHit(target, source) {
-			if (source.getStat('atk', false, true) >= source.getStat('spa', false, true)) {
-				(this.boost({atk: 1, spe: 1}, source))
-			} else if (source.getStat('spa', false, true) > source.getStat('atk', false, true)) {
-				(this.boost({spa: 1, spe: 1}, source))
+		onHit(pokemon) {
+			const success = !!this.boost({atk: 1, spe: 1});
+			if (pokemon.status === 'psn' || pokemon.status === 'tox') {
+			return pokemon.cureStatus() || success;
 			}
-				source.cureStatus();
 		},
 		secondary: null,
 		target: "self",
@@ -1034,11 +1016,11 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 				}
 				return 5;
 			},
-			onBasePowerPriority: 6,
 			onBasePower(basePower, attacker, defender, move) {
-							if (move.type === 'Psychic' && defender.isGrounded() && !defender.isSemiInvulnerable()) {
-								this.debug('midnight terrain weaken');
-								return this.chainModify(0.5);
+				const weakenedMoves = ['psychic', 'psyshock'];
+				if (weakenedMoves.includes(move.id) && defender.isGrounded() && !defender.isSemiInvulnerable()) {
+					this.debug('move weakened by midnight terrain');
+					return this.chainModify(0.5);
 				}
 				if (move.type === 'Dark' && attacker.isGrounded()) {
 					this.debug('midnight terrain boost');

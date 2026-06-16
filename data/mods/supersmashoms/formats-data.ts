@@ -8,6 +8,9 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 	donphan: {
 		tier: "Mix and Mega",
 	},
+	donphanmega: {
+		tier: "Mix and Mega",
+	},
 	cramorant: {
 		tier: "Tier Shift",
 	},
@@ -76,5 +79,105 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 	},
 	porygon2: {
 		tier: "STABmons",
+	},
+
+	garchomp: {
+		tier: "Sketchmons",
+	},
+	ogerpon: {
+		tier: "Convergence",
+	},
+	cutiefly: {
+		tier: "Cross Evolution",
+	},
+	revavroom: {
+		tier: "Mix and Mega",
+	},
+	revavroommega: {
+		tier: "Mix and Mega",
+	},
+	slitherwing: {
+		tier: "Almost Any Ability",
+	},
+
+	sceptile: {
+		tier: "Illegal",
+	},
+	sceptilemega: {
+		tier: "Formemons",
+	},
+	munkidori: {
+		tier: "Inheritance",
+	},
+	enamorustherian: {
+		tier: "Nature Swap",
+	},
+	yanma: {
+		tier: "Cross Evolution",
+	},
+	terrakion: {
+		tier: "STABmons",
+	},
+	rotommow: {
+		tier: "Mix and Mega",
+	},
+	rotommowmega: {
+		tier: "Mix and Mega",
+	},
+	misdreavus: {
+		tier: "Cross Evolution",
+	},
+	ironbundle: {
+		tier: "Flipped",
+	},
+
+	tinkaton: {
+		tier: "Frantic Fusions",
+	},
+	latias: {
+		tier: "Bonus Type",
+	},
+	zarude: {
+		tier: "Convergence",
+	},
+	azumarill: {
+		tier: "Tier Shift",
+	},
+	quaquaval: {
+		tier: "Almost Any Ability",
+	},
+	venusaur: {
+		tier: "Illegal",
+	},
+	venusaurmega: {
+		tier: "Formemons",
+	},
+
+	altaria: {
+		tier: "Illegal",
+	},
+	altariamega: {
+		tier: "Formemons",
+	},
+	screamtail: {
+		tier: "Almost Any Ability",
+	},
+	ninetales: {
+		tier: "Frantic Fusions",
+	},
+	crabominable: {
+		tier: "Frantic Fusions",
+	},
+	swampert: {
+		tier: "Illegal",
+	},
+	swampertmega: {
+		tier: "Formemons",
+	},
+	spiritomb: {
+		tier: "Mix and Mega",
+	},
+	spiritombmega: {
+		tier: "Mix and Mega",
 	},
 };

@@ -31,7 +31,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onAfterMoveSecondarySelfPriority: -1,
 		onAfterMoveSecondarySelf(pokemon, target, move) {
 		if (this.checkMoveMakesContact(move, target, pokemon)) {
-				this.heal(pokemon.baseMaxhp / 8);
+				this.heal(pokemon.baseMaxhp / 8, pokemon, pokemon);
 			}
 		},
 		flags: {},
@@ -87,18 +87,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -3,
 	},
 	shadowpounce: {
-		shortDesc: "This Pokemon retaliates with Shadow Sneak whenever it is damaged by an attack.",
-		onDamagingHitOrder: 3,
+		shortDesc: "Pokemon making contact with this Pokemon lose 1/8 of their max HP.",
+		onDamagingHitOrder: 1,
 		onDamagingHit(damage, target, source, move) {
-			if (!move.noreact && target.hp && source.hp) {
-				const reaction = this.dex.getActiveMove('shadowsneak');
-				reaction.noreact = true;
-				this.actions.useMove(reaction, target, source);
+			if (this.checkMoveMakesContact(move, source, target, true)) {
+				this.damage(source.baseMaxhp / 8, source, target);
 			}
 		},
 		flags: {},
 		name: "Shadow Pounce",
-		rating: 3.5,
+		rating: 2.5,
 		num: -4,
 	},
 	domainofice: {
@@ -134,10 +132,10 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -5,
 	},
 	blindinglight: {
-		shortDesc: "This Pokemon's Speed is raised 1 stage if hit by a Bug attack; Bug immunity.",
+		shortDesc: "This Pokemon's Attack is raised 1 stage if hit by a Bug attack; Bug immunity.",
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Bug' && move.category !== "Status") {
-				if (!this.boost({spe: 1})) {
+				if (!this.boost({atk: 1})) {
 					this.add('-immune', target, '[from] ability: Blinding Light');
 				}
 				return null;
@@ -147,5 +145,94 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		name: "Blinding Light",
 		rating: 3,
 		num: -6,
+	},
+	giftsgiven: {
+		shortDesc: "This Pokemonuses Stockpile if it attacks and KOes another Pokemon.",
+		onSourceAfterFaint(length, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+				this.actions.useMove(this.dex.getActiveMove('stockpile'), source, source);
+			}
+		},
+		flags: {},
+		name: "Gifts Given",
+		rating: 3,
+		num: -7,
+	},
+	omagatoki: {
+		shortDesc: "This Pokemon's attacks that are super effective against the target do 1.25x damage.",
+		onModifyDamage(damage, source, target, move) {
+			if (move && target.getMoveHitData(move).typeMod > 0) {
+				return this.chainModify([5120, 4096]);
+			}
+		},
+		flags: {},
+		name: "Omagatoki",
+		rating: 2.5,
+		num: -8,
+	},
+	stormwingmatriarch: {
+		shortDesc: "Rock moves are less effective against this Pokemon. Taking rock damage boosts speed.",
+		onEffectiveness(typeMod, target, type, move) {
+			if (target.types.length >= 1 && type !== target.types[0]) return; // Ensure effectiveness reduction & speed boost only happens once per damage instance
+			if (move.type == 'Rock') {
+				this.boost({spe: 1});
+				return typeMod - 1;
+			}
+		},
+		flags: {},
+		name: "Stormwing Matriarch",
+		rating: 2.5,
+		num: -9,
+	},
+	luigilogic: {
+		shortDesc: "This Pokemon blocks certain Status moves and bounces them back to the user.",
+		onTryHitPriority: 1,
+		onTryHit(target, source, move) {
+			if (target === source || move.hasBounced || !move.flags['reflectable']) {
+				return;
+			}
+			const newMove = this.dex.getActiveMove(move.id);
+			newMove.hasBounced = true;
+			newMove.pranksterBoosted = false;
+			this.actions.useMove(newMove, target, source);
+			return null;
+		},
+		onAllyTryHitSide(target, source, move) {
+			if (target.isAlly(source) || move.hasBounced || !move.flags['reflectable']) {
+				return;
+			}
+			const newMove = this.dex.getActiveMove(move.id);
+			newMove.hasBounced = true;
+			newMove.pranksterBoosted = false;
+			this.actions.useMove(newMove, this.effectState.target, source);
+			return null;
+		},
+		condition: {
+			duration: 1,
+		},
+		flags: {breakable: 1},
+		name: "Luigi Logic",
+		rating: 4,
+		num: -10,
+	},
+	launchedfist: {
+		shortDesc: "Punch moves: 1.2x power & become special.",
+		onBasePowerPriority: 23,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['punch']) {
+				this.debug('Launched Fist boost');
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onModifyMove(move, pokemon) {
+			if (move.flags['punch']) {
+				this.debug('Launched Fist category change');
+				move.category = 'Special';
+			}
+		},
+		flags: {},
+		name: "Launched Fist",
+		rating: 3,
+		num: -11,
 	},
 };

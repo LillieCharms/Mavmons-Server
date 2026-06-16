@@ -184,8 +184,11 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 			this.singleEvent('WeatherChange', this.effect, this.effectState, pokemon);
 		},
 		onWeatherChange(pokemon) {
-			if (pokemon.effectiveWeather) pokemon.addVolatile('ability:swordofruin');
-			else pokemon.removeVolatile('ability:swordofruin');
+			if (pokemon.effectiveWeather()) {
+				pokemon.addVolatile('ability:swordofruin');
+			} else {
+				pokemon.removeVolatile('ability:swordofruin');
+			}
 		},
 		flags: {},
 		name: "Sword of Hisou",
@@ -309,13 +312,13 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 	},
 	undefineddefense: {
 		onSourceModifyDamage(damage, source, target, move) {
-			if (move.type === target.hpType) {
+			if (move.type === target.teraType) {
 				return this.chainModify(0.5);
 			}
 		},
 		flags: {},
 		name: "Undefined Defense",
-		shortDesc: "Halves damage taken from moves of the Pokémon's hidden power type.",
+		shortDesc: "Halves damage taken from moves of the Pokémon's Tera type.",
 	},
 	echo: {
 		onTryHit(target, source, move) {
@@ -361,23 +364,27 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 		shortDesc: "Heals status conditions at the end of the turn while in grassy terrain.",
 	},
 	wickedpower: {
-		onModifyAtkPriority: 5,
-		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Dark' && attacker.hp <= attacker.maxhp / 3) {
-				this.debug('Wicked Power boost');
-				return this.chainModify(1.5);
-			}
-		},
-		onModifySpAPriority: 5,
-		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Dark' && attacker.hp <= attacker.maxhp / 3) {
-				this.debug('Wicked Power boost');
-				return this.chainModify(1.5);
-			}
+		// onModifyAtkPriority: 5,
+		// onModifyAtk(atk, attacker, defender, move) {
+		// 	if (move.type === 'Dark') {
+		// 		this.debug('Wicked Power boost');
+		// 		return this.chainModify(1.5);
+		// 	}
+		// },
+		// onModifySpAPriority: 5,
+		// onModifySpA(atk, attacker, defender, move) {
+		// 	if (move.type === 'Dark') {
+		// 		this.debug('Wicked Power boost');
+		// 		return this.chainModify(1.5);
+		// 	}
+		// },
+		onDamagingHitOrder: 1,
+		onDamagingHit(damage, target, source, move) {
+			target.addVolatile('wickedenergy');
 		},
 		flags: {},
 		name: "Wicked Power",
-		shortDesc: "Dark-Type moves are 1.5x stronger while under 33% HP.",
+		shortDesc: "When this Pokémon is hit, its next Dark-Type move has 2x power.",
 	},
 	growbigger: {
 		//effects in scripts/battle, pokemon, etc
@@ -434,7 +441,11 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 		shortDesc: "Consuming a berry increases Atk. by one stage.",
 	},
 	lunatictorch: {
-		//effects in pokemon/effectiveWeather
+		onWeatherModifyDamage(damage, attacker, defender, move) {
+            		if (this.field.weather !== 'sunnyday' && this.field.isTerrain('psychicterrain')) {
+                	(this.dex.conditions.getByID('sunnyday' as ID) as any).onWeatherModifyDamage.call(this, damage, attacker, defender, move);
+            		}
+        	},
 		flags: {},
 		name: "Lunatic Torch",
 		shortDesc: "Gain the effects of Sun while in Psychic Terrain.",
@@ -463,7 +474,7 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 	},
 	winterhearth: {
 		onBasePower(basePower, attacker, defender, move) {
-			if (['snowscape'].includes(pokemon.effectiveWeather())) {
+			if (this.field.isWeather(['hail', 'snow']) && move.type === 'Fire') {
 				return this.chainModify(2);
 			}
 		},
@@ -477,36 +488,35 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 			this.singleEvent('WeatherChange', this.effect, this.effectState, pokemon);
 		},
 		onWeatherChange(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies !== 'Okina Matara' || pokemon.transformed) return;
+			let forme = null;
 			switch (pokemon.effectiveWeather()) {
-				case 'sunnyday':
-					if (pokemon.setType('Fire')) this.add('-start', pokemon, 'typechange', 'Fire');
-					break;
-				case 'desolateland':
-					if (pokemon.setType('Fire')) this.add('-start', pokemon, 'typechange', 'Fire');
-					break;
-				case 'raindance':
-					if (pokemon.setType('Water')) this.add('-start', pokemon, 'typechange', 'Water');
-					break;
-				case 'primordialsea':
-					if (pokemon.setType('Water')) this.add('-start', pokemon, 'typechange', 'Water');
-					break;
-				case 'sandstorm':
-					if (pokemon.setType('Rock')) this.add('-start', pokemon, 'typechange', 'Rock');
-					break;
-				case 'hail':
-					if (pokemon.setType('Ice')) this.add('-start', pokemon, 'typechange', 'Ice');
-					break;
-				case 'snowscape':
-					if (pokemon.setType('Ice')) this.add('-start', pokemon, 'typechange', 'Ice');
-					break;
-				default:
-					if (pokemon.setType(pokemon.getTypes())) this.add('-start', pokemon, 'typechange', pokemon.baseSpecies.getTypes().join('/'));
-					break;
+			case 'sunnyday':
+			case 'desolateland':
+				if (pokemon.species.id !== 'okinamatarasummer') forme = 'Okina Matara-Summer';
+				break;
+			case 'raindance':
+			case 'primordialsea':
+				if (pokemon.species.id !== 'okinamataraspring') forme = 'Okina Matara-Spring';
+				break;
+			case 'sandstorm':
+				if (pokemon.species.id !== 'okinamataraautumn') forme = 'Okina Matara-Autumn';
+				break;
+			case 'hail':
+			case 'snow':
+				if (pokemon.species.id !== 'okinamatarawinter') forme = 'Okina Matara-Winter';
+				break;
+			default:
+				if (pokemon.species.id !== 'okinamatara') forme = 'okina Matara';
+				break;
+			}
+			if (pokemon.isActive && forme) {
+				pokemon.formeChange(forme, this.effect, false, '[msg]');
 			}
 		},
-		flags: {},
+		flags: {failroleplay: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Four Seasons",
-		shortDesc: "Okina Matara's primary typing changes to match the weather.",
+		shortDesc: "Okina Matara's forme changes to match the weather.",
 	},
 	heavystone: {
 		onStart(source) {
@@ -662,5 +672,36 @@ export const Abilities: {[k: string]: ModdedAbilityData} = {
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, notransform: 1},
 		name: "Cactus Drive",
 		shortDesc: "Grassy Terrain active or Booster Energy used: highest stat is 1.3x, or 1.5x if Speed.",
+	},
+	corruptdata: {
+		onDamagingHit(damage, target, source, move, pokemon) {
+			if (this.checkMoveMakesContact(move, source, target)) {
+				source.setType("???");
+				this.add('-start', source, 'typechange', "???", '[from] ability: Corrupt Data');
+			}
+		},
+		flags: {},
+		name: "Corrupt Data",
+		shortDesc: "When an attacker makes contact with this pokémon, the attacker becomes typeless.",
+	},
+	immovable: {
+		onDragOutPriority: 1,
+		onDragOut(pokemon) {
+			this.add('-activate', pokemon, 'ability: Immovable');
+			return null;
+		},
+		flags: {breakable: 1},
+		name: "Immovable",
+	},
+	truthoverload: {
+		onDamagingHit(damage, target, source, move) {
+			if (this.checkMoveMakesContact(move, source, target)) {
+				if (this.randomChance(3, 10)) {
+					source.addVolatile('confusion', source, move);
+				}
+			}
+		},
+		flags: {},
+		name: "Truth Overload",
 	},
 };

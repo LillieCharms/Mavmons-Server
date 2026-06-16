@@ -53,7 +53,7 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		types: ["Flying"],
 		gender: "N",
 		baseStats: {hp: 119, atk: 89, def: 104, spa: 98, spd: 70, spe: 80},
-		abilities: {0: "Quark Drive", H: "Motor Drive"},
+		abilities: {0: "Cloud Nine", H: "Motor Drive"},
 		heightm: 1.8,
 		weightkg: 380.7,
 		color: "Gray",
@@ -177,6 +177,7 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		inherit: true,
 		types: ["Water", "Dark"],
 		baseStats: {hp: 76, atk: 123, def: 65, spa: 60, spd: 60, spe: 136},
+		abilities: {0: "Swift Swim", H: "Cloud Nine"},
 	},
 	victreebel: {
 		inherit: true,

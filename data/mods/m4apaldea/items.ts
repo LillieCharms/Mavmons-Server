@@ -405,10 +405,10 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		gen: 9,
 		desc: "If held by a Galvantula, this item allows it to Mega Evolve in battle.",
 	},
-	golurkite: {
-		name: "Golurkite",
+	golurkitey: {
+		name: "Golurkite-Y",
 		spritenum: 578,
-		megaStone: "Golurk-Mega",
+		megaStone: "Golurk-Mega-Y",
 		megaEvolves: "Golurk",
 		itemUser: ["Golurk"],
 		onTakeItem(item, source) {
@@ -419,10 +419,10 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		gen: 9,
 		desc: "If held by a Golurk, this item allows it to Mega Evolve in battle.",
 	},
-	emboarite: { 
-		name: "Emboarite",
+	emboaritey: { 
+		name: "Emboarite-Y",
 		spritenum: 578,
-		megaStone: "Emboar-Mega",
+		megaStone: "Emboar-Mega-Y",
 		megaEvolves: "Emboar",
 		itemUser: ["Emboar"],
 		onTakeItem(item, source) {
@@ -670,5 +670,47 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		num: -2048,
 		gen: 9,
 		desc: "If held by a Rabsca, this item allows it to Mega Evolve in battle.",
+	},
+	kingdranite: { 
+		name: "Kingdranite",
+		spritenum: 578,
+		megaStone: "Kingdra-Mega",
+		megaEvolves: "Kingdra",
+		itemUser: ["Kingdra"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
+			return true;
+		},
+		num: -2049,
+		gen: 9,
+		desc: "If held by a Kingdra, this item allows it to Mega Evolve in battle.",
+	},
+	sandacondanite: { 
+		name: "Sandacondanite",
+		spritenum: 578,
+		megaStone: "Sandaconda-Mega",
+		megaEvolves: "Sandaconda",
+		itemUser: ["Sandaconda"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
+			return true;
+		},
+		num: -2050,
+		gen: 9,
+		desc: "If held by a Sandaconda, this item allows it to Mega Evolve in battle.",
+	},
+	screamtailite: { 
+		name: "Screamtailite",
+		spritenum: 578,
+		megaStone: "Scream Tail-Mega",
+		megaEvolves: "Scream Tail",
+		itemUser: ["Scream Tail"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
+			return true;
+		},
+		num: -2051,
+		gen: 9,
+		desc: "If held by a Scream Tail, this item allows it to Mega Evolve in battle.",
 	},
 };

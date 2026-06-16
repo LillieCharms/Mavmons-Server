@@ -9,19 +9,33 @@ export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
 	},	
 	
 	init() {
-		for (const pokemon in Dex.data.Pokedex){
-			if (pokemon in Dex.data.Learnsets && this.modData('Learnsets', pokemon).learnset) {
-				this.modData("Learnsets", pokemon).learnset.fishingterrain = ["9L1"];
-				this.modData("Learnsets", pokemon).learnset.holdhands = ["9L1"];
-				this.modData("Learnsets", pokemon).learnset.mewing = ["9L1"];
-				this.modData("Learnsets", pokemon).learnset.epicbeam = ["9L1"];
-				this.modData("Learnsets", pokemon).learnset.bigbash = ["9L1"];
-				const mon = Dex.species.get(pokemon);
-				if (!mon.types.includes('Water') && !mon.types.includes('Steel')) this.modData("Learnsets", pokemon).learnset.fisheater = ["9L1"];
-				if (mon.fish) this.modData("Learnsets", pokemon).learnset.fish = ["9L1"];
-				if (mon.diamondhand) this.modData("Learnsets", pokemon).learnset.diamondhand = ["9L1"];
-				if (mon.hoenn || mon.gen === 3) this.modData("Learnsets", pokemon).learnset.hoenn = ["9L1"];
-				if (mon.trans) this.modData("Learnsets", pokemon).learnset.trans = ["9L1"];
+    	for (const id in this.dataCache.Pokedex) {
+			if (this.dataCache.Learnsets[id] && this.dataCache.Learnsets[id].learnset) {
+				this.modData('Learnsets', this.toID(id)).learnset.fishingterrain = ["9L1"];
+				this.modData('Learnsets', this.toID(id)).learnset.holdhands = ["9L1"];
+				this.modData('Learnsets', this.toID(id)).learnset.mewing = ["9L1"];
+				this.modData('Learnsets', this.toID(id)).learnset.epicbeam = ["9L1"];
+				this.modData('Learnsets', this.toID(id)).learnset.bigbash = ["9L1"];
+				if (!this.data.Pokedex[id].types.includes('Water') && !this.data.Pokedex[id].types.includes('Steel') && !this.data.Pokedex[id].baseForme) {
+	                this.modData('Learnsets', this.toID(id)).learnset.fisheater = ["9L1"];
+            	}
+				if (id.diamondhand) {
+					this.modData('Learnsets', this.toID(id)).learnset.diamondhand = ["9L1"];
+				}
+				if (id.hoenn || id.gen === 3) {
+					this.modData('Learnsets', this.toID(id)).learnset.hoenn = ["9L1"];
+				}
+				if (id.trans) {
+					this.modData('Learnsets', this.toID(id)).learnset.trans = ["9L1"];
+				}
+				if (id.bird) {
+					this.modData('Learnsets', this.toID(id)).learnset.bird = ["9L1"];
+					this.modData('Learnsets', this.toID(id)).learnset.justthebirdsthesequel = ["9L1"];
+				}
+				if (id.fish) {
+					this.modData('Learnsets', this.toID(id)).learnset.fish = ["9L1"];
+					this.modData('Learnsets', this.toID(id)).learnset.fishield = ["9L1"];
+				}
 			}
 		}
 	},
@@ -39,13 +53,22 @@ export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
 
 				this.add('start');
 
-				// Change Zacian/Zamazenta into their Crowned formes
+				// Change Circall into Wario
 				for (const pokemon of this.getAllPokemon()) {
 					let rawSpecies: Species | null = null;
-					if (pokemon.species.id === 'zacian' && pokemon.item === 'rustedsword') {
-						rawSpecies = this.dex.species.get('Zacian-Crowned');
-					} else if (pokemon.species.id === 'zamazenta' && pokemon.item === 'rustedshield') {
-						rawSpecies = this.dex.species.get('Zamazenta-Crowned');
+					console.log(`${pokemon.species.id}\n
+								${pokemon.baseMoves.indexOf('stankyleg')}\n
+								${pokemon.baseMoves.indexOf('youwantfun')}\n
+								${pokemon.baseMoves.indexOf('wariopicrosspuzzle4g')}\n
+								${pokemon.baseMoves.indexOf('ohmygoooodwaaaaaaaaaanisfokifnouh')}\n
+								${pokemon.hasAbility('bloodlinegreatestachievement')}\n`);
+					if (pokemon.species.id === 'circall' && 
+						pokemon.baseMoves.indexOf('stankyleg') >= 0 &&
+						pokemon.baseMoves.indexOf('youwantfun') >= 0 &&
+						pokemon.baseMoves.indexOf('wariopicrosspuzzle4g') >= 0 &&
+						pokemon.baseMoves.indexOf('ohmygoooodwaaaaaaaaaanisfokifnouh') >= 0 &&
+						pokemon.hasAbility('bloodlinegreatestachievement')) {
+						rawSpecies = this.dex.species.get('Wario-Forbidden-One');
 					}
 					if (!rawSpecies) continue;
 					const species = pokemon.setSpecies(rawSpecies);
@@ -55,25 +78,6 @@ export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
 						(pokemon.gender === '' ? '' : ', ' + pokemon.gender) + (pokemon.set.shiny ? ', shiny' : '');
 					pokemon.setAbility(species.abilities['0'], null, true);
 					pokemon.baseAbility = pokemon.ability;
-
-					const behemothMove: {[k: string]: string} = {
-						'Zacian-Crowned': 'behemothblade', 'Zamazenta-Crowned': 'behemothbash',
-					};
-					const ironHead = pokemon.baseMoves.indexOf('ironhead');
-					if (ironHead >= 0) {
-						const move = this.dex.moves.get(behemothMove[rawSpecies.name]);
-						pokemon.baseMoveSlots[ironHead] = {
-							move: move.name,
-							id: move.id,
-							pp: (move.noPPBoosts || move.isZ) ? move.pp : move.pp * 8 / 5,
-							maxpp: (move.noPPBoosts || move.isZ) ? move.pp : move.pp * 8 / 5,
-							target: move.target,
-							disabled: false,
-							disabledSource: '',
-							used: false,
-						};
-						pokemon.moveSlots = pokemon.baseMoveSlots.slice();
-					}
 				}
 
 				if (this.format.onBattleStart) this.format.onBattleStart.call(this);
@@ -526,6 +530,10 @@ export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
 				canTera = true;
 				type = 'Steel';
 			}
+			if (pokemon.species.id === 'boogerponclownerstone' && type === 'Grass') {
+				canTera = true;
+				type = 'Silly';
+			}
 			if (type === 'Bug' || canTera) {
 				this.battle.add('-terastallize', pokemon, type);
 				pokemon.terastallized = type;
@@ -535,9 +543,8 @@ export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
 				pokemon.addedType = '';
 				pokemon.knownType = true;
 				pokemon.apparentType = type;
-				if (pokemon.species.baseSpecies === 'Ogerpon') {
-					const tera = pokemon.species.id === 'ogerpon' ? 'tealtera' : 'tera';
-					pokemon.formeChange(pokemon.species.id + tera, null, true);
+				if (pokemon.species.id === 'boogerponclownerstone') {
+					pokemon.formeChange('boogerponclownerstonetera', null, true);
 				}
 				if (pokemon.species.name === 'Terapagos-Terastal' && type === 'Stellar') {
 					pokemon.formeChange('Terapagos-Stellar', null, true);
@@ -1304,6 +1311,22 @@ export const Scripts: {[k: string]: ModdedBattleScriptsData} = {
 			if ('telekinesis' in this.volatiles) return false;
 			return item !== 'airballoon';
 		},
+		effectiveWeather(message?: string | boolean) {
+			const weather = this.battle.field.effectiveWeather();
+			switch (weather) {
+			case 'sunnyday':
+			case 'raindance':
+			case 'desolateland':
+			case 'primordialsea':
+				if (this.hasItem('utilityumbrella')) return '';
+			}
+			// TODO: check interactions of Mega Sol with Utility Umbrella and Desolate Land
+			if (this.hasAbility('lemonga') && this.battle.activePokemon === this && weather !== 'acidrain') {
+				if (message) this.battle.add('-activate', this, 'ability: Lemonga Sour');
+				return 'acidrain' as ID;
+			}
+			return weather;
+		}
 	},
 	field: {
 		inherit: true,

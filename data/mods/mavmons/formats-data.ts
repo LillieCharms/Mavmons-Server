@@ -35,4 +35,12 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
+	andrew: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
+	cheez: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
 };
