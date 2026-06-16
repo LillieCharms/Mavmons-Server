@@ -389,30 +389,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -16,
 	},
-	multiscale: {
-		onSourceModifyDamage(damage, source, target, move) {
-			if (target.hp >= target.maxhp) {
-				this.debug('Multiscale weaken');
-				return this.chainModify(0.5);
-			}
-		},
-		onSourceModifyDamage(damage, source, target, move) {
-			if (move.type === 'Fighting' && target.getMoveHitData(move).typeMod > 0) {
-				const hitSub = target.volatiles['substitute'] && !move.flags['bypasssub'] && !(move.infiltrates && this.gen >= 6);
-				if (hitSub) return;
-
-				if (target.eatItem()) {
-					this.debug('-50% reduction');
-					this.add('-enditem', target, this.effect, '[weaken]');
-					return this.chainModify(0.5);
-				}
-			}
-		},
-		flags: {breakable: 1},
-		name: "Multiscale",
-		rating: 3.5,
-		num: 136,
-	},
 	perplexinggaze: {
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
