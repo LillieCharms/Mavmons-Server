@@ -43,4 +43,8 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
+	roaringknight: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
 };
