@@ -1376,6 +1376,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
         category: "Physical",
         name: "God of Lights Tyrfing",
         pp: 5,
+        priority: -3,
         flags: { protect: 1, failmefirst: 1, nosleeptalk: 1, noassist: 1, failcopycat: 1},
         priorityChargeCallback(pokemon) {
             pokemon.addVolatile('godoflightstyrfing');
@@ -1393,7 +1394,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
                 this.boost({ atk: 3, def: 3, spd: 3}, attacker, attacker, move);
                 }
             },
-        },
         onAfterMove(pokemon) {
             pokemon.removeVolatile('godoflightstyrfing');
         },
@@ -1401,37 +1401,14 @@ export const Moves: {[k: string]: ModdedMoveData} = {
             boosts: {
                 atk: -3,
                 def: -3,
-				spd: -3,
+                spd: -3,
             },
         },
         secondary: null,
         target: "normal",
-        type: "Steel",
+        type: "Fighting",
         contestType: "Tough",
     },
-	godslayersword: {
-		num: -38,
-		accuracy: 100,
-		basePower: 80,
-		category: "Physical",
-		name: "Godslayer Sword",
-		shortDesc: "If not very effective: hits for neutral effectiveness.",
-		pp: 5,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1, contact: 1, slicing: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Sacred Sword", target);
-		},
-		onEffectiveness(typeMod, target, type, move) {
-			if (typeMod < 0) {
-				return 0;
-			}
-		},
-		target: "normal",
-		type: "Normal",
-		contestType: "Cool",
-	},
 	guardianorbitars: {
 		num: -39,
 		accuracy: true,
