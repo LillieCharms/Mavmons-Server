@@ -1240,6 +1240,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 60,
 		category: "Physical",
 		name: "Cargo Throw",
+		shortDesc: "Switches the opponent out. If the opponent is under half HP, always crits. Hits Ghost-types.",
 		pp: 16,
 		priority: -6,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
@@ -1271,6 +1272,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		category: "Physical",
 		name: "Crystal Barrage",
+		shortDesc: "Hits 4 times, each successful hit, damage increases. Super effective on Dark types.",
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
@@ -1289,21 +1291,22 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePowerCallback(pokemon, target, move) {
 			// You can't get here unless the pursuit succeeds
 			if (target.beingCalledBack || target.switchFlag) {
-				this.debug('pursuit damage boost');
+				this.debug('swoon damage boost');
 				return move.basePower * 3;
 			}
 			return move.basePower;
 		},
 		category: "Physical",
 		name: "Swoon",
+		shortDesc: "if opponent is attempting to switch out, this attack does 150 and hits before switching.",
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 		beforeTurnCallback(pokemon) {
 			for (const side of this.sides) {
 				if (side.hasAlly(pokemon)) continue;
-				side.addSideCondition('pursuit', pokemon);
-				const data = side.getSideConditionData('pursuit');
+				side.addSideCondition('swoon', pokemon);
+				const data = side.getSideConditionData('swoon');
 				if (!data.sources) {
 					data.sources = [];
 				}
@@ -1314,18 +1317,18 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			if (target?.beingCalledBack || target?.switchFlag) move.accuracy = true;
 		},
 		onTryHit(target, pokemon) {
-			target.side.removeSideCondition('pursuit');
+			target.side.removeSideCondition('swoon');
 		},
 		condition: {
 			duration: 1,
 			onBeforeSwitchOut(pokemon) {
-				this.debug('Pursuit start');
+				this.debug('Swoon start');
 				let alreadyAdded = false;
 				pokemon.removeVolatile('destinybond');
 				for (const source of this.effectState.sources) {
 					if (!source.isAdjacent(pokemon) || !this.queue.cancelMove(source) || !source.hp) continue;
 					if (!alreadyAdded) {
-						this.add('-activate', pokemon, 'move: Pursuit');
+						this.add('-activate', pokemon, 'move: Swoon');
 						alreadyAdded = true;
 					}
 					// Run through each action in queue to check if the Pursuit user is supposed to Mega Evolve this turn.
@@ -1339,7 +1342,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 							}
 						}
 					}
-					this.actions.runMove('pursuit', source, source.getLocOf(pokemon));
+					this.actions.runMove('swoon', source, source.getLocOf(pokemon));
 				}
 			},
 		},

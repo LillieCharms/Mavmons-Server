@@ -140,7 +140,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 	},
 	vince: {
 		learnset: {
-			calmmind: ["9L1"],
 			return: ["9L1"],
 			extremespeed: ["9L1"],
 			psychic: ["9L1"],
@@ -164,8 +163,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			knockoff: ["9L1"],
 			aquaring: ["9L1"],
 			waterspout: ["9L1"],
-			nastyplot: ["9L1"],
-			rapidspin: ["9L1"],
+			burstbomb: ["9L1"],
 			trizooka: ["9L1"],
 			deepbreath: ["9L1"],
 		},
