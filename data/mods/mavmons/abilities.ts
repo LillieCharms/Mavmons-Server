@@ -393,6 +393,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onStart(pokemon) {
 			if (pokemon.m.guardBroken === undefined) {
 				pokemon.m.guardBroken = false;
+				this.field.addPseudoWeather('darkness');
 			}
 		},
 
