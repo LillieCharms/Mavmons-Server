@@ -389,6 +389,35 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -16,
 	},
+	yetdarker: {
+		onStart(pokemon) {
+			if (pokemon.m.guardBroken === undefined) {
+				pokemon.m.guardBroken = false;
+			}
+		},
+
+		onSourceModifyDamage(damage, source, target, move) {
+			if (!target.m.guardBroken) {
+				return this.chainModify(0.5);
+			}
+		},
+
+		onDamagingHit(damage, target, source, move) {
+			const hitData = target.getMoveHitData(move);
+
+			if (!target.m.guardBroken && hitData?.typeMod > 0) {
+				target.m.guardBroken = true;
+
+				this.add('-activate', target, 'ability: Yet Darker');
+				this.add('-message', `${target.name} let its guard down!`);
+			}
+		},
+		flags: {},
+		name: "Yet Darker",
+		shortDesc: "Sets Darkness upon switch in, half damage from attacks until Super Effective hit.",
+		rating: 4,
+		num: -17,
+	},
 	perplexinggaze: {
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
