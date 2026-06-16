@@ -405,7 +405,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			swift: ["9L1"],
 			nightmare: ["9L1"],
 			rollout: ["9L1"],
-			frusturation: ["9L1"],
+			frustration: ["9L1"],
 			psychoshift: ["9L1"],
 			shadowsneak: ["9L1"],
 			sacredsword: ["9L1"],
