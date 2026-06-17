@@ -1184,7 +1184,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -30,
 		accuracy: 100,
 		basePower: 130,
-		category: "Physical",
+		category: "Special",
 		name: "Flame of Ideals",
 		pp: 1,
 		priority: 0,

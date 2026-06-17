@@ -38,7 +38,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	shelteriumz: {
 		name: "Shelterium Z",
-		desc: "If held by Roaring Knight with Crystal Nova, it can use Crystal Nova.",
+		desc: "If held by Roaring Knight with Sword Tunnel, it can use Crystal Nova.",
 		spritenum: 686,
 		onTakeItem: false,
 		zMove: "Crystal Nova",

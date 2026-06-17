@@ -446,7 +446,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
                 }
         },
         flags: {},
-        name: "We Cant Afford Not To Try",
+        name: "We Can't Afford Not To Try!",
         rating: 4.5,
         num: -18,
     },

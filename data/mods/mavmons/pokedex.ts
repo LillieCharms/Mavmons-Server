@@ -125,13 +125,13 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "Unaware", 1: "Smash Rage", H: "CheezEsports"},
 		weightkg: 75,
 	},
-//saving this space for nindo if he ever does his mon, numL 2011
+//saving this space for nindo if he ever does his mon, num: 2011
 	roaringknight: {
 		num: 2012,
 		name: "Roaring Knight",
 		types: ["Dark"],
 		gender: "N",
-		baseStats: {hp: 79, atk: 160, def: 160, spa: 79, spd: 79, spe: 143},
+		baseStats: {hp: 100, atk: 120, def: 98, spa: 100, spd: 90, spe: 142},
 		abilities: {0: "Aura Break", 1: "Emergency Exit", H: "Yet Darker"},
 		weightkg: 75,
 	},
