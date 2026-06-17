@@ -22,25 +22,29 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		rating: 3,
 		// Hazard Immunity implemented in moves.ts
 	},
-	maannaniumz: {
-		name: "Maannanium Z",
-		desc: "If held by Ishtar with Meteor Beam, it can use Mountain Range-Shaking Firewood of Venus.",
-		spritenum: 643,
+	dianthite: {
+		name: "Dianthite",
+		desc: "If held by Diantha, this item allows her to Mega Evolve in battle.",
+		spritenum: 625,
 		onTakeItem: false,
-		zMove: "Mountain Range-Shaking Firewood of Venus",
-		zMoveFrom: "Meteor Beam",
-		itemUser: ["Ishtar"],
-		num: -4,
+		megaStone: "Diantha-Mega",
+		megaEvolves: "Diantha",
+		itemUser: ["Diantha"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
+			return true;
+		},
+		num: -3,
 		gen: 9,
 	},
-	hecatiumz: {
-		name: "Hecatium Z",
-		desc: "If held by Hecatia-Tropical with Life Soup, it can use Water Planet.",
-		spritenum: 633,
+	shelteriumz: {
+		name: "Shelterium Z",
+		desc: "If held by Roaring Knight with Crystal Nova, it can use Crystal Nova.",
+		spritenum: 686,
 		onTakeItem: false,
-		zMove: "Water Planet",
-		zMoveFrom: "Life Soup",
-		itemUser: ["Hecatia-Tropical"],
+		zMove: "Crystal Nova",
+		zMoveFrom: "Sword Tunnel",
+		itemUser: ["Roaring Knight"],
 		num: -4,
 		gen: 9,
 	},
@@ -55,10 +59,10 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		num: -5,
 		gen: 9,
 	},
-	// unresolved issues with Negative Zone, not implementing
 	threesacredtreasures: {
 		name: "Three Sacred Treasures",
 		desc: "If held by Pit, this item allows him to Mega Evolve in battle.",
+		onTakeItem: false,
 		megaStone: "Pit-Mega",
 		megaEvolves: "Pit",
 		itemUser: ["Pit"],

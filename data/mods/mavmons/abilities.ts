@@ -126,13 +126,31 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -1,
 	},
 	benmode: {
-		onResidualOrder: 29,
+	    onResidualOrder: 29,
 		onResidual(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.species.id === 'benbenmode' || pokemon.hp > pokemon.maxhp / 2) return;
-			this.add('-activate', pokemon, 'ability: Ben Mode');
-			pokemon.formeChange('benbenmode', this.effect, true);
+			if (pokemon.baseSpecies.baseSpecies !== 'Ben' || pokemon.transformed) {
+				return;
+			}
+
+			if (pokemon.hp <= pokemon.maxhp / 2 && pokemon.species.forme !== 'Ben-Mode') {
+				this.add('-activate', pokemon, 'ability: Ben Mode');
+				pokemon.formeChange('benben', this.effect, true);
+			} else if (pokemon.hp > pokemon.maxhp / 2 && pokemon.species.forme === 'Ben-Mode') {
+				pokemon.formeChange('Ben', this.effect, true);
+			}
 		},
+		condition: {
+			onStart(pokemon) {
+				if (pokemon.species.id !== 'benben') {
+					pokemon.formeChange('Ben-Mode');
+				}
+			},
+			onEnd(pokemon) {
+				if (pokemon.species.forme === 'Ben-Mode') {
+					pokemon.formeChange('Ben');
+				}
+			},
+		}
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
 		rating: 5,
@@ -393,23 +411,18 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onStart(pokemon) {
 			if (pokemon.m.guardBroken === undefined) {
 				pokemon.m.guardBroken = false;
-				
 			}
 			this.field.addPseudoWeather('darkness');
 		},
-
 		onSourceModifyDamage(damage, source, target, move) {
 			if (!target.m.guardBroken) {
 				return this.chainModify(0.75);
 			}
 		},
-
 		onDamagingHit(damage, target, source, move) {
 			const hitData = target.getMoveHitData(move);
-
 			if (!target.m.guardBroken && hitData?.typeMod > 0) {
 				target.m.guardBroken = true;
-
 				this.add('-activate', target, 'ability: Yet Darker');
 				this.add('-message', `${target.name} let its guard down!`);
 			}

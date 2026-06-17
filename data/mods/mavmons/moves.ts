@@ -1253,29 +1253,23 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Fighting",
 		contestType: "Cool",
 	},
-	crystalbarrage: {
+	swordtunnel: {
 		num: -34,
-		accuracy: 95,
-		basePower: 10,
+		accuracy: 100,
+		basePower: 18,
 		basePowerCallback(pokemon, target, move) {
-			return 10 * move.hit;
-		},
-		onEffectiveness(typeMod, target, type) {
-			if (type === 'Dark') return 1;
+			return 18 * move.hit;
 		},
 		category: "Physical",
-		name: "Crystal Barrage",
-		shortDesc: "Hits 4 times, each successful hit, damage increases. Super effective on Dark types.",
+		name: "Sword Tunnel",
+		shortDesc: "Hits 5 times.",
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, bullet: 1, metronome: 1},
-		multihit: 4,
-		multiaccuracy: true,
+		multihit: 5,
 		secondary: null,
 		target: "normal",
 		type: "Dark",
-		zMove: {basePower: 130},
-		maxMove: {basePower: 140},
 	},
 	swoon: {
 		num: -35,
@@ -1292,7 +1286,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Swoon",
 		shortDesc: "if opponent is attempting to switch out, this attack does 100 and hits before switching.",
-		pp: 5,
+		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 		beforeTurnCallback(pokemon) {
@@ -1344,106 +1338,75 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Dark",
 		contestType: "Clever",
 	},
-	goetia: {
-		num: -36,
-		accuracy: 75,
-		basePower: 120,
-		category: "Special",
-		name: "Goetia",
-		shortDesc: "No additional effect.",
-		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Black Hole Eclipse", target);
-			this.add('-anim', source, "Thunder", target);
-		},
-		target: "normal",
-		type: "Dark",
-		contestType: "Beautiful",
-	},
 	godoflightstyrfing: {
-        num: -1,
+        num: -36,
         accuracy: 100,
         basePower: 40,
         category: "Physical",
         name: "God of Lights Tyrfing",
         pp: 5,
         priority: 0,
-        flags: { protect: 1, failmefirst: 1, nosleeptalk: 1, noassist: 1, failcopycat: 1},
-        onTryMove(attacker, defender, move) {
-                if (attacker.removeVolatile(move.id)) {
-                    return;
-                }
-                this.add('-prepare', attacker, move.name);
-                this.boost({ atk: 3, def: 3, spd: 3}, attacker, attacker, move);
-                },
-        onAfterMove(pokemon, target, move) {
-                    this.damage(Math.round(pokemon.maxhp / 8), pokemon, pokemon, this.dex.conditions.get('Steel Beam'), true);
-        },
-        self: {
-            boosts: {
-                atk: -3,
-                def: -3,
-                spd: -3,
+        flags: { protect: 1},
+        priorityChargeCallback(pokemon) {
+            pokemon.addVolatile('godoflightstyrfing');
             },
+        condition: {
+            duration: 1,
+            onStart(pokemon) {
+                this.add('-singleturn', pokemon, 'move: God of Lights Tyrfing');
+                            this.add('-prepare', pokemon);
+                this.boost({ atk: 3, def: 3, spd: 3}, pokemon);
+            },
+            onAfterMove(pokemon, target, move) {
+                    this.damage(Math.round(pokemon.maxhp / 8), pokemon, pokemon, this.dex.conditions.get('Steel Beam'), true);
+            },
+            onEnd(pokemon) {
+            this.boost({ atk: -3, def: -3, spd: -3}, pokemon);
+            }
         },
         secondary: null,
         target: "normal",
         type: "Steel",
         contestType: "Tough",
     },
-	guardianorbitars: {
-		num: -39,
+	crystalnova: {
+		num: -37,
 		accuracy: true,
-		basePower: 0,
-		category: "Status",
-		name: "Guardian Orbitars",
-		shortDesc: "Special attacks targeting the user's side get reflected for the rest of the turn.",
-		pp: 20,
-		priority: 4,
-		flags: {metronome: 1},
+		basePower: 180,
+		category: "Special",
+		name: "Crystal Nova",
+		shortDesc: "Uses Atk stat. Resets Darkness for a total of 8 turns.",
+		pp: 1,
+		priority: 0,
+		flags: {},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Magic Coat", source);
+			this.add('-anim', source, "Night Shade", target);
+			this.add('-anim', source, "Black Hole Eclipse", target);
+			this.add('-anim', source, "Behemoth Blade", target);
 		},
-		volatileStatus: 'guardianorbiters',
-		condition: {
-			duration: 1,
-			onStart(target, source, effect) {
-				this.add('-singleturn', target, 'move: Guardian Orbiters');
-				if (effect?.effectType === 'Move') {
-					this.effectState.pranksterBoosted = effect.pranksterBoosted;
-				}
-			},
-			onTryHitPriority: 2,
-			onTryHit(target, source, move) {
-				if (target === source || move.hasBounced || !move.category === 'Special') {
-					return;
-				}
-				const newMove = this.dex.getActiveMove(move.id);
-				newMove.hasBounced = true;
-				newMove.pranksterBoosted = this.effectState.pranksterBoosted;
-				this.actions.useMove(newMove, target, source);
-				return null;
-			},
-			onAllyTryHitSide(target, source, move) {
-				if (target.isAlly(source) || move.hasBounced || !move.category === 'Special') {
-					return;
-				}
-				const newMove = this.dex.getActiveMove(move.id);
-				newMove.hasBounced = true;
-				newMove.pranksterBoosted = false;
-				this.actions.useMove(newMove, this.effectState.target, source);
-				return null;
-			},
+		onHit(target, source) {
+			const id = 'darkness';
+			const pw = this.field.pseudoWeather[id];
+			if (pw) {
+				const remaining = pw.duration || 0;
+				this.field.removePseudoWeather(id);
+				this.field.addPseudoWeather(id, source, null, {
+					duration: remaining + 3,
+				});
+				this.add('-message', "The Roaring extends the Darkness!");
+			} else {
+				this.field.addPseudoWeather(id, source, null, {
+					duration: 5,
+				});
+			}
 		},
+		overrideOffensiveStat: 'atk',
+		isZ: "shelteriumz",
 		secondary: null,
-		target: "self",
-		type: "Fairy",
-		zMove: {boost: {spd: 1}},
-		contestType: "Clever",
+		target: "normal",
+		type: "Dark",
+		contestType: "Cool",
 	},
 	finalstrike: {
 		num: -40,

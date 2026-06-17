@@ -16,6 +16,18 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		baseStats: {hp: 105, atk: 80, def: 90, spa: 165, spd: 104, spe: 136},
 		abilities: {0: "Cute Charm", 1: "Caged Demon", H: "Solidarity"}, 
 		weightkg: 50,
+		otherFormes: ["Diantha-Mega"],
+	},
+	dianthamega: {
+		num: 2001,
+		name: "Diantha-Mega",
+		types: ["Fairy", "Steel"],
+		gender: "F",
+		baseStats: {hp: 105, atk: 91, def: 144, spa: 170, spd: 144, spe: 126},
+		abilities: {0: "Lady's Iron Will"}, 
+		weightkg: 100,
+		otherFormes: ["Diantha-Mega"],
+		requiredItem: "Dianthite",
 	},
 	ben: {
 		num: 2002,
@@ -28,11 +40,11 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		otherFormes: ["Ben-Mode"],
 		weightkg: 80,
 	},
-	benbenmode: {
+	benben: {
 		num: 2002,
 		name: "Ben-Ben",
     	baseSpecies: "Ben",
-		forme: "Ben-Mode",
+		forme: "BenMode",
 		types: ["Electric", "Psychic"],
     	gender: "M",
 		baseStats: {hp: 80, atk: 151, def: 100, spa: 135, spd: 94, spe: 151},
@@ -120,7 +132,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Dark"],
 		gender: "N",
 		baseStats: {hp: 79, atk: 160, def: 160, spa: 79, spd: 79, spe: 143},
-		abilities: {0: "Sharpness", 1: "Yet Darker"},
+		abilities: {0: "Aura Break", 1: "Emergency Exit", H: "Yet Darker"},
 		weightkg: 75,
 	},
 	ryuko: {
@@ -132,6 +144,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "Life Fiber Syncronize"},
 		weightkg: 75,
 	},
+
 	wochien: {
 		num: 1001,
 		name: "Wo-Chien",
