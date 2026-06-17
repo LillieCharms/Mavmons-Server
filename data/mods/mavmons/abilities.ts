@@ -451,9 +451,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
         num: -18,
     },
 	ladysironwill: {
-		onSwitchOut(pokemon) {
-			pokemon.heal(pokemon.baseMaxhp / 3);
-		},
 		onCheckShow(pokemon) {
 				// This is complicated
 				// For the most part, in-game, it's obvious whether or not Natural Cure activated,
@@ -518,6 +515,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				}
 			},
 			onSwitchOut(pokemon) {
+				pokemon.heal(pokemon.baseMaxhp / 3);
 				if (!pokemon.status) return;
 	
 				// if pokemon.showCure is undefined, it was skipped because its ability

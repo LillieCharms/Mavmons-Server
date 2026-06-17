@@ -61,7 +61,6 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	threesacredtreasures: {
 		name: "Three Sacred Treasures",
 		desc: "If held by Pit, this item allows him to Mega Evolve in battle.",
-		onTakeItem: false,
 		megaStone: "Pit-Mega",
 		megaEvolves: "Pit",
 		itemUser: ["Pit"],
