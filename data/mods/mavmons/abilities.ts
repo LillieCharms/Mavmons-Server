@@ -448,18 +448,94 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
         flags: {},
         name: "We Cant Afford Not To Try",
         rating: 4.5,
-        num: -1,
+        num: -18,
     },
-	rainbowpuppeteer: {
-		onModifyMove(move) {
-			move.forceSTAB = true;
+	ladysironwill: {
+		onSwitchOut(pokemon) {
+			pokemon.heal(pokemon.baseMaxhp / 3);
 		},
+		onCheckShow(pokemon) {
+				// This is complicated
+				// For the most part, in-game, it's obvious whether or not Natural Cure activated,
+				// since you can see how many of your opponent's pokemon are statused.
+				// The only ambiguous situation happens in Doubles/Triples, where multiple pokemon
+				// that could have Natural Cure switch out, but only some of them get cured.
+				if (pokemon.side.active.length === 1) return;
+				if (pokemon.showCure === true || pokemon.showCure === false) return;
+	
+				const cureList = [];
+				let noCureCount = 0;
+				for (const curPoke of pokemon.side.active) {
+					// pokemon not statused
+					if (!curPoke?.status) {
+						// this.add('-message', "" + curPoke + " skipped: not statused or doesn't exist");
+						continue;
+					}
+					if (curPoke.showCure) {
+						// this.add('-message', "" + curPoke + " skipped: Natural Cure already known");
+						continue;
+					}
+					const species = curPoke.species;
+					// pokemon can't get Natural Cure
+					if (!Object.values(species.abilities).includes("Lady's Iron Will")) {
+						// this.add('-message', "" + curPoke + " skipped: no Natural Cure");
+						continue;
+					}
+					// pokemon's ability is known to be Natural Cure
+					if (!species.abilities['1'] && !species.abilities['H']) {
+						// this.add('-message', "" + curPoke + " skipped: only one ability");
+						continue;
+					}
+					// pokemon isn't switching this turn
+					if (curPoke !== pokemon && !this.queue.willSwitch(curPoke)) {
+						// this.add('-message', "" + curPoke + " skipped: not switching");
+						continue;
+					}
+	
+					if (curPoke.hasAbility('ladysironwill')) {
+						// this.add('-message', "" + curPoke + " confirmed: could be Natural Cure (and is)");
+						cureList.push(curPoke);
+					} else {
+						// this.add('-message', "" + curPoke + " confirmed: could be Natural Cure (but isn't)");
+						noCureCount++;
+					}
+				}
+	
+				if (!cureList.length || !noCureCount) {
+					// It's possible to know what pokemon were cured
+					for (const pkmn of cureList) {
+						pkmn.showCure = true;
+					}
+				} else {
+					// It's not possible to know what pokemon were cured
+	
+					// Unlike a -hint, this is real information that battlers need, so we use a -message
+					this.add('-message', "(" + cureList.length + " of " + pokemon.side.name + "'s pokemon " + (cureList.length === 1 ? "was" : "were") + " cured by Lady's Iron Will.)");
+	
+					for (const pkmn of cureList) {
+						pkmn.showCure = false;
+					}
+				}
+			},
+			onSwitchOut(pokemon) {
+				if (!pokemon.status) return;
+	
+				// if pokemon.showCure is undefined, it was skipped because its ability
+				// is known
+				if (pokemon.showCure === undefined) pokemon.showCure = true;
+	
+				if (pokemon.showCure) this.add('-curestatus', pokemon, pokemon.status, "[from] ability: Lady's Iron Will");
+				pokemon.clearStatus();
+	
+				// only reset .showCure if it's false
+				// (once you know a Pokemon has Natural Cure, its cures are always known)
+				if (!pokemon.showCure) pokemon.showCure = undefined;
+			},
 		flags: {},
-		name: "Rainbow Puppeteer",
-		shortDesc: "This Pokemon's moves have STAB.",
-		rating: 4,
-		num: -20,
-	},
+		name: "Lady's Iron Will",
+		rating: 4.5,
+		num: -19,
+		},
 	devouringjaw: {
 		onModifyMove(move) {
 			if (move.flags['bite']) { 
