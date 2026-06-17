@@ -26,7 +26,6 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		name: "Dianthite",
 		desc: "If held by Diantha, this item allows her to Mega Evolve in battle.",
 		spritenum: 625,
-		onTakeItem: false,
 		megaStone: "Diantha-Mega",
 		megaEvolves: "Diantha",
 		itemUser: ["Diantha"],

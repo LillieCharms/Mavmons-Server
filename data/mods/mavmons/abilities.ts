@@ -150,7 +150,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 					pokemon.formeChange('Ben');
 				}
 			},
-		}
+		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
 		rating: 5,
