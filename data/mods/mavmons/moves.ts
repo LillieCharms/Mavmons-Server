@@ -766,52 +766,28 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Clever",
 	},
-	phantom: {
+	elementalbomb: {
 		num: -18,
 		accuracy: 100,
-		basePower: 120,
+		basePower: 45,
 		category: "Special",
-		shortDesc: "Deals damage two turns after use.",
-		name: "Phantom",
+		shortDesc: "Hits 2 times, each hit has a 20% chance to burn.",
+		name: "Elemental Bomb",
 		pp: 5,
+		multihit: 2,
 		priority: 0,
-		flags: {allyanim: 1, metronome: 1, futuremove: 1},
-		ignoreImmunity: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, bullet: 1},
  		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-message', source.name + " is setting up Phantom!");
-			this.add('-anim', source, "Future Sight", target);
+			this.add('-anim', source, "Weather Ball", target);
 		},
-		onHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Secret Sword", target);
-		},
-		onTry(source, target) {
-			if (!target.side.addSlotCondition(target, 'futuremove')) return false;
-			Object.assign(target.side.slotConditions[target.position]['futuremove'], {
-				duration: 3,
-				move: 'phantom',
-				source: source,
-				moveData: {
-					id: 'phantom',
-					name: "Phantom",
-					accuracy: 100,
-					basePower: 120,
-					category: "Special",
-					priority: 0,
-					flags: {allyanim: 1, metronome: 1, futuremove: 1},
-					ignoreImmunity: false,
-					effectType: 'Move',
-					type: 'Ghost',
+		secondary: {
+					chance: 20,
+					status: 'brn',
 				},
-			});
-			this.add('-start', source, 'move: Phantom');
-			return this.NOT_FAIL;
-		},
-		secondary: null,
 		target: "normal",
-		type: "Ghost",
-		contestType: "Tough",
+		type: "Normal",
+		contestType: "Clever",
 	},
 	starshatter: {
 		num: -19,
@@ -822,7 +798,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Starshatter",
 		pp: 15,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, heal: 1},
+		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 		  this.attrLastMove('[still]');
 		  this.add('-anim', source, "Rock Blast", target);
@@ -1408,102 +1384,225 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Dark",
 		contestType: "Cool",
 	},
-	finalstrike: {
-		num: -40,
-		accuracy: 90,
-		basePower: 130,
-		category: "Special",
-		name: "Final Strike",
-		shortDesc: "Lowers the user's Special Attack by 1.",
+	musouisshin: {
+		num: -38,
+		accuracy: 100,
+		basePower: 100,
+		category: "Physical",
+		name: "Musou Isshin",
+		shortDesc: "No Secondary Effect.",
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Judgment", target);
-			this.add('-anim', source, "Light of Ruin", target);
-		},
-		self: {
-			boosts: {
-				spa: -1,
-			},
+			this.add('-anim', source, "Fusion Bolt", source);
 		},
 		secondary: null,
 		target: "normal",
-		type: "Fairy",
-		contestType: "Beautiful",
+		type: "Electric",
+		contestType: "Cool",
 	},
-	schemeofacuity: {
+	eternalpatience: {
+			num: -39,
+			accuracy: true,
+			basePower: 0,
+			category: "Status",
+			name: "Eternal Patience",
+			shortDesc: "Protects from attacks. If attacked, deals 1/10th Max HP damage to opponent.",
+			pp: 10,
+			priority: 4,
+			flags: {noassist: 1, failcopycat: 1},
+			onPrepareHit(target, source, move) {
+				this.attrLastMove('[still]');
+				this.add('-anim', source, "Protect", source);
+			},
+			stallingMove: true,
+			volatileStatus: 'eternalpatience',
+			onPrepareHit(pokemon) {
+				return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+			},
+			onHit(pokemon) {
+				pokemon.addVolatile('stall');
+			},
+			condition: {
+				duration: 1,
+				onStart(target) {
+					this.add('-singleturn', target, 'move: Protect');
+				},
+				onTryHitPriority: 3,
+				onTryHit(target, source, move) {
+					if (!move.flags['protect'] || move.category === 'Status') {
+						if (['gmaxoneblow', 'gmaxrapidflow'].includes(move.id)) return;
+						if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
+						return;
+					}
+					if (move.smartTarget) {
+						move.smartTarget = false;
+					} else {
+						this.add('-activate', target, 'move: Protect');
+					}
+					const lockedmove = source.getVolatile('lockedmove');
+					if (lockedmove) {
+						// Outrage counter is reset
+						if (source.volatiles['lockedmove'].duration === 2) {
+							delete source.volatiles['lockedmove'];
+						}
+					}
+					this.damage(source.baseMaxhp / 10, source, target);
+					return this.NOT_FAIL;
+				},
+				onHit(target, source, move) {
+					this.damage(source.baseMaxhp / 10, source, target);
+				},
+			},
+			secondary: null,
+			target: "self",
+			type: "Ghost",
+			zMove: {boost: {def: 1}},
+			contestType: "Tough",
+		},
+	musounohitotachi: {
+			num: -40,
+			accuracy: true,
+			basePower: 0,
+			damageCallback(pokemon, target) {
+						return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 5), 2);
+					},
+			category: "Special",
+			name: "Musou no Hitotachi",
+			pp: 1,
+			priority: 0,
+			flags: {},
+			onPrepareHit(target, source, move) {
+				this.attrLastMove('[still]');
+				this.add('-anim', source, "Poltergeist", source);
+			},
+			isZ: "lesbiumz",
+			breaksProtect: true,
+			secondary: {
+						chance: 100,
+						volatileStatus: 'flinch',
+					},
+			target: "normal",
+			type: "Electric",
+			contestType: "Tough",
+		},
+	senketsukisarai: {
 		num: -41,
+		accuracy: 100,
+		basePower: 200,
+		category: "Physical",
+		name: "Senketsu Kisaragi",
+		shortDesc: "Can only be used by Ryuko-Syncronized, reverts back to Ryuko Matoi.",
+		pp: 5,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, slicing: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Extreme Evoboost", source);
+			this.add('-anim', source, "Behemoth Blade", target);
+		},
+		secondary: null,
+		self: {
+			onHit(pokemon) {
+				if (pokemon.species.id !== 'ryukosyncronized') return;
+
+				pokemon.formeChange('Ryuko Matoi', this.effect, true);
+				this.add('-formechange', pokemon, 'Ryuko Syncronized', '[from] move: Senketsu Kisaragi');
+				this.add('-message', 'Ryuko burnt up all her life fibers and reverted back to her base form!');
+
+
+			},
+		},
+		target: "normal",
+		type: "Fire",
+		contestType: "Cool",
+	},
+	darkestlariat: {
+		num: -42,
+		accuracy: 100,
+		basePower: 90,
+		category: "Physical",
+		name: "Darkest Lariat",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		ignoreEvasion: true,
+		ignoreDefensive: true,
+		ignoreAbility: true,
+		secondary: {
+					chance: 20,
+					self: {
+						boosts: {
+							atk: 1,
+						},
+					},
+				},
+		target: "normal",
+		type: "Fire",
+		contestType: "Cool",
+	},
+	decapitationmode: {
+		num: -43,
+		accuracy: 100,
+		basePower: 70,
+		category: "Physical",
+		name: "Decapitation Mode",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (target.hp * 2 <= target.maxhp) {
+				return this.chainModify(2);
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Fire",
+		contestType: "Tough",
+	},
+	senisoshitsu: {
+			num: -44,
+			accuracy: true,
+			basePower: 20,
+			category: "Physical",
+			name: "SEN-I-SOSHITSU",
+			pp: 8,
+			priority: 0,
+			flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+			onAfterMoveSecondarySelf(pokemon, target, move) {
+				if (!target || target.fainted || target.hp <= 0) this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1}, pokemon, pokemon, move);
+			},
+			secondary: null,
+			target: "normal",
+			type: "Fire",
+			contestType: "Cool",
+		},
+	rudebuster: {
+		num: -45,
 		accuracy: 100,
 		basePower: 80,
 		category: "Special",
-		name: "Scheme of Acuity",
-		shortDesc: "Prevents the target from switching out.",
+		name: "Rude Buster",
+		shortDesc: "Uses Atk in calculation, deals Rude damage.",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		overrideOffensiveStat: 'def',
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Laser Focus", source);
-			this.add('-anim', source, "Leaf Storm", target);
+			this.add('-anim', source, "Spatial Rend", source);
+			this.add('-anim', source, "Psywave", target);
 		},
-		secondary: {
-			chance: 100,
-			onHit(target, source, move) {
-				if (source.isActive) target.addVolatile('trapped', source, move, 'trapper');
-			},
+		onModifyMove(move, pokemon) {
+			if (pokemon.species.id === 'susie') {
+				move.forceSTAB = true;
+			}
 		},
-		target: "normal",
-		type: "Grass",
-		contestType: "Clever",
-	},
-	illusoryheartburst: {
-		num: -42,
-		accuracy: true,
-		basePower: 160,
-		category: "Special",
-		name: "Illusory Heartburst",
-		shortDesc: "Sets Grassy Terrain.",
-		pp: 1,
-		priority: 0,
-		flags: {},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Geomancy", source);
-			this.add('-anim', source, "Grass Knot", target);
-		},
-		isZ: "nahidiumz",
-		self: {
-			onHit(source) {
-				this.field.setTerrain('grassyterrain');
-			},
-		},
-		target: "normal",
-		type: "Grass",
-		contestType: "Cute",
-	},
-	// Inhale is -43, but Kirby is uncoded
-	// Star Spit is -44, but Kirby is uncoded
-	devilsknife: {
-		num: -45,
-		accuracy: 100,
-		basePower: 60,
-		category: "Physical",
-		name: "Devilsknife",
-		shortDesc: "Hits twice.",
-		pp: 10,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, slicing: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Swords Dance", source);
-			this.add('-anim', source, "Shadow Claw", target);
-		},
-		multihit: 2,
 		secondary: null,
 		target: "normal",
-		type: "Ghost",
+		type: "???",
 		contestType: "Clever",
 	},
 	snowgrave: {

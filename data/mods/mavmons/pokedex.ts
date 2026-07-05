@@ -77,7 +77,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fairy", "Ice"],
 		gender: "F",
 		baseStats: {hp: 104, atk: 99, def: 105, spa: 110, spd: 125, spe: 101},
-		abilities: {0: "Refrigerate", 1: "Color Pulse", H: "Solidarity"},
+		abilities: {0: "Refrigerate", 1: "Pixelate", H: "Solidarity"},
 		weightkg: 10,
 	},
 	katie: {
@@ -138,10 +138,41 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 	ryuko: {
 		num: 2013,
 		name: "Ryuko Matoi",
+		baseSpecies: "Ryuko Matoi",
+		forme: "Base"
 		types: ["Fire"],
 		gender: "F",
 		baseStats: {hp: 74, atk: 94, def: 72, spa: 42, spd: 78, spe: 110},
 		abilities: {0: "Life Fiber Syncronize"},
+		weightkg: 75,
+	},
+	ryukosyncronized: {
+		num: 2013,
+		name: "Ryuko-Syncronized",
+		baseSpecies: "Ryuko Matoi",
+		forme: "Syncronized"
+		types: ["Fire"],
+		gender: "F",
+		baseStats: {hp: 74, atk: 149, def: 102, spa: 85, spd: 124, spe: 146},
+		abilities: {0: "Life Fiber Syncronize"},
+		weightkg: 75,
+	},
+	raidenshogun: {
+		num: 2014,
+		name: "Raiden Shogun",
+		types: ["Electric", "Ghost"],
+		gender: "F",
+		baseStats: {hp: 110, atk: 135, def: 80, spa: 105, spd: 80, spe: 145},
+		abilities: {0: "Air Lock", 1: "Lightning Rod", H: "Shard of Euthymia"},
+		weightkg: 75,
+	},
+	susie: {
+		num: 2015,
+		name: "Susie",
+		types: ["Dragon", "Dark"],
+		gender: "F",
+		baseStats: {hp: 140, atk: 154, def: 82, spa: 102, spd: 82, spe: 100},
+		abilities: {0: "Defiant", 1: "Intimidate", H: "DevilsKnife"},
 		weightkg: 75,
 	},
 

@@ -534,60 +534,66 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4.5,
 		num: -19,
 		},
-	devouringjaw: {
-		onModifyMove(move) {
-			if (move.flags['bite']) { 
-				move.drain ||= [1, 2];
-			}
+	shardofeuthymia: {
+		onStart(source) {
+			this.field.setPseudoWeather('balefulomen', source);
 		},
 		flags: {},
-		name: "Devouring Jaw",
-		shortDesc: "This Pokemon's biting moves heal it for 50% of the damage dealt.",
-		rating: 3,
+		name: "Shard of Euthymia",
+		shortDesc: "On entry, applies Baleful Omen to the enemy field for 5 turns.",
+		rating: 4,
+		num: -20,
+	},
+	lifefibersyncronize: {
+		onStart(pokemon) {
+			if (pokemon.species.id !== 'ryuko') {
+				pokemon.formeChange('Ryuko Matoi', this.effect, true);
+			}
+		},
+
+		onDamagingHit(damage, target, source, move) {
+			// Already transformed.
+			if (target.species.id !== 'ryuko') return;
+
+			// Ignore damage from Status moves just in case.
+			if (move.category === 'Status') return;
+
+			target.formeChange('Ryuko-Syncronized', this.effect, true);
+			this.add('-formechange', target, 'Ryuko-Syncronized', '[from] ability: Life Fiber Syncronized');
+			this.add('-message', 'Life Fiber Syncronize, Kamui Senketsu!');
+		},
+		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},,
+		name: "Life Fiber Syncronize",
+		shortDesc: "Transforms Ryuko into Ryuko-Syncronized when taking damage.",
+		rating: 5,
 		num: -21,
 	},
-	divearmor: {
-		onSourceModifyDamage(damage, source, target, move) {
-			if (target.getMoveHitData(move).typeMod > 0) {
-				this.debug('DiVE Armor neutralize');
-				return this.chainModify(0.75);
-			}
-		},
-		onDamage(damage, target, source, effect) {
-			if (
-				effect.effectType === "Move" &&
-				!effect.multihit &&
-				(!effect.negateSecondary && !(effect.hasSheerForce && source.hasAbility('sheerforce')))
-			) {
-				this.effectState.checkedBerserk = false;
-			} else {
-				this.effectState.checkedBerserk = true;
-			}
-		},
-		onTryEatItem(item) {
-			const healingItems = [
-				'aguavberry', 'enigmaberry', 'figyberry', 'iapapaberry', 'magoberry', 'sitrusberry', 'wikiberry', 'oranberry', 'berryjuice',
+	devilsknife: {
+		onStart(pokemon) {
+			const quotes = [
+				"Jevil: I CAN DO ANYTHING",
+				"Jevil: UEE HEE HEE!",
+				"Jevil: CHAOS, CHAOS!",
+				"Jevil: METAMORPHOSIS!",
+				"Jevil: THE TRUE AND NEO CHAOS!",
+				"Jevil: BYE-BYE!",
 			];
-			if (healingItems.includes(item.id)) {
-				return this.effectState.checkedBerserk;
-			}
-			return true;
+			this.add('-message', quotes[this.random(quotes.length)]);
 		},
-		onAfterMoveSecondary(target, source, move) {
-			this.effectState.checkedBerserk = true;
-			if (!source || source === target || !target.hp || !move.totalDamage) return;
-			const lastAttackedBy = target.getLastAttackedBy();
-			if (!lastAttackedBy) return;
-			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
-			if (target.hp < target.maxhp / 4 && target.hp + damage >= target.maxhp / 4) {
-				const bestStat = target.getBestStat(true, true);
-				this.boost({[bestStat]: 1}, target, target);
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.id === 'rudebuster') {
+				return this.chainModify(100 / 80);
 			}
 		},
-		flags: {breakable: 1},
-		name: "DiVE Armor",
-		shortDesc: "Recieves 3/4 damage from SE attacks; highest stat raised by 1 when hp below 25%.",
-		rating: 3,
+
+		onModifyMove(move) {
+			if (move.type === 'Dragon' && move.accuracy !== true) {
+				move.accuracy = 100;
+			}
+		},
+		name: "DevilsKnife",
+		shortDesc: "Boosts Rude Buster's power by 1.25x. Dragon type attacks have 100% accuracy.",
+		rating: 3.5,
 		num: -22,
 	},
 	shadowgift: {

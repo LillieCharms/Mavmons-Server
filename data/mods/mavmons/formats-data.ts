@@ -47,4 +47,12 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
+	ryuko: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
+	raidenshogun: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
 };
