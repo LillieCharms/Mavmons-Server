@@ -1486,7 +1486,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			type: "Electric",
 			contestType: "Tough",
 		},
-	senketsukisarai: {
+	senketsukisaragi: {
 		num: -41,
 		accuracy: 100,
 		basePower: 200,
@@ -1517,12 +1517,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Fire",
 		contestType: "Cool",
 	},
-	darkestlariat: {
+	scissorblade: {
 		num: -42,
 		accuracy: 100,
 		basePower: 90,
 		category: "Physical",
-		name: "Darkest Lariat",
+		name: "Scissor Blade",
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
@@ -1566,7 +1566,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			basePower: 20,
 			category: "Physical",
 			name: "SEN-I-SOSHITSU",
-			pp: 8,
+			pp: 5,
 			priority: 0,
 			flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 			onAfterMoveSecondarySelf(pokemon, target, move) {
@@ -1603,49 +1603,25 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "???",
 		contestType: "Clever",
 	},
-	snowgrave: {
-		num: -46,
-		accuracy: 100,
-		basePower: 150,
-		category: "Special",
-		name: "Snowgrave",
-		shortDesc: "Fails if the user takes damage before it hits.",
-		pp: 20,
-		priority: -3,
-		flags: {protect: 1, failmefirst: 1, nosleeptalk: 1, noassist: 1, failcopycat: 1, failinstruct: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Blizzard", target);
-			this.add('-anim', source, "Subzero Slammer", target);
-		},
-		priorityChargeCallback(pokemon) {
-			pokemon.addVolatile('snowgrave');
-		},
-		beforeMoveCallback(pokemon) {
-			if (pokemon.volatiles['snowgrave']?.lostFocus) {
-				this.add('cant', pokemon, 'Snowgrave', 'Snowgrave');
-				return true;
-			}
-		},
-		condition: {
-			duration: 1,
-			onStart(pokemon) {
-				this.add('-singleturn', pokemon, 'move: Snowgrave');
-			},
-			onHit(pokemon, source, move) {
-				if (move.category !== 'Status') {
-					this.effectState.lostFocus = true;
+	scythemare: {
+			num: -46,
+			accuracy: 100,
+			basePower: 70,
+			basePowerCallback(pokemon, target, move) {
+				if (target.status === 'slp') {
+					this.debug('BP doubled on paralyzed target');
+					return move.basePower * 2;
 				}
+				return move.basePower;
 			},
-			onTryAddVolatile(status, pokemon) {
-				if (status.id === 'flinch') return null;
+			category: "Physical",
+			name: "Scythemare",
+			pp: 10,
+			priority: 0,
+			flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+			onHit(target) {
+				if (target.status === 'slp') target.cureStatus();
 			},
-		},
-		secondary: null,
-		target: "normal",
-		type: "Ice",
-		contestType: "Beautiful",
-	},
 	killingclaw: {
 		num: -47,
 		accuracy: 100,

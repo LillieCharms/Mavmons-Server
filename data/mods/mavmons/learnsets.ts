@@ -489,7 +489,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			dragonclaw: ["9L1"],
 			dragonpulse: ["9L1"],
 			dragonrush: ["9L1"],
-			dragiontail: ["9L1"],
+			dragontail: ["9L1"],
 			drainpunch: ["9L1"],
 			dualchop: ["9L1"],
 			earthquake: ["9L1"],
