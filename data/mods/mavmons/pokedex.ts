@@ -138,7 +138,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 	ryuko: {
 		num: 2013,
 		name: "Ryuko Matoi",
-		baseSpecies: "Ryuko Matoi",
+		baseSpecies: "Ryuko",
 		forme: "Base",
 		types: ["Fire"],
 		gender: "F",
