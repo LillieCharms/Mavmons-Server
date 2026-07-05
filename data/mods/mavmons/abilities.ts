@@ -547,7 +547,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	lifefibersyncronize: {
 		onStart(pokemon) {
 			if (pokemon.species.id !== 'ryuko') {
-				pokemon.formeChange('Ryuko Matoi', this.effect, true);
+				pokemon.formeChange('Ryuko', this.effect, true);
 			}
 		},
 
