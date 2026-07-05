@@ -562,7 +562,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			this.add('-formechange', target, 'Ryuko-Syncronized', '[from] ability: Life Fiber Syncronized');
 			this.add('-message', 'Life Fiber Syncronize, Kamui Senketsu!');
 		},
-		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},,
+		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Life Fiber Syncronize",
 		shortDesc: "Transforms Ryuko into Ryuko-Syncronized when taking damage.",
 		rating: 5,
