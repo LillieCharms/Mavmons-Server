@@ -536,7 +536,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 	shardofeuthymia: {
 		onStart(source) {
-			this.field.setPseudoWeather('balefulomen', source);
+			this.field.addPseudoWeather('balefulomen', source);
 		},
 		flags: {},
 		name: "Shard of Euthymia",
