@@ -1413,13 +1413,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			pp: 10,
 			priority: 4,
 			flags: {noassist: 1, failcopycat: 1},
-			onPrepareHit(target, source, move) {
-				this.attrLastMove('[still]');
-				this.add('-anim', source, "Protect", source);
-			},
 			stallingMove: true,
 			volatileStatus: 'eternalpatience',
 			onPrepareHit(pokemon) {
+				this.attrLastMove('[still]');
+				this.add('-anim', source, "Protect", source);
 				return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 			},
 			onHit(pokemon) {
