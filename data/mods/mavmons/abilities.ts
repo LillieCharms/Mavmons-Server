@@ -104,7 +104,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: 281,
 	},
 	starstruckveil: {
-		shortDesc: "Fire type volt absorb. Special Justified. Ignore other abilities.",
+		shortDesc: "Fire absorb. Special Justified. Ignore other abilities.",
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Fire') {
 				if (!this.heal(target.baseMaxhp / 4)) {
@@ -153,11 +153,12 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
+		shortDesc: "When at <50% HP, unleash Ben Mode.",
 		rating: 5,
 		num: -2,
 	},
 	harmfulmental: {
-		shortDesc: "The users attacks are powered up by 20%, but they take 10% recoil after landing an attack.",
+		shortDesc: "The users attacks are powered up by 20%, but they take 10% recoil after attacking.",
 		onModifyDamage(damage, source, target, move) {
 			return this.chainModify([1200, 1000]);
 		},
@@ -228,7 +229,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -7,
 	},
 	cageddemon: {
-		shortDesc: "When the user is hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, and the user slowly perishes. ",
+		shortDesc: "When hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, user slowly perishes. ",
 		onModifyTypePriority: -1,
 			condition: 
 			{
@@ -267,7 +268,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -10,
 	},
 	laserpressure: {
-		shortDesc: "Decreases Atk and Sp.Atk of all opponents on the field by 20% each.",
+		shortDesc: "Decreases Atk and SpAtk of all opponents on the field by 20% each.",
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
 			this.add('-ability', pokemon, 'Laser Pressure');
@@ -294,7 +295,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -11,
 	},
 	chargingego: {
-		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy stats by two stages the first time it KOs an opponent.",
+		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy stats by +2 the first time it KOs an opponent.",
 		onSourceAfterFaint(length, target, source, effect) {
 			if (effect && effect.effectType === 'Move') {
 				this.boost({atk: length}, source);
@@ -404,6 +405,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {},
 		name: "Multi-Faceted",
+		shortDesc: "This Pokemon's offensive stat is multiplied by 1.5 while using a Fighting or Psychic-Type attack.",
 		rating: 3.5,
 		num: -16,
 	},
@@ -447,6 +449,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
         },
         flags: {},
         name: "We Can't Afford Not To Try!",
+		shortDesc: "This Pokemon has a 21% chance to attack again upon landing an attack, and has its accuracy multiplied by 0.79x.",
         rating: 4.5,
         num: -18,
     },
@@ -531,6 +534,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			},
 		flags: {},
 		name: "Lady's Iron Will",
+		shortDesc: "When this Pokemon switches out, it restores 33% of its HP and cures all status conditions. This Pokemon takes double damage from Electric-type attacks.",
 		rating: 4.5,
 		num: -19,
 		},
@@ -564,7 +568,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Life Fiber Syncronize",
-		shortDesc: "Transforms Ryuko into Ryuko-Syncronized when taking damage.",
+		shortDesc: "Transforms Ryuko into Ryuko-Syncronized after taking damage.",
 		rating: 5,
 		num: -21,
 	},
