@@ -1467,7 +1467,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-					return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 5), 2);
+					return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 3), 5);
 				},
 		category: "Special",
 		name: "Musou no Hitotachi",
@@ -1509,7 +1509,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onHit(pokemon) {
 				if (pokemon.species.id !== 'ryukosyncronized') return;
 
-				pokemon.formeChange('Ryuko Matoi', this.effect, true);
+				pokemon.formeChange('Ryuko', this.effect, true);
 				this.add('-formechange', pokemon, 'Ryuko Syncronized', '[from] move: Senketsu Kisaragi');
 				this.add('-message', 'Ryuko burnt up all her life fibers and reverted back to her base form!');
 
@@ -1594,7 +1594,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
-		overrideOffensiveStat: 'def',
+		overrideOffensiveStat: 'atk',
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Spatial Rend", source);
@@ -1630,6 +1630,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onHit(target) {
 				if (target.status === 'slp') target.cureStatus();
 			},
+			target: "normal",
+			type: "Dark",
+			contestType: "Cool",
 	},
 	killingclaw: {
 		num: -47,
