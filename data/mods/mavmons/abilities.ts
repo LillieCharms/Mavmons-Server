@@ -549,23 +549,21 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -20,
 	},
 	lifefibersyncronize: {
-		onStart(pokemon) {
-			if (pokemon.species.id !== 'ryuko') {
-				pokemon.formeChange('Ryuko', this.effect, true);
-			}
-		},
+	onStart(pokemon) {
+		if (pokemon.species.id !== 'ryuko') {
+			pokemon.formeChange('Ryuko', this.effect, true);
+		}
+	},
 
-		onDamagingHit(damage, target, source, move) {
-			// Already transformed.
-			if (target.species.id !== 'ryuko') return;
+	onDamagingHit(damage, target, source, move) {
+		if (target.species.id !== 'ryuko') return;
+		if (move.category === 'Status') return;
 
-			// Ignore damage from Status moves just in case.
-			if (move.category === 'Status') return;
+		if (!target.formeChange('Ryuko-Syncronized', this.effect)) return;
 
-			target.formeChange('Ryuko-Syncronized', this.effect, true);
-			this.add('-formechange', target, 'Ryuko-Syncronized', '[from] ability: Life Fiber Syncronized');
-			this.add('-message', 'Life Fiber Syncronize, Kamui Senketsu!');
-		},
+		this.add('-formechange', target, 'Ryuko-Syncronized', '[from] ability: Life Fiber Syncronize');
+		this.add('-message', 'Life Fiber Syncronize, Kamui Senketsu!');
+	},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Life Fiber Syncronize",
 		shortDesc: "Transforms Ryuko into Ryuko-Syncronized after taking damage.",

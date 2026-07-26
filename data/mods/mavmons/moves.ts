@@ -1509,11 +1509,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onHit(pokemon) {
 				if (pokemon.species.id !== 'ryukosyncronized') return;
 
-				pokemon.formeChange('Ryuko', this.effect, true);
-				this.add('-formechange', pokemon, 'Ryuko Syncronized', '[from] move: Senketsu Kisaragi');
-				this.add('-message', 'Ryuko burnt up all her life fibers and reverted back to her base form!');
+				if (!pokemon.formeChange('Ryuko', this.effect)) return;
 
-
+				this.add('-formechange', pokemon, 'Ryuko', '[from] move: Senketsu Kisaragi');
+				this.add('-message', 'Ryuko burnt up all her Life Fibers and reverted back to her base form!');
 			},
 		},
 		target: "normal",
@@ -1565,7 +1564,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Fire",
 		contestType: "Tough",
 	},
-	
 	senisoshitsu: {
 		num: -44,
 		accuracy: true,

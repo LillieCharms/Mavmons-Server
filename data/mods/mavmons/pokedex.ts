@@ -138,7 +138,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 	ryuko: {
 		num: 2013,
 		name: "Ryuko",
-		Baseforme: "Unsyncronized",
+		baseforme: "Unsyncronized",
 		types: ["Fire"],
 		gender: "F",
 		baseStats: {hp: 74, atk: 94, def: 72, spa: 42, spd: 78, spe: 110},
@@ -156,8 +156,6 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		gender: "F",
 		baseStats: {hp: 74, atk: 149, def: 102, spa: 85, spd: 124, spe: 146},
 		abilities: {0: "Life Fiber Syncronize"},
-		requiredAbility: "Life Fiber Syncronize",
-		battleOnly: "Ryuko",
 		weightkg: 75,
 	},
 	raidenshogun: {

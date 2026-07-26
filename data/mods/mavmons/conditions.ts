@@ -47,7 +47,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
             }
         },
 		onFieldEnd() {
-    	    this.add('-fieldend', 'Thunderstorm');
+    	    this.add('-fieldend', 'Baleful Omen');
         },
     },
 
