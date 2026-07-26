@@ -1642,7 +1642,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
     accuracy: 100,
     basePower: 50,
 	
-		const cheezrage = pokemon.volatiles.smashrage;
+		const: cheezrage = pokemon.volatiles.smashrage;
 
 		if (cheezrage) {
 			return 350;
