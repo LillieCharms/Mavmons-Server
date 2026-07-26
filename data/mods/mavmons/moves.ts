@@ -1641,21 +1641,19 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	num: -47,
     accuracy: 100,
     basePower: 50,
-	
-		const cheezrage = pokemon.volatiles.smashrage;
-
-		if (cheezrage) {
-			return 350;
-		},
-		if (!pokemon.volatiles.smashrage) {
-			// normal Giant Punch boosts
-		},
 		onTry(pokemon) {
 			if (!pokemon.volatiles.giantpunchstacks) {
 				pokemon.addVolatile("giantpunchstacks");
 			}
 		},
+
 		basePowerCallback(pokemon) {
+			// Smash Rage override
+			if (pokemon.volatiles.smashrage) {
+				return 350;
+			}
+
+			// Normal Giant Punch scaling
 			const stacks =
 				pokemon.volatiles.giantpunchstacks?.stacks || 0;
 
@@ -1664,29 +1662,36 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				50 + (stacks * 30)
 			);
 		},
+
 		onAfterMove(pokemon) {
 			const volatile =
 				pokemon.volatiles.giantpunchstacks;
 
 			if (!volatile) return;
+
 			const stacks = volatile.stacks;
-			if (stacks >= 10) {
-				this.boost({
-					atk: 2,
-					def: 2,
-					spd: 2,
-				}, pokemon);
-				// 75% drain handled here
-			} else if (stacks >= 5) {
-				this.boost({
-					atk: 1,
-					def: 1,
-					spd: 1,
-				}, pokemon);
-				// 30% drain handled here
+
+			// Smash Rage prevents Giant Punch boosts
+			if (!pokemon.volatiles.smashrage) {
+				if (stacks >= 10) {
+					this.boost({
+						atk: 2,
+						def: 2,
+						spd: 2,
+					}, pokemon);
+
+				} else if (stacks >= 5) {
+					this.boost({
+						atk: 1,
+						def: 1,
+						spd: 1,
+					}, pokemon);
+				}
 			}
-			// reset stacks
+
+			// Reset stacks
 			volatile.stacks = 0;
+
 			this.add(
 				"-activate",
 				pokemon,
