@@ -1666,11 +1666,14 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		onAfterMove(pokemon) {
 			const volatile =
 				pokemon.volatiles.giantpunchstacks;
-
 			if (!volatile) return;
-
 			const stacks = volatile.stacks;
-
+			if (stacks > 0) {
+				this.add(
+					"-message",
+					`${pokemon.name} used all Giant Punch's charge!`
+				);
+			}
 			// Smash Rage prevents Giant Punch boosts
 			if (!pokemon.volatiles.smashrage) {
 				if (stacks >= 10) {
@@ -1692,10 +1695,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			// Reset stacks
 			volatile.stacks = 0;
 
-			this.add(
-				"-activate",
-				pokemon,
-				"Giant Punch Stacks reset"
+			 this.add(
+				"-message",
+				`${pokemon.name}'s Giant Punch charge reset to 0!`
 			);
 		},
 		target: "normal",
@@ -1749,7 +1751,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		category: "Status",
 		type: "Normal",
-		pp: 8,
+		pp: 5,
 		target: "self",
 		contestType: "Beautiful",
 	},

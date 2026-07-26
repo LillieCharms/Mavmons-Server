@@ -51,36 +51,35 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
         },
     },
 	giantpunchstacks: {
-    	name: "Giant Punch Stacks",
+		name: "Giant Punch Stacks",
+
 		onStart(pokemon) {
 			this.effectState.stacks = 0;
+
+			this.add(
+				"-message",
+				`${pokemon.name} has no Giant Punch charge!`
+			);
 		},
+
 		onDamagingHit(damage, target) {
 			if (!damage) return;
+
 			let gain = 1;
-			if (target.volatiles.cheezesports) {
+
+			// CheezEsports interaction
+			if (target.volatiles.chezesports) {
 				gain = 2;
 			}
+
 			this.effectState.stacks = Math.min(
 				10,
 				this.effectState.stacks + gain
 			);
+
 			this.add(
-				"-activate",
-				target,
-				"Giant Punch Stacks",
-				this.effectState.stacks
-			);
-		},
-		onSwitchOut(pokemon) {
-			// prevents normal volatile removal
-			return false;
-		},
-		onEnd(pokemon) {
-			this.add(
-				"-end",
-				pokemon,
-				"Giant Punch Stacks"
+				"-message",
+				`${target.name} has ${this.effectState.stacks} Giant Punch charge!`
 			);
 		},
 	},
