@@ -550,23 +550,21 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	lifefibersyncronize: {
 	onStart(pokemon) {
-		if (pokemon.species.id !== 'ryuko') {
+			if (pokemon.species.id !== 'ryuko') {
 			pokemon.formeChange('Ryuko', this.effect, true);
 		}
 	},
-
 	onDamagingHit(damage, target, source, move) {
+		// Already transformed.
 		if (target.species.id !== 'ryuko') return;
+		// Ignore Status moves.
 		if (move.category === 'Status') return;
-
-		if (!target.formeChange('Ryuko-Syncronized', this.effect)) return;
-
-		this.add('-formechange', target, 'Ryuko-Syncronized', '[from] ability: Life Fiber Syncronize');
+		if (!target.formeChange('Ryuko-Syncronized', this.effect, true)) return;
 		this.add('-message', 'Life Fiber Syncronize, Kamui Senketsu!');
 	},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Life Fiber Syncronize",
-		shortDesc: "Transforms Ryuko into Ryuko-Syncronized after taking damage.",
+		shortDesc: "Transforms Ryuko into Ryuko-Syncronized after being hit.",
 		rating: 5,
 		num: -21,
 	},
@@ -598,42 +596,42 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -22,
 	},
-	shadowgift: {
-		onModifyAtkPriority: 5,
-		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Ghost') {
-				this.debug('Shadowgift boost');
-				return this.chainModify(1.5);
+	smashrage: {
+    name: "Smash Rage",
+		onDamage(damage, target, source, effect) {
+			if (target.hp <= target.maxhp * 0.35) {
+				if (!target.volatiles.smashrage) {
+					target.addVolatile("smashrage");
+				}
 			}
 		},
-		onModifySpAPriority: 5,
-		onModifySpA(atk, attacker, defender, move) {
-			if (move.type === 'Ghost') {
-				this.debug('Shadowgift boost');
-				return this.chainModify(1.5);
+
+		onResidual(pokemon) {
+			if (pokemon.hp <= pokemon.maxhp * 0.35) {
+				if (!pokemon.volatiles.smashrage) {
+					pokemon.addVolatile("smashrage");
+				}
 			}
 		},
-		name: "Shadowgift",
-		shortDesc: "Attacking stat multiplied by 1.5 while using a Ghost-type attack.",
-		rating: 3.5,
+		name: "Smash Rage",
+		shortDesc: "35% hp, next Physical attack does 20% more. Custom moves have additional effects.",
+		rating: 4,
 		num: -23,
 	},
-	galeforce: {
-		onSourceAfterFaint(length, target, source, effect) {
-			if (effect && effect.effectType === 'Move') {
-				this.add('-anim', source, "Tailwind", source);
-				source.addVolatile('galeforce');
-			}
-		},
-		condition: {
-			onModifyPriority(priority, pokemon, target, move) {
-				pokemon.removeVolatile('galeforce')
-				return priority + 1;
-			},
-		},
-		name: "Galeforce",
-		shortDesc: "If this Pokemon attacks and KO's a target, next move used has +1 priority.",
-		rating: 3,
+	cheezesports: {
+		onDamagingHit(damage, target, source, move) {
+        if (!move.type) return;
+
+        const effectiveness =
+            this.dex.getEffectiveness(move.type, target);
+
+        if (effectiveness > 0) {
+            target.addVolatile("cheezesports");
+        }
+    },
+		name: "CheezEsports",
+		shortDesc: "When hit by a supereffective move, sign attacker up to CheezEsports.",
+		rating: 4,
 		num: -24,
 	},
 	smirk: {

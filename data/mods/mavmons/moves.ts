@@ -1241,6 +1241,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Sword Tunnel",
 		shortDesc: "Hits 5 times.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', target, "Swords Dance", target);
+		},
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, bullet: 1, metronome: 1},
@@ -1399,7 +1403,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Fusion Bolt", source);
+			this.add('-anim', source, "Fusion Bolt", target);
 		},
 		secondary: null,
 		target: "normal",
@@ -1497,20 +1501,23 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, slicing: 1},
-		onPrepareHit(target, source, move) {
+		onTry(source) {
+			if (source.species.id !== 'ryukosyncronized') {
+				this.add('-fail', source, 'move: Senketsu Kisaragi');
+				return false;
+			}
+		},
+		onPrepareHit(source) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Extreme Evoboost", source);
-			this.add('-anim', source, "Behemoth Blade", target);
+			this.add('-anim', source, "Behemoth Blade", source);
 		},
 		secondary: null,
 		self: {
 			onHit(pokemon) {
-				this.add('-message', 'Before: ' + pokemon.species.id);
-
-				const success = pokemon.formeChange('Ryuko', this.effect, true);
-
-				this.add('-message', 'Success: ' + success);
-				this.add('-message', 'After: ' + pokemon.species.id);
+				if (pokemon.species.id !== 'ryukosyncronized') return;
+				if (!pokemon.formeChange('Ryuko', this.effect, true)) return;
+				this.add('-message', 'Ryuko burnt up all her Life Fibers and reverted back to her base form!');
 			},
 		},
 		target: "normal",
@@ -1593,7 +1600,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		overrideOffensiveStat: 'atk',
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Spatial Rend", source);
+			this.add('-anim', source, "Spatial Rend", target);
 			this.add('-anim', source, "Psywave", target);
 		},
 		onModifyMove(move, pokemon) {
@@ -1630,82 +1637,117 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			type: "Dark",
 			contestType: "Cool",
 	},
-	killingclaw: {
-		num: -47,
-		accuracy: 100,
-		basePower: 90,
-		category: "Physical",
-		name: "Killing Claw",
-		shortDesc: "100% chance to lower the target's Attack by 1.",
-		pp: 10,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, slicing: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Bide", source);
-			this.add('-anim', source, "Metal Claw", target);
+	giantpunch: {
+	num: -47,
+    accuracy: 100,
+    basePower: 50,
+	
+		const cheezrage = pokemon.volatiles.smashrage;
+
+		if (cheezrage) {
+			return 350;
 		},
-		secondary: {
-			chance: 100,
-			boosts: {
-				atk: -1,
-			},
+		if (!pokemon.volatiles.smashrage) {
+			// normal Giant Punch boosts
+		},
+		onTry(pokemon) {
+			if (!pokemon.volatiles.giantpunchstacks) {
+				pokemon.addVolatile("giantpunchstacks");
+			}
+		},
+		basePowerCallback(pokemon) {
+			const stacks =
+				pokemon.volatiles.giantpunchstacks?.stacks || 0;
+
+			return Math.min(
+				350,
+				50 + (stacks * 30)
+			);
+		},
+		onAfterMove(pokemon) {
+			const volatile =
+				pokemon.volatiles.giantpunchstacks;
+
+			if (!volatile) return;
+			const stacks = volatile.stacks;
+			if (stacks >= 10) {
+				this.boost({
+					atk: 2,
+					def: 2,
+					spd: 2,
+				}, pokemon);
+				// 75% drain handled here
+			} else if (stacks >= 5) {
+				this.boost({
+					atk: 1,
+					def: 1,
+					spd: 1,
+				}, pokemon);
+				// 30% drain handled here
+			}
+			// reset stacks
+			volatile.stacks = 0;
+			this.add(
+				"-activate",
+				pokemon,
+				"Giant Punch Stacks reset"
+			);
 		},
 		target: "normal",
-		type: "Steel",
-		contestType: "Cool",
-	},
-	brilliantdiamond: {
+		category: "Physical",
+		name: "Giant Punch",
+		shortDesc: "+30 Power when attacked, Max 10 hits. Additional effects at 5-10 hits.",
+		type: "Fighting",
+		pp: 10,
+		contact: true,
+	}
+	pretzeldog: {
 		num: -48,
 		accuracy: true,
 		basePower: 0,
-		category: "Status",
-		name: "Brilliant Diamond",
-		shortDesc: "Hits two turns after being used; prevents foe(s) from switching next turn.",
-		pp: 10,
-		priority: 0,
-		flags: {mirror: 1, bypasssub: 1, allyanim: 1, metronome: 1, futuremove: 1},
-		ignoreImmunity: true,
-		onTry(source, target) {
-			if (!target.side.addSlotCondition(target, 'futuremove')) return false;
-			this.add('-anim', source, "Power Gem", target);
-			Object.assign(target.side.slotConditions[target.position]['futuremove'], {
-				duration: 3,
-				move: 'brilliantdiamond',
-				source: source,
-				moveData: {
-					id: 'brilliantdiamond',
-					name: "Brilliant Diamond",
-					accuracy: true,
-					basePower: 0,
-					category: "Status",
-					priority: 0,
-					flags: {mirror: 1, bypasssub: 1, allyanim: 1, metronome: 1, futuremove: 1},
-					sideCondition: 'brilliantdiamond',
-					condition: {
-						duration: 2,
-						onSideStart(targetSide) {
-							this.add('-sidestart', targetSide, 'move: Brilliant Diamond');
-						},
-						onTrapPokemon(pokemon) {
-							pokemon.tryTrap();
-							this.add('-anim', pokemon, "Rock Polish", pokemon);
-						},
-					},
-					ignoreImmunity: false,
-					effectType: 'Move',
-					type: 'Rock',
-				},
-			});
-			this.add('-start', source, 'move: Brilliant Diamond');
-			return this.NOT_FAIL;
-		},
-		secondary: null,
-		target: "foeSide",
-		type: "Rock",
-		zMove: {boost: {def: 2}},
-		contestType: "Clever",
+		if (pokemon.hp === pokemon.maxhp && !pokemon.status) {
+			return false;
+		}
+		onHit(pokemon) {
+    let healAmount;
+		if (pokemon.volatiles.chezesports) {
+			const hpPercent =
+				pokemon.hp / pokemon.maxhp;
+			if (hpPercent <= 0.20) {
+				healAmount = 0.85;
+			} else if (hpPercent <= 0.30) {
+				healAmount = 0.70;
+			} else if (hpPercent <= 0.40) {
+				healAmount = 0.60;
+			} else if (hpPercent <= 0.50) {
+				healAmount = 0.50;
+			} else {
+				healAmount = 0.40;
+			}
+		} else {
+			healAmount = 0.25;
+			const hpPercent =
+				pokemon.hp / pokemon.maxhp;
+			if (hpPercent < 0.5) {
+				const increments =
+					Math.floor((0.5 - hpPercent) * 10);
+				healAmount += increments * 0.10;
+			}
+		}
+		this.heal(
+			Math.floor(pokemon.maxhp * healAmount),
+			pokemon
+		);
+
+		pokemon.cureStatus();
 	},
+		category: "Status",
+		type: "Normal",
+		pp: 8,
+		target: "self",
+		contestType: "Beautiful",
+	},
+
 	starriders: {
 		num: -49,
 		accuracy: true,

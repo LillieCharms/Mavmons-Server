@@ -50,5 +50,95 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
     	    this.add('-fieldend', 'Baleful Omen');
         },
     },
-
+	giantpunchstacks: {
+    	name: "Giant Punch Stacks",
+		onStart(pokemon) {
+			this.effectState.stacks = 0;
+		},
+		onDamagingHit(damage, target) {
+			if (!damage) return;
+			let gain = 1;
+			if (target.volatiles.cheezesports) {
+				gain = 2;
+			}
+			this.effectState.stacks = Math.min(
+				10,
+				this.effectState.stacks + gain
+			);
+			this.add(
+				"-activate",
+				target,
+				"Giant Punch Stacks",
+				this.effectState.stacks
+			);
+		},
+		onSwitchOut(pokemon) {
+			// prevents normal volatile removal
+			return false;
+		},
+		onEnd(pokemon) {
+			this.add(
+				"-end",
+				pokemon,
+				"Giant Punch Stacks"
+			);
+		},
+	},
+	smashrage: {
+		name: "Smash Rage",
+		onStart(pokemon) {
+			this.add(
+				"-start",
+				pokemon,
+				"Smash Rage"
+			);
+		},
+		onBasePower(basePower, pokemon, target, move) {
+			if (move.category !== "Physical") return;
+			return this.chainModify(1.2);
+		},
+		onModifyMove(move, pokemon) {
+			if (move.category !== "Physical") return;
+			// Cargo Throw always crits
+			if (move.id === "cargothrow") {
+				move.willCrit = true;
+			}
+			// Giant Punch override
+			if (move.id === "giantpunch") {
+				move.basePower = 350;
+			}
+		},
+		onAfterMove(pokemon, target, move) {
+			if (move.category !== "Physical") return;
+			// Consume Smash Rage after first physical attack
+			pokemon.removeVolatile("smashrage");
+		},
+		onEnd(pokemon) {
+			this.add(
+				"-end",
+				pokemon,
+				"Smash Rage"
+			);
+		},
+	},
+	cheezesports: {
+    	name: "Signed by CheezEsports",
+		onStart(pokemon) {
+			this.add(
+				"-start",
+				pokemon,
+				"CheezEsports"
+			);
+		},
+		onSwitchOut(pokemon) {
+			pokemon.removeVolatile("cheezesports");
+		},
+		onEnd(pokemon) {
+			this.add(
+				"-end",
+				pokemon,
+				"CheezEsports"
+			);
+		},
+	},
 };
