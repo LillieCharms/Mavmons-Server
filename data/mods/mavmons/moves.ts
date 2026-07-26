@@ -1710,42 +1710,43 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -48,
 		accuracy: true,
 		basePower: 0,
+		onHit(pokemon) {
 		if (pokemon.hp === pokemon.maxhp && !pokemon.status) {
+			this.add('-fail', pokemon);
 			return false;
 		}
-		onHit(pokemon) {
-    let healAmount;
-		if (pokemon.volatiles.chezesports) {
-			const hpPercent =
-				pokemon.hp / pokemon.maxhp;
-			if (hpPercent <= 0.20) {
-				healAmount = 0.85;
-			} else if (hpPercent <= 0.30) {
-				healAmount = 0.70;
-			} else if (hpPercent <= 0.40) {
-				healAmount = 0.60;
-			} else if (hpPercent <= 0.50) {
-				healAmount = 0.50;
+		let healAmount;
+			if (pokemon.volatiles.chezesports) {
+				const hpPercent =
+					pokemon.hp / pokemon.maxhp;
+				if (hpPercent <= 0.20) {
+					healAmount = 0.85;
+				} else if (hpPercent <= 0.30) {
+					healAmount = 0.70;
+				} else if (hpPercent <= 0.40) {
+					healAmount = 0.60;
+				} else if (hpPercent <= 0.50) {
+					healAmount = 0.50;
+				} else {
+					healAmount = 0.40;
+				}
 			} else {
-				healAmount = 0.40;
+				healAmount = 0.25;
+				const hpPercent =
+					pokemon.hp / pokemon.maxhp;
+				if (hpPercent < 0.5) {
+					const increments =
+						Math.floor((0.5 - hpPercent) * 10);
+					healAmount += increments * 0.10;
+				}
 			}
-		} else {
-			healAmount = 0.25;
-			const hpPercent =
-				pokemon.hp / pokemon.maxhp;
-			if (hpPercent < 0.5) {
-				const increments =
-					Math.floor((0.5 - hpPercent) * 10);
-				healAmount += increments * 0.10;
-			}
-		}
-		this.heal(
-			Math.floor(pokemon.maxhp * healAmount),
-			pokemon
-		);
+			this.heal(
+				Math.floor(pokemon.maxhp * healAmount),
+				pokemon
+			);
 
-		pokemon.cureStatus();
-	},
+			pokemon.cureStatus();
+		},
 		category: "Status",
 		type: "Normal",
 		pp: 8,
