@@ -1419,7 +1419,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		stallingMove: true,
 		volatileStatus: 'eternalpatience',
 		onPrepareHit(pokemon) {
-			this.add('-anim', source, "Protect", source);
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Protect", pokemon);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
@@ -1451,9 +1452,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				}
 				this.damage(source.baseMaxhp / 10, source, target);
 				return this.NOT_FAIL;
-			},
-			onHit(target, source, move) {
-				this.damage(source.baseMaxhp / 10, source, target);
 			},
 		},
 		secondary: null,
@@ -1507,12 +1505,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		secondary: null,
 		self: {
 			onHit(pokemon) {
-				if (pokemon.species.id !== 'ryukosyncronized') return;
+				this.add('-message', 'Before: ' + pokemon.species.id);
 
-				if (!pokemon.formeChange('Ryuko', this.effect)) return;
+				const success = pokemon.formeChange('Ryuko', this.effect, true);
 
-				this.add('-formechange', pokemon, 'Ryuko', '[from] move: Senketsu Kisaragi');
-				this.add('-message', 'Ryuko burnt up all her Life Fibers and reverted back to her base form!');
+				this.add('-message', 'Success: ' + success);
+				this.add('-message', 'After: ' + pokemon.species.id);
 			},
 		},
 		target: "normal",
