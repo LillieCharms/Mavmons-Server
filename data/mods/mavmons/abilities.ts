@@ -597,7 +597,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -22,
 	},
 	smashrage: {
-    name: "Smash Rage",
 		onDamage(damage, target, source, effect) {
 			if (target.hp <= target.maxhp * 0.35) {
 				if (!target.volatiles.smashrage) {
