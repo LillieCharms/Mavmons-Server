@@ -229,17 +229,21 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -7,
 	},
 	cageddemon: {
-		shortDesc: "When hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, user slowly perishes. ",
-		onModifyTypePriority: -1,
-			condition: 
-			{
-			onTrapPokemon(pokemon) {
-				pokemon.tryTrap();
-			},
-		},
-		boosts: {
-			atk: 2,
-			spa: 2,
+		shortDesc: "When hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, user slowly perishes. ",		
+		onDamagingHit(damage, target, source, move) {
+			if (target.volatiles['cageddemon']) return;
+			if (target.getMoveHitData(move).typeMod > 0) {
+				// Super effective hit
+				this.boost({
+					atk: 2,
+					spa: 2,
+					def: -2,
+					spd: -2,
+				}, target);
+
+				target.addVolatile('cageddemon');
+				target.addVolatile('perishsong');
+			}
 		},
 		name: "Caged Demon",
 		rating: 4,
@@ -276,16 +280,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onAnyModifyAtk(atk, target, source, move) {
 			const abilityHolder = this.effectState.target;
 			if (target.hasAbility('Laser Pressure')) return;
-			if (!move.ruinedAtk?.hasAbility('Laser Pressure')) move.ruinedAtk = abilityHolder;
-			if (move.ruinedAtk !== abilityHolder) return;
+			if (!move.pressuredAtk?.hasAbility('Laser Pressure')) move.pressuredAtk = abilityHolder;
+			if (move.pressuredAtk !== abilityHolder) return;
 			this.debug('Laser Pressure Atk drop');
 			return this.chainModify(0.20);
 		},
 		onAnyModifySpa(spa, target, source, move) {
 			const abilityHolder = this.effectState.target;
 			if (target.hasAbility('Laser Pressure')) return;
-			if (!move.ruinedSpa?.hasAbility('Laser Pressure')) move.ruinedSpa = abilityHolder;
-			if (move.ruinedSpa !== abilityHolder) return;
+			if (!move.pressuredSpa?.hasAbility('Laser Pressure')) move.pressuredSpa = abilityHolder;
+			if (move.pressuredSpa !== abilityHolder) return;
 			this.debug('Laser Pressure Spa drop');
 			return this.chainModify(0.20);
 		},
@@ -295,17 +299,18 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -11,
 	},
 	chargingego: {
-		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy stats by +2 the first time it KOs an opponent.",
+		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy by 2, reduces evasion by 1, the first time it KOs an opponent.",
 		onSourceAfterFaint(length, target, source, effect) {
-			if (effect && effect.effectType === 'Move') {
-				this.boost({atk: length}, source);
-			}
-			if (effect && effect.effectType === 'Move') {
-				this.boost({spa: length}, source);
-			}
-			if (effect && effect.effectType === 'Move') {
-				this.boost({accuracy: length}, source);
-			}
+			if (!effect || effect.effectType !== 'Move') return;
+			if (source.abilityState.activated) return;
+			source.abilityState.activated = true;
+			this.boost({
+				atk: 2,
+				spa: 2,
+				accuracy: 2,
+				evasion: -1,
+			}, source);
+			this.add('-ability', source, 'Charging Ego');
 		},
 		flags: {},
 		name: "Charging Ego",
@@ -313,35 +318,30 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -12,
 	},
 	solidarity: {
-        onStart(pokemon) {
-            let FairyBoost = 0;
-                this.add('-activate', pokemon, 'ability: Solidarity');
-                { 
-                    for(let i = 0; i < pokemon.side.pokemon.length; i++){
-                        if (pokemon.side.pokemon[i].hasType('Fairy')) {
-                            FairyBoost += 1;    
-                        }
-                    }
-                }
-                this.add('-start', pokemon, `FAIRYBOOST (${FairyBoost})`, '[silent]');
-                this.effectState.Fairy = FairyBoost;
-        },
-        onEnd(pokemon) {
-            this.add('-end', pokemon, `FAIRYBOOST (${this.effectState.FairyBoost})`, '[silent]');
-        },
-        onBasePowerPriority: 21,
-        onBasePower(basePower, attacker, defender, move) {
-            if (this.effectState.FairyBoost) {
-                const powMod = [4096, 4300.8, 4505.6, 4710.4, 4915.2, 5120, 5324.8];
-                this.debug(`Solidarity boost: ${powMod[this.effectState.FairyBoost]}/4096`);
-                return this.chainModify([powMod[this.effectState.FairyBoost], 4096]);
-            }
-        },
-        name: "Solidarity",
-		shortDesc: "For each Fairy type Pokemon on the team, raise non-speed stats by 5%.",
-        rating: 4,
-        num: -13,
-    },
+		shortDesc: "Raises the user's non-Speed stats by 5% for each Fairy-type Pokémon on the team.",
+		onStart(pokemon) {
+			let fairyCount = 0;
+			for (const ally of pokemon.side.pokemon) {
+				if (ally.hasType('Fairy')) fairyCount++;
+			}
+			pokemon.addVolatile('solidarity');
+			pokemon.volatiles['solidarity'].fairyCount = fairyCount;
+			this.add('-ability', pokemon, 'Solidarity');
+		},
+		onModifyStats(stats, pokemon) {
+			const volatile = pokemon.volatiles['solidarity'];
+			if (!volatile) return;
+			const multiplier = 1 + (volatile.fairyCount * 0.05);
+			stats.hp *= multiplier;
+			stats.atk *= multiplier;
+			stats.def *= multiplier;
+			stats.spa *= multiplier;
+			stats.spd *= multiplier;
+		},
+		name: "Solidarity",
+		rating: 4,
+		num: -13,
+	},
 	dragonfucker: {
         onStart(pokemon) {
             let DragonBoost = 0;
@@ -555,7 +555,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		// Ignore Status moves.
 		if (move.category === 'Status') return;
 		if (!target.formeChange('Ryuko-Syncronized', this.effect, true)) return;
-		this.add('-message', 'Life Fiber Syncronize, Kamui Senketsu!');
+		this.add('c', 'Ryuko', 'Life Fiber Syncronize, Kamui Senketsu!');
 	},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Life Fiber Syncronize",
@@ -573,19 +573,17 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				"Jevil: THE TRUE AND NEO CHAOS!",
 				"Jevil: BYE-BYE!",
 			];
-			this.add('-message', quotes[this.random(quotes.length)]);
+			this.add('c', 'Jevil', quotes[this.random(quotes.length)]);
 		},
-		onBasePower(basePower, attacker, defender, move) {
-			if (move.id === 'rudebuster') {
-				return this.chainModify(100 / 80);
-			}
-		},
-
 		onModifyMove(move) {
-			if (move.type === 'Dragon' && move.accuracy !== true) {
-				move.accuracy = 100;
-			}
-		},
+				if (move.id === 'rudebuster') {
+					move.basePower = 100;
+				}
+
+				if (move.type === 'Dragon' && move.accuracy !== true) {
+					move.accuracy = 100;
+				}
+			},
 		name: "DevilsKnife",
 		shortDesc: "Boosts Rude Buster's power by 1.25x. Dragon type attacks have 100% accuracy.",
 		rating: 3.5,
@@ -628,23 +626,26 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -24,
 	},
-	smirk: {
-		// On protect effect handled in moves.ts
-		onFoeDamagingHit(damage, target, source, move) {
-			if (target.getMoveHitData(move).typeMod > 0) {
-				this.debug('Smirk trigger');
-				source.addVolatile('laserfocus');
-			}
+	ctedistributor: {
+		onStart(pokemon) {
+			pokemon.abilityState.belowThreshold = false;
 		},
-		onAfterMove(pokemon, target, move) {
-			if (pokemon.moveThisTurnResult === false) {
-				this.debug('Smirk trigger');
-				target.addVolatile('laserfocus');
+		onUpdate(pokemon) {
+			const belowThreshold = pokemon.hp <= pokemon.maxhp / 4;
+			if (belowThreshold && !pokemon.abilityState.belowThreshold) {
+				for (const target of pokemon.foes()) {
+					this.boost({
+						atk: -1,
+						spa: -1,
+					}, target, pokemon);
+				}
+				this.add('-ability', pokemon, 'CTE Distributor');
 			}
+			pokemon.abilityState.belowThreshold = belowThreshold;
 		},
-		name: "Smirk",
-		shortDesc: "On Supereffective attack or a failed move against this Pokemon, grants Laser Focus.",
-		rating: 3,
+		name: "CTE Distributor",
+		shortDesc: "When this Pokémon reaches 25% HP or less, lowers the opponent's Atk and SpA by 1 stage.",
+		rating: 3.5,
 		num: -25,
 	},
 	// This isn't a doubles mod!

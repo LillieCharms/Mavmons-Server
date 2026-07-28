@@ -155,7 +155,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fire"],
 		gender: "F",
 		baseStats: {hp: 74, atk: 149, def: 102, spa: 85, spd: 124, spe: 146},
-		abilities: {0: "Life Fiber Syncronize"},
+		abilities: {0: "No Ability"},
 		weightkg: 75,
 	},
 	raidenshogun: {

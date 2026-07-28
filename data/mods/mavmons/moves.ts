@@ -287,7 +287,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	starsthatpiercetheheavens: {
 		num: -8,
 		accuracy: true,
-		basePower: 200,
+		basePower: 180,
 		category: "Special",
 		name: "Stars That Pierce The Sky",
 		shortDesc: "Blocks healing and removes all hazards.",
@@ -506,7 +506,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Shock Bubble",
 		pp: 15,
 		priority: 4,
-		flags: {contact: 1, slicing: 1, heal: 1, protect: 1, mirror: 1},
+		flags: {protect: 1},
 		onPrepareHit(target, source, pokemon) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Tail Glow", target);
@@ -515,9 +515,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		stallingMove: true,
 		volatileStatus: 'shockbubble',
-		onHit(pokemon) {
-			pokemon.addVolatile('stall');
-		},
 		condition: {
 			duration: 1,
 			onStart(target) {
@@ -525,6 +522,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			},
 			onTryHitPriority: 3,
 			onTryHit(target, source, move) {
+				if (move.category === 'Status') return;
+
 				if (!move.flags['protect']) {
 					if (['gmaxoneblow', 'gmaxrapidflow'].includes(move.id)) return;
 					if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
@@ -542,15 +541,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 						delete source.volatiles['lockedmove'];
 					}
 				}
-				if (this.checkMoveMakesContact(move, source, target)) {
-					this.field.setTerrain('electricterrain');
-				}
+
+				this.field.setTerrain('electricterrain');
 				return this.NOT_FAIL;
-			},
-			onHit(target, source, move) {
-				if (move.isZOrMaxPowered && this.checkMoveMakesContact(move, source, target)) {
-					this.field.setTerrain('electricterrain');
-				}
 			},
 		},
 		target: "self",
@@ -679,26 +672,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Killer Wail 5.1",
 		pp: 10,
 		priority: 0,
-		flags: {mirror: 1, metronome: 1, sound: 1, bypasssub: 1},
-		condition: {
-			duration: 3,
-			onStart(pokemon, source) {
-				this.add('-start', pokemon, 'move: Killer Wail 5.1', '[of] ' + source);
-			},
-			onResidualOrder: 14,
-			onResidual(pokemon) {
-				const source = this.effectState.source;
-				if (source && (!source.isActive || source.hp <= 0 || !source.activeTurns)) {
-					delete pokemon.volatiles['Killer Wail 5.1'];
-					this.add('-end', pokemon, 'Killer Wail 5.1', '[silent]');
-					return;
-				}
-				this.boost({def: -1, spd: -1}, pokemon, source, this.dex.getActiveMove('Killer Wail 5.1'));
-			},
-			onEnd(target) {
-				this.add('-end', target, 'move: Killer Wail 5.1');
-			},
-		},
+		flags: {mirror: 1, metronome: 1, sound: 1, bypasssub: 1, protect: 1},
 		secondary: {
 			chance: 100,
 			volatileStatus: 'killerwail51',
@@ -711,7 +685,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Resroes 50% of user's max HP, summons Safeguard.",
+		shortDesc: "Restores 50% of user's max HP, summons Safeguard.",
 		name: "Anxiety Pills",
 		pp: 5,
 		priority: 0,
@@ -777,14 +751,14 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		multihit: 2,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1, bullet: 1},
- 		onPrepareHit(target, source, move) {
+ 		onHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Weather Ball", target);
 		},
 		secondary: {
-					chance: 20,
-					status: 'brn',
-				},
+			chance: 20,
+			status: 'brn',
+		},
 		target: "normal",
 		type: "Normal",
 		contestType: "Clever",
@@ -809,26 +783,23 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Rock",
 		contestType: "Cute",
 	},
-	lightningkick: {
+	pitchingchange: {
 		num: -20,
-		accuracy: 90,
-		basePower: 90,
-		category: "Special",
-		overrideDefensiveStat: 'def',
-		shortDesc: "Damages target based on defense. High critical hit ratio.",
-		name: "Lightning Kick",
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Pitching Change",
+		shortDesc: "Switches the user out. The incoming Pokémon restores 1/16 of its max HP.",
 		pp: 10,
 		priority: 0,
 		flags: {},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Thunderous Kick", target);
+		target: "self",
+		type: "Normal",
+
+		onHit(source) {
+			source.addVolatile('pitchingchange');
+			this.actions.useMove('switch', source);
 		},
-		
-		critRatio: 2,
-		target: "normal",
-		type: "Electric",
-		contestType: "Beautiful",
 	},
 	fullchargeshot: {
 		num: -21,
@@ -1361,7 +1332,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "Uses Atk stat. Resets Darkness for a total of 8 turns.",
 		pp: 1,
 		priority: 0,
-		flags: {},
+		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Night Shade", target);
@@ -1380,7 +1351,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				this.add('-message', "The Roaring extends the Darkness!");
 			} else {
 				this.field.addPseudoWeather(id, source, null, {
-					duration: 5,
+					duration: 3,
 				});
 			}
 		},
