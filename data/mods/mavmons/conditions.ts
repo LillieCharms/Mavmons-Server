@@ -191,9 +191,9 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 	},
 	solidarity: {
 		name: "Solidarity",
-
 		onStart(pokemon) {
-			this.add('-start', pokemon, 'Solidarity', `[${this.effectState.fairyCount}]`);
+			const fairyCount = pokemon.volatiles['solidarity'].fairyCount;
+			this.add('-start', pokemon, 'Solidarity', `[${fairyCount}]`);
 		},
 	},
 };

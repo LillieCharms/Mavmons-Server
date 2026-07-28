@@ -1681,6 +1681,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	},
 	pretzeldog: {
 		num: -48,
+		name: "Pretzel Dog",
+		shortDesc: "Heals the user for 25% max HP and cures status conditions. Heals more based on user's current HP.",
 		accuracy: true,
 		basePower: 0,
 		onHit(pokemon) {

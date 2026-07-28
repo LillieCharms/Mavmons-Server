@@ -201,6 +201,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			protect: ["9L1"],
 			anxietypills: ["9L1"],
 			killerwail51: ["9L1"],
+			elementalbomb: ["9L1"],
 		},
 	},
 	katie: {
@@ -242,6 +243,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			electricfence: ["9L1"],
 			canopyhunter: ["9L1"],
 			thirdeye: ["9L1"],
+			pitchingchange: ["9L1"],
 		},
 	},
 	lewyn: {

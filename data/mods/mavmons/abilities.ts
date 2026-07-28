@@ -318,25 +318,38 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -12,
 	},
 	solidarity: {
-		shortDesc: "Raises the user's non-Speed stats by 5% for each Fairy-type Pokémon on the team.",
+		shortDesc: "Raises the user's non-Speed stats by 5% for each Fairy-type Pokemon on the team.",
 		onStart(pokemon) {
 			let fairyCount = 0;
 			for (const ally of pokemon.side.pokemon) {
-				if (ally.hasType('Fairy')) fairyCount++;
+				if (ally.hasType('Fairy')) {
+					fairyCount++;
+				}
 			}
 			pokemon.addVolatile('solidarity');
 			pokemon.volatiles['solidarity'].fairyCount = fairyCount;
 			this.add('-ability', pokemon, 'Solidarity');
+			this.add('-message', `Solidarity: ${fairyCount}`);
 		},
-		onModifyStats(stats, pokemon) {
-			const volatile = pokemon.volatiles['solidarity'];
-			if (!volatile) return;
-			const multiplier = 1 + (volatile.fairyCount * 0.05);
-			stats.hp *= multiplier;
-			stats.atk *= multiplier;
-			stats.def *= multiplier;
-			stats.spa *= multiplier;
-			stats.spd *= multiplier;
+		onModifyMaxHp(maxhp, pokemon) {
+			const count = pokemon.volatiles['solidarity']?.fairyCount || 0;
+			return Math.floor(maxhp * (1 + count * 0.05));
+		},
+		onModifyAtk(atk, pokemon) {
+			const count = pokemon.volatiles['solidarity']?.fairyCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		onModifyDef(def, pokemon) {
+			const count = pokemon.volatiles['solidarity']?.fairyCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		onModifySpA(spa, pokemon) {
+			const count = pokemon.volatiles['solidarity']?.fairyCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		onModifySpD(spd, pokemon) {
+			const count = pokemon.volatiles['solidarity']?.fairyCount || 0;
+			return this.chainModify(1 + count * 0.05);
 		},
 		name: "Solidarity",
 		rating: 4,
