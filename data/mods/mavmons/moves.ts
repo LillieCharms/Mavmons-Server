@@ -789,16 +789,17 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Pitching Change",
-		shortDesc: "Switches the user out. The incoming Pokémon restores 1/16 of its max HP.",
+		shortDesc: "Switches the user out. The incoming Pokemon restores 1/16 of its max HP.",
 		pp: 10,
 		priority: 0,
 		flags: {},
 		target: "self",
 		type: "Normal",
 
+		selfSwitch: true,
+
 		onHit(source) {
 			source.addVolatile('pitchingchange');
-			this.actions.useMove('switch', source);
 		},
 	},
 	fullchargeshot: {
