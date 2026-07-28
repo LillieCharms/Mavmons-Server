@@ -141,7 +141,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		},
 	},
 	cageddemon: {
-		name: "Caged Demon"
+		name: "Caged Demon",
 		onTrapPokemon(pokemon) {
 				pokemon.tryTrap();
 			},
