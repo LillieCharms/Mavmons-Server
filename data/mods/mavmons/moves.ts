@@ -407,9 +407,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Coins!!!",
 		shortDesc: "Removes hazards from user's side and sets a layer of Steel Spikes.",
-		pp: 30,
+		pp: 10,
 		priority: -1,
-		flags: flags: {protect: 1, mirror: 1},
+		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Make it Rain", target);

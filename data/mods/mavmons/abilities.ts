@@ -661,21 +661,21 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			}
 		},
 		onAfterMoveSecondary(target, source, move) {
-			this.effectState.checkedBerserk = true;
-			if (!source || source === target || !target.hp || !move.totalDamage) return;
-			const lastAttackedBy = target.getLastAttackedBy();
-			if (!lastAttackedBy) return;
-			const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
-				for (const target of pokemon.foes()) {
-					this.boost({
-						atk: -1,
-						spa: -1,
-					}, target, pokemon);
+				this.effectState.checkedBerserk = true;
+				if (!source || source === target || !target.hp || !move.totalDamage) return;
+				const lastAttackedBy = target.getLastAttackedBy();
+				if (!lastAttackedBy) return;
+				const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
+				if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+					for (const target of pokemon.foes()) {
+						this.boost({
+							atk: -1,
+							spa: -1,
+						}, target, pokemon);
+					}
+					this.add('-ability', pokemon, 'CTE Distributor');
 				}
-				this.add('-ability', pokemon, 'CTE Distributor');
-			}
-			}
+			},
 		name: "CTE Distributor",
 		shortDesc: "When this Pokemon reaches 25% HP or less, lowers the opponent's Atk and SpA by 1 stage.",
 		rating: 3.5,
