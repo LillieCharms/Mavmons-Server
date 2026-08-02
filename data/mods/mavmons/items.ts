@@ -62,15 +62,14 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		name: "Justice Axe",
 		desc: "If held by Susie, turn Slash into Rude Buster, turn OKHeal into BetterHeal.",
 		onModifyMove(move, pokemon) {
-		if (pokemon.species.id !== 'susie') return;
-
-		if (move.id === 'slash') {
-			move = this.dex.getActiveMove('rudebuster');
-		} else if (move.id === 'okheal') {
-			move = this.dex.getActiveMove('betterheal');
-		}
-		return move;
-	}
+			if (pokemon.species.id !== 'susie') return;
+			if (move.id === 'slash') {
+				move = this.dex.getActiveMove('rudebuster');
+			} else if (move.id === 'okheal') {
+				move = this.dex.getActiveMove('betterheal');
+			}
+			return move;
+		},
 		num: -6,
 		gen: 9,
 	},
