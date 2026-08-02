@@ -68,7 +68,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Water", "Psychic"],
 		gender: "M",
 		baseStats: {hp: 90, atk: 100, def: 100, spa: 150, spd: 95, spe: 135},
-		abilities: {0: "Adaptability", 1: "Color Pulse", H: "Serenity"},
+		abilities: {0: "Water Veil", 1: "Color Pulse", H: "Serenity"},
 		weightkg: 75,
 	},
 	alexis: {
@@ -184,6 +184,24 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		baseStats: {hp: 140, atk: 154, def: 82, spa: 102, spd: 82, spe: 100},
 		abilities: {0: "Defiant", 1: "Intimidate", H: "DevilsKnife"},
 		weightkg: 75,
+	},
+	soren: {
+		num: 2016,
+		name: "Soren",
+		types: ["Flying"],
+		gender: "M",
+		baseStats: {hp: 80, atk: 70, def: 80, spa: 175, spd: 100, spe: 115},
+		abilities: {0: "Keen Eye", 1: "Divisive Resourcefulness", H: "Anima Master"},
+		weightkg: 75,
+	},
+	omegashenron: {
+		num: 2017,
+		name: "Omega Shenron",
+		types: ["Dragon", "Dark"],
+		gender: "M",
+		baseStats: {hp: 255, atk: 150, def: 70, spa: 155, spd: 70, spe: 77},
+		abilities: {0: "Prism Armor", 1: "End of Dormancy", H: "Strengthen me, Shadow Dragons!"},
+		weightkg: 175,
 	},
 
 	wochien: {

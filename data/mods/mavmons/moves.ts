@@ -300,8 +300,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Light That Burns the Sky", target);
 		},
 		onHit(target, source, move) {
-			let success = false;
-			if (!target.volatiles['substitute'] || move.infiltrates) success = !!this.boost({evasion: -1});
 			const removeTarget = [
 				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence',
 			];
@@ -411,7 +409,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "Removes hazards from user's side and sets a layer of Steel Spikes.",
 		pp: 30,
 		priority: -1,
-		flags: {},
+		flags: flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Make it Rain", target);
@@ -486,7 +484,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Call an Uber",
 		pp: 20,
 		priority: 0,
-		flags: {bullet: 1, protect: 1, mirror: 1},
+		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Shift Gear", target);
@@ -807,7 +805,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 80,
 		basePower: 180,
 		category: "Special",
-		name: "Full-Charged Shot",
+		name: "Full Charged Shot",
 		shortDesc: "Ignores effects of abilities and moves, can't be used twice in a row. ",
 		pp: 5,
 		priority: 0,
@@ -1194,9 +1192,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -34,
 		accuracy: 100,
 		basePower: 18,
-		basePowerCallback(pokemon, target, move) {
-			return 18 * move.hit;
-		},
 		category: "Physical",
 		name: "Sword Tunnel",
 		shortDesc: "Hits 5 times.",
@@ -1427,8 +1422,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-					return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 3), 5);
-				},
+			return Math.max(0, target.hp - Math.floor(target.maxhp * 0.4));
+		},
 		category: "Special",
 		name: "Musou no Hitotachi",
 		shortDesc: "Sets target's HP to 40%. Flinches.",
@@ -1437,7 +1432,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {},
 		onPrepareHit(target, source, move) {
 		this.attrLastMove('[still]');
-		this.add('-anim', source, "Poltergeist", source);
+		this.add('-anim', source, "Poltergeist", target);
 		},
 		isZ: "lesbiumz",
 		breaksProtect: true,
@@ -1570,17 +1565,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "???",
 		contestType: "Cool",
 	},
-	scythemare: {
+	saction: {
 			num: -46,
 			accuracy: 100,
-			basePower: 70,
-			basePowerCallback(pokemon, target, move) {
-				if (target.status === 'slp') {
-					this.debug('BP doubled on sleeping target');
-					return move.basePower * 2;
-				}
-				return move.basePower;
-			},
+			basePower: 90,
 			category: "Physical",
 			name: "S-Action",
 			shortDesc: "Performs a random S-Action.",
@@ -1758,13 +1746,17 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		isZ: "geniumz",
 		secondary: null,
 		target: "normal",
-		type: "Fairy",
+		type: "Dark",
 		contestType: "Beautiful",
 	},
 	cutsceneswoon: {
 		num: -50,
 		accuracy: 100,
 		basePower: 50,
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Pursuit", source);
+		},
 		basePowerCallback(pokemon, target, move) {
 			// You can't get here unless the pursuit succeeds
 			if (target.beingCalledBack || target.switchFlag) {
@@ -1838,6 +1830,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 1,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Recover", source);
+		},
 		heal: [3, 20],
 		secondary: null,
 		target: "self",
@@ -1855,6 +1851,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 8,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Moonlight", source);
+		},
 		heal: [1, 2],
 		secondary: null,
 		target: "self",
@@ -1862,121 +1862,165 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Clever",
 	},
-	rightbehindyou: {
+	rewarp: {
 		num: -53,
 		accuracy: true,
-		basePower: 140,
-		category: "Physical",
-		name: "Right Behind You",
-		shortDesc: "Raises user's speed by 1; restores 50% of damage dealt.",
+		category: "Status",
+		name: "Rewarp",
+		shortDesc: "Disappear for turn 1. At the end of the next turn, user switches out.",
 		pp: 1,
-		priority: 0,
-		flags: {contact: 1, heal: 1},
+		priority: 4,
+		flags: {},
+		noPPBoosts: true,
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Bide", source);
-			this.add('-anim', source, "First Impression", target);
+			this.add('-anim', source, "Baton Pass", source);
 		},
-		self: {
-			boosts: {
-				spe: 1,
+		volatileStatus: 'rewarp',
+		condition: {
+			duration: 2,
+			onStart(pokemon) {
+				this.add('-prepare', pokemon, 'Rewarp');
+			},
+			onInvulnerability(target, source, move) {
+				if (source === target) return;
+				return false;
+			},
+			onResidualOrder: 1,
+			onResidual(pokemon) {
+				if (this.effectState.duration === 1) {
+					this.add('-activate', pokemon, 'move: Rewarp');
+					if (pokemon.hp && pokemon.switchFlag !== false) {
+						pokemon.switchFlag = true;
+					}
+				}
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'Rewarp');
 			},
 		},
-		drain: [1, 2],
-		isZ: "spyniumz",
+		secondary: null,
+		target: "self",
+		type: "Normal",
+		contestType: "Smart",
+	},
+	
+	assigndecoy: {
+	num: -54,
+    accuracy: true,
+    basePower: 0,
+    category: "Status",
+    name: "Assign Decoy",
+    pp: 10,
+	flags: {snatch: 1, nonsky: 1, metronome: 1},
+	onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Substitute", source);
+		},
+    condition: this.dex.conditions.get('substitute'),
+		onTry(source) {
+			if (source.volatiles['substitute']) {
+				this.add('-fail', source);
+				return null;
+			}
+
+			source.volatiles['substitute'] = {
+				hp: Math.floor(source.maxhp / 4),
+			};
+			this.add('-start', source, 'Substitute');
+		},
+	target: "self",
+    type: "Normal",
+	contestType: "Smart",
+	},
+
+	rexcalibur: {
+		num: -55,
+		accuracy: true,
+		basePower: 120,
+		category: "Special",
+		name: "Rexcalibur",
+		shortDesc: "Never misses.",
+		pp: 5,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, wind: 1},
+		secondary: null,
+		target: "normal",
+		type: "Flying",
+		contestType: "Cool",
+	},
+
+	minusenergypowerball: {
+		num: -56,
+		accuracy: 100,
+		basePower: 30,
+		category: "Special",
+		name: "Minus Energy Power Ball",
+		shortDesc: "Hits 7 times.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', target, "Light That Burns the Sky", target);
+		},
+		pp: 10,
+		priority: 0,
+		flags: { protect: 1, mirror: 1, bullet: 1, metronome: 1},
+		multihit: 7,
 		secondary: null,
 		target: "normal",
 		type: "Dark",
-		contestType: "Tough",
 	},
-	
-	// Skipping ahead bc future moves in the spreadsheet got added to an older mon
-	bombblast: {
-		num: -77,
+	dragonflashbullet: {
+		num: -57,
 		accuracy: 100,
-		basePower: 100,
+		basePower: 10,
 		category: "Special",
-		name: "Bomb Blast",
-		shortDesc: "Hits one turn after being used.",
+		name: "Dragon Flash Bullet Punch",
+		shortDesc: "Hits 7 times.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', target, "Hyper Beam", target);
+		},
+		onAfterMove(source, target, move) {
+			if (!source.hp || !target.hp) return;
+			this.damage(source.baseMaxhp * 0.15, source, source);
+			if (!source.hp) return;
+			this.actions.useMove(move.id, source, target);
+		}
 		pp: 10,
 		priority: 0,
-		flags: {allyanim: 1, metronome: 1, futuremove: 1, bullet: 1},
-		ignoreImmunity: true,
-		onTry(source, target) {
-			if (!target.side.addSlotCondition(target, 'futuremove')) return false;
-			this.add('-anim', source, "Fling", target);
-			Object.assign(target.side.slotConditions[target.position]['futuremove'], {
-				duration: 2,
-				move: 'bombblast',
-				source: source,
-				moveData: {
-					id: 'bombblast',
-					name: "Bomb Blast",
-					accuracy: 100,
-					basePower: 100,
-					category: "Special",
-					priority: 0,
-					flags: {allyanim: 1, metronome: 1, futuremove: 1, bullet: 1},
-					onPrepareHit(target, source, move) {
-						this.attrLastMove('[still]');
-						this.add('-anim', target, "Explosion", source);
-					},
-					ignoreImmunity: false,
-					effectType: 'Move',
-					type: 'Normal',
-				},
-			});
-			this.add('-start', source, 'move: Bomb Blast');
-			return this.NOT_FAIL;
-		},
+		flags: {protect: 1, mirror: 1, bullet: 1, metronome: 1},
 		secondary: null,
 		target: "normal",
-		type: "Normal",
-		contestType: "Clever",
+		type: "Dragon",
 	},
-	bombthrow: {
-		num: -78,
+	dragonthunder: {
+		num: -58,
 		accuracy: 100,
-		basePower: 100,
-		category: "Physical",
-		name: "Bomb Throw",
-		shortDesc: "Hits one turn after being used.",
-		pp: 10,
-		priority: 0,
-		flags: {allyanim: 1, metronome: 1, futuremove: 1},
-		ignoreImmunity: true,
-		onTry(source, target) {
-			if (!target.side.addSlotCondition(target, 'futuremove')) return false;
-			this.add('-anim', source, "Fling", target);
-			Object.assign(target.side.slotConditions[target.position]['futuremove'], {
-				duration: 2,
-				move: 'bombthrow',
-				source: source,
-				moveData: {
-					id: 'bombthrow',
-					name: "Bomb Throw",
-					accuracy: 100,
-					basePower: 100,
-					category: "Physical",
-					priority: 0,
-					flags: {allyanim: 1, metronome: 1, futuremove: 1},
-					onPrepareHit(target, source, move) {
-						this.attrLastMove('[still]');
-						this.add('-anim', target, "Explosion", source);
-					},
-					ignoreImmunity: false,
-					effectType: 'Move',
-					type: 'Fire',
-				},
-			});
-			this.add('-start', source, 'move: Bomb Throw');
-			return this.NOT_FAIL;
+		basePower: 120,
+		category: "Special",
+		name: "Dragon Thunder",
+		shortDesc: "Paralyzes Target. Boost Def and SpDef by 1.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', target, "Thunder Punch", target);
 		},
-		secondary: null,
+		self: {
+			boosts: {
+				def: 1,
+				spd: 1,
+			},
+		},
+		pp: 15,
+		priority: 0,
+		flags: { protect: 1, mirror: 1, bullet: 1, metronome: 1},
+		secondary: {
+			chance: 100,
+			status: 'par',
+		},
 		target: "normal",
-		type: "Fire",
-		contestType: "Cool",
+		type: "Electric",
 	},
+
 	
 	
 	// Below are vanilla moves altered by custom interractions

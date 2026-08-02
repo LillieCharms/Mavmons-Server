@@ -356,35 +356,43 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -13,
 	},
 	dragonfucker: {
-        onStart(pokemon) {
-            let DragonBoost = 0;
-                this.add('-activate', pokemon, 'ability: Dragonfucker');
-                { 
-                    for(let i = 0; i < pokemon.side.pokemon.length; i++){
-                        if (pokemon.side.pokemon[i].hasType('Dragon')) {
-                            DragonBoost += 1;    
-                        }
-                    }
-                }
-                this.add('-start', pokemon, `DRAGONBOOST (${Solid})`, '[silent]');
-                this.effectState.Dragon = DragonBoost;
-        },
-        onEnd(pokemon) {
-            this.add('-end', pokemon, `DRAGONBOOST (${this.effectState.DragonBoost})`, '[silent]');
-        },
-        onBasePowerPriority: 21,
-        onBasePower(basePower, attacker, defender, move) {
-            if (this.effectState.Solid) {
-                const powMod = [4096, 4300.8, 4505.6, 4710.4, 4915.2, 5120, 5324.8];
-                this.debug(`Dragonfucker boost: ${powMod[this.effectState.DragonBoost]}/4096`);
-                return this.chainModify([powMod[this.effectState.DragonBoost], 4096]);
-            }
-        },
-        name: "Dragonfucker",
-		shortDesc: "For each Dragon type Pokemon on the team, raise non-speed Stats by 5%.",
-        rating: 4,
-        num: -14,
-    },
+		shortDesc: "Raises the user's non-Speed stats by 5% for each Dragon-type Pokemon on the team.",
+		onStart(pokemon) {
+			let dragonCount = 0;
+			for (const ally of pokemon.side.pokemon) {
+				if (ally.hasType('Fairy')) {
+					dragonCount++;
+				}
+			}
+			pokemon.addVolatile('dragonfucker');
+			pokemon.volatiles['dragonfucker'].dragonCount = dragonCount;
+			this.add('-ability', pokemon, 'dragonfucker');
+			this.add('-message', `Dragonfucker: ${dragonCount}`);
+		},
+		onModifyMaxHp(maxhp, pokemon) {
+			const count = pokemon.volatiles['dragonfucker']?.dragonCount || 0;
+			return Math.floor(maxhp * (1 + count * 0.05));
+		},
+		onModifyAtk(atk, pokemon) {
+			const count = pokemon.volatiles['dragonfucker']?.dragonCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		onModifyDef(def, pokemon) {
+			const count = pokemon.volatiles['dragonfucker']?.dragonCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		onModifySpA(spa, pokemon) {
+			const count = pokemon.volatiles['dragonfucker']?.dragonCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		onModifySpD(spd, pokemon) {
+			const count = pokemon.volatiles['dragonfucker']?.dragonCount || 0;
+			return this.chainModify(1 + count * 0.05);
+		},
+		name: "Dragonfucker",
+		rating: 4,
+		num: -14,
+	},
 	todaysbrew: {
 		// Multitype's type-changing itself is implemented in statuses.js
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
@@ -641,12 +649,24 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -24,
 	},
 	ctedistributor: {
-		onStart(pokemon) {
-			pokemon.abilityState.belowThreshold = false;
+		onDamage(damage, target, source, effect) {
+			if (
+				effect.effectType === "Move" &&
+				!effect.multihit &&
+				(!effect.negateSecondary && !(effect.hasSheerForce && source.hasAbility('sheerforce')))
+			) {
+				this.effectState.checkedBerserk = false;
+			} else {
+				this.effectState.checkedBerserk = true;
+			}
 		},
-		onUpdate(pokemon) {
-			const belowThreshold = pokemon.hp <= pokemon.maxhp / 4;
-			if (belowThreshold && !pokemon.abilityState.belowThreshold) {
+		onAfterMoveSecondary(target, source, move) {
+			this.effectState.checkedBerserk = true;
+			if (!source || source === target || !target.hp || !move.totalDamage) return;
+			const lastAttackedBy = target.getLastAttackedBy();
+			if (!lastAttackedBy) return;
+			const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
+			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
 				for (const target of pokemon.foes()) {
 					this.boost({
 						atk: -1,
@@ -655,10 +675,9 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				}
 				this.add('-ability', pokemon, 'CTE Distributor');
 			}
-			pokemon.abilityState.belowThreshold = belowThreshold;
-		},
+			}
 		name: "CTE Distributor",
-		shortDesc: "When this Pokémon reaches 25% HP or less, lowers the opponent's Atk and SpA by 1 stage.",
+		shortDesc: "When this Pokemon reaches 25% HP or less, lowers the opponent's Atk and SpA by 1 stage.",
 		rating: 3.5,
 		num: -25,
 	},
@@ -689,11 +708,87 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -26,
 	},
-	autobuild: {
-		name: "Autobuild",
-		shortDesc: "This Pokemon is immune to hazards & terrain.",
-		// Literally every element of this has to be handled via moves.ts
+	divisiveresourcefulness: {
+		onTryHeal(damage, target, source, effect) {
+			const pokemon = this.effectState.target;
+			if (target.side === pokemon.side) return;
+			if (!pokemon.hp || !pokemon.hasAbility('divisiveresourcefulness')) return;
+			if (target.hp <= target.maxhp / 4) return;
+			this.add('-ability', pokemon, 'Divisive Resourcefulness');
+			return false;
+		},
+		name: "Divisive Resourcefulness",
+		shortDesc: "Opponents above 25% HP cannot restore HP.",
 		rating: 4,
 		num: -27,
+	},
+	animamaster: {
+    onBasePower(basePower, attacker, defender, move) {
+        if (move.type === 'Fire' || move.type === 'Electric') {
+            return this.chainModify(1.5);
+        }
+    },
+    onModifyMove(move) {
+        if (
+            move.category === 'Status' &&
+            (move.type === 'Fire' ||
+             move.type === 'Electric' ||
+             move.type === 'Flying')
+        ) {
+            move.accuracy = true;
+        }
+    },
+	name: "Anima Master",
+    shortDesc: "Fire/Electric attacks boost 1.5x. Fire, Electric, and Flying status moves never miss.",
+	rating: 4,
+	num: -28,
+	},
+
+	strengthenmeshadowdragons: {
+    
+		onStart(pokemon) {
+			this.effectState.used = false;
+		},
+
+		onUpdate(pokemon) {
+			if (this.effectState.used) return;
+			if (pokemon.hp && pokemon.hp <= pokemon.maxhp / 2) {
+				this.effectState.used = true;
+
+				this.add('-ability', pokemon, 'Second Wind');
+
+				this.heal(pokemon.baseMaxhp);
+				this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1}, pokemon);
+			}
+		},
+	name: "Strengthen me, Shadow Dragons!",
+    shortDesc: "Once per battle, at 1/2 HP or less, restores full HP and raises all stats by 1.",
+	rating: 5,
+	num: -29,
+	},
+	endofdormancy: {
+		onModifyAtk(atk, pokemon) {
+			return this.chainModify(this.getTurnBoost(pokemon));
+		},
+		onModifyDef(def, pokemon) {
+			return this.chainModify(this.getTurnBoost(pokemon));
+		},
+		onModifySpA(spa, pokemon) {
+			return this.chainModify(this.getTurnBoost(pokemon));
+		},
+		onModifySpD(spd, pokemon) {
+			return this.chainModify(this.getTurnBoost(pokemon));
+		},
+		onModifySpe(spe, pokemon) {
+			return this.chainModify(this.getTurnBoost(pokemon));
+		},
+		getTurnBoost(pokemon) {
+			const turns = Math.min(this.turn, 100);
+			return 1 + (turns * 0.02);
+		},
+	name: "End of Dormancy",
+	shortDesc: "This Pokemon's stats are boosted by 2% each turn, up to turn 100.",
+	rating: 5,
+	num: -30,
 	},
 };
