@@ -1985,7 +1985,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.damage(source.baseMaxhp * 0.15, source, source);
 			if (!source.hp) return;
 			this.actions.useMove(move.id, source, target);
-		}
+		},
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, bullet: 1, metronome: 1},
