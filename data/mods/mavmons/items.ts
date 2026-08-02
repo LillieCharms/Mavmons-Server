@@ -58,16 +58,19 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		num: -5,
 		gen: 9,
 	},
-	threesacredtreasures: {
-		name: "Three Sacred Treasures",
-		desc: "If held by Pit, this item allows him to Mega Evolve in battle.",
-		megaStone: "Pit-Mega",
-		megaEvolves: "Pit",
-		itemUser: ["Pit"],
-		onTakeItem(item, source) {
-			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
-			return true;
-		},
+	justiceaxe: {
+		name: "Justice Axe",
+		desc: "If held by Susie, turn Slash into Rude Buster, turn OKHeal into BetterHeal.",
+		onModifyMove(move, pokemon) {
+		if (pokemon.species.id !== 'susie') return;
+
+		if (move.id === 'slash') {
+			move = this.dex.getActiveMove('rudebuster');
+		} else if (move.id === 'okheal') {
+			move = this.dex.getActiveMove('betterheal');
+		}
+		return move;
+	}
 		num: -6,
 		gen: 9,
 	},

@@ -807,9 +807,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 80,
 		basePower: 180,
 		category: "Special",
-		name: "Full-Charge Shot",
-		shortDesc: "Ignores effects of abilities and moves, high critical hit ratio, can't be used twice in a row. ",
-		pp: 10,
+		name: "Full-Charged Shot",
+		shortDesc: "Ignores effects of abilities and moves, can't be used twice in a row. ",
+		pp: 5,
 		priority: 0,
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
@@ -817,7 +817,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Hyper Beam", target);
 		},
 		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1},
-		critRatio: 2,
 		ignoreAbility: true,
 		target: "normal",
 		type: "???",
@@ -828,27 +827,15 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		name: "Quick Super Jump",
-		shortDesc: "Switches the user out, passing stat changes. Fully restores user.",
-		pp: 1,
-		noPPBoosts: true,
+		name: "Wavebreaker",
+		shortDesc: "-2 evasion. Sets hazard, 25% damage to non-levitating Pokemon. Lasts 4 turns.",
+		pp: 10,
 		priority: 4,
 		flags: {snatch: 1, heal: 1, metronome: 1},
-		onHit(target) {
-			this.heal(target.maxhp);
-			if (!this.canSwitch(target.side) || target.volatiles['commanded']) {
-				this.attrLastMove('[still]');
-				this.add('-fail', target);
-				return this.NOT_FAIL;
-			}
+		sideCondition: 'wavebreaker',
+		boosts: {
+			evasion: -2,
 		},
-		self: {
-			onHit(source) {
-				source.skipBeforeSwitchOutEventFlag = true;
-			},
-		},
-		heal: [1, 1],
-		selfSwitch: 'copyvolatile',
 		secondary: null,
 		target: "self",
 		type: "Water",
@@ -1328,9 +1315,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -37,
 		accuracy: true,
 		basePower: 180,
-		category: "Special",
+		category: "Physical",
 		name: "Crystal Nova",
-		shortDesc: "Uses Atk stat. Resets Darkness for a total of 8 turns.",
+		shortDesc: "Adds 3 turns to Darkness.",
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
@@ -1356,7 +1343,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				});
 			}
 		},
-		overrideOffensiveStat: 'atk',
 		isZ: "shelteriumz",
 		secondary: null,
 		target: "normal",
@@ -1466,11 +1452,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	senketsukisaragi: {
 		num: -41,
 		accuracy: 100,
-		basePower: 200,
+		basePower: 150,
 		category: "Physical",
 		name: "Senketsu Kisaragi",
 		shortDesc: "Can only be used by Ryuko-Syncronized, reverts back to Ryuko Matoi.",
-		pp: 5,
+		pp: 1,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, slicing: 1},
 		onTry(source) {
@@ -1492,6 +1478,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				this.add('-message', 'Ryuko burnt up all her Life Fibers and reverted back to her base form!');
 			},
 		},
+		noPPBoosts: true,
 		target: "normal",
 		type: "Fire",
 		contestType: "Cool",
@@ -1511,11 +1498,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		ignoreAbility: true,
 		secondary: {
 					chance: 20,
-					self: {
 						boosts: {
-							atk: 1,
+							def: 1,
 						},
-					},
 				},
 		target: "normal",
 		type: "Fire",
@@ -1547,12 +1532,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 20,
 		category: "Physical",
 		name: "SEN-I-SOSHITSU",
-		shortDesc: "Raises the user's Atk/Def/SpAtk/SpDef/Spe by 1 if this KOes the target. Bypass Accuracy",
+		shortDesc: "Raises the user's Atk by 3 if this KO's the target. Bypass Accuracy",
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 		onAfterMoveSecondarySelf(pokemon, target, move) {
-			if (!target || target.fainted || target.hp <= 0) this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1}, pokemon, pokemon, move);
+			if (!target || target.fainted || target.hp <= 0) this.boost({atk: 3}, pokemon, pokemon, move);
 		},
 		secondary: null,
 		target: "normal",
@@ -1562,7 +1547,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	rudebuster: {
 		num: -45,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 100,
 		category: "Special",
 		name: "Rude Buster",
 		shortDesc: "Uses Atk in calculation, deals Rude damage.",
@@ -1583,7 +1568,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		secondary: null,
 		target: "normal",
 		type: "???",
-		contestType: "Clever",
+		contestType: "Cool",
 	},
 	scythemare: {
 			num: -46,
@@ -1597,13 +1582,35 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				return move.basePower;
 			},
 			category: "Physical",
-			name: "Scythemare",
-			shortDesc: "Power doubles if target is asleep, cures it.",
+			name: "S-Action",
+			shortDesc: "Performs a random S-Action.",
 			pp: 10,
 			priority: 0,
 			flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
-			onHit(target) {
-				if (target.status === 'slp') target.cureStatus();
+			onAfterHit(target, source, move) {
+				// Kill quote
+				if (target.hp <= 0) {
+					this.add('message', `"Heh... you're never gonna win, you hear me?!"`);
+					return;
+				}
+				// Super effective quote
+				if (target.getMoveHitData(move).typeMod > 0) {
+					this.add('message', `"Your weakness? Oh yeah, Flowery told me."`);
+					return;
+				}
+				// Low HP quote
+				if (source.hp <= source.maxhp / 4) {
+					this.add('message', `"Didn't... think I'd still be standing, did you?"`);
+					return;
+				}
+				// Misc quotes
+				const quotes = [
+					`"(lancer drove in and blew up the opponent!)"`,
+					`"Watch THIS! (Susie throws her axe wildly!)"`,
+					`"Talk your way out of THIS!"`,
+					`"Think fast!"`,
+				];
+				this.add('c', 'Susie', quotes[this.random(quotes.length)]);
 			},
 			target: "normal",
 			type: "Dark",
@@ -1729,100 +1736,130 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "self",
 		contestType: "Beautiful",
 	},
-
-	starriders: {
+	crystalbarrage: {
 		num: -49,
-		accuracy: true,
-		basePower: 200,
-		category: "Special",
-		name: "Star Riders",
+		accuracy: 100,
+		basePower: 10,
+		category: "Physical",
+		name: "Crystal Barrage",
 		shortDesc: "No additional effects.",
-		pp: 1,
+		pp: 10,
 		priority: 0,
 		flags: {},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Cosmic Power", source);
-			this.add('-anim', source, "Moongeist Beam", target);
+			this.add('-anim', source, "Swift", source);
 		},
+		basePowerCallback(pokemon, target, move) {
+			return 20 * move.hit;
+		},
+		multihit: 4,
+		multiaccuracy: true,
 		isZ: "geniumz",
 		secondary: null,
 		target: "normal",
 		type: "Fairy",
 		contestType: "Beautiful",
 	},
-	eject: {
+	cutsceneswoon: {
 		num: -50,
-		accuracy: 90,
-		basePower: 90,
-		category: "Special",
-		name: "Eject",
-		shortDesc: "Forces the target to switch to a random ally.",
-		pp: 10,
-		priority: -6,
-		flags: {protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Nasty Plot", source);
-			this.add('-anim', source, "Hyper Voice", target);
-			this.add('-anim', target, "Teleport", target);
-		},
-		forceSwitch: true,
-		target: "normal",
-		type: "Normal",
-		contestType: "Clever",
-	},
-	backstab: {
-		num: -51,
 		accuracy: 100,
-		basePower: 80,
+		basePower: 50,
 		basePowerCallback(pokemon, target, move) {
-			if (target.newlySwitched || this.queue.willMove(target)) {
-				this.debug('Backstab damage boost');
-				return move.basePower * 1.5;
+			// You can't get here unless the pursuit succeeds
+			if (target.beingCalledBack || target.switchFlag) {
+				this.debug('cutscene swoon damage boost');
+				return move.basePower * 3;
 			}
-			this.debug('Backstab NOT boosted');
 			return move.basePower;
 		},
 		category: "Physical",
-		name: "Backstab",
-		shortDesc: "Power 1.5x if user moves before the target.",
+		name: "Cutscene Swoon",
+		shortDesc: "if opponent is attempting to switch out, power doubles, hits before switching.",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, slicing: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Bide", source);
-			this.add('-anim', source, "Shadow Sneak", target);
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		beforeTurnCallback(pokemon) {
+			for (const side of this.sides) {
+				if (side.hasAlly(pokemon)) continue;
+				side.addSideCondition('cutsceneswoon', pokemon);
+				const data = side.getSideConditionData('cutsceneswoon');
+				if (!data.sources) {
+					data.sources = [];
+				}
+				data.sources.push(pokemon);
+			}
+		},
+		onModifyMove(move, source, target) {
+			if (target?.beingCalledBack || target?.switchFlag) move.accuracy = true;
+		},
+		onTryHit(target, pokemon) {
+			target.side.removeSideCondition('cutsceneswoon');
+		},
+		condition: {
+			duration: 1,
+			onBeforeSwitchOut(pokemon) {
+				this.debug('Cutscene Swoon start');
+				let alreadyAdded = false;
+				pokemon.removeVolatile('destinybond');
+				for (const source of this.effectState.sources) {
+					if (!source.isAdjacent(pokemon) || !this.queue.cancelMove(source) || !source.hp) continue;
+					if (!alreadyAdded) {
+						this.add('-activate', pokemon, 'move: Cutscene Swoon');
+						alreadyAdded = true;
+					}
+					// Run through each action in queue to check if the Pursuit user is supposed to Mega Evolve this turn.
+					// If it is, then Mega Evolve before moving.
+					if (source.canMegaEvo || source.canUltraBurst) {
+						for (const [actionIndex, action] of this.queue.entries()) {
+							if (action.pokemon === source && action.choice === 'megaEvo') {
+								this.actions.runMegaEvo(source);
+								this.queue.list.splice(actionIndex, 1);
+								break;
+							}
+						}
+					}
+					this.actions.runMove('cutsceneswoon', source, source.getLocOf(pokemon));
+				}
+			},
 		},
 		secondary: null,
 		target: "normal",
 		type: "Dark",
 		contestType: "Clever",
 	},
-	electrosapper: {
-		num: -52,
-		accuracy: 90,
+	okheal: {
+		num: -51,
+		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		name: "Electro-Sapper",
-		shortDesc: "Lowers the target's Speed by 1; Traps and damages the target for 4-5 turns.",
-		pp: 10,
+		name: "OKHeal",
+		shortDesc: "You are going to lose Points.",
+		pp: 1,
 		priority: 0,
-		flags: {protect: 1, reflectable: 1, mirror: 1, metronome: 1},
-		onPrepareHit(target, source, move) {
-			this.attrLastMove('[still]');
-			this.add('-anim', source, "Bide", source);
-			this.add('-anim', source, "Thunder Cage", target);
-		},
-		volatileStatus: 'partiallytrapped',
-		boosts: {
-			spe: -1,
-		},
+		flags: {snatch: 1, heal: 1, metronome: 1},
+		heal: [3, 20],
 		secondary: null,
-		target: "normal",
-		type: "Electric",
-		zMove: {boost: {spd: 1, spe: 1}},
+		target: "self",
+		type: "Normal",
+		zMove: {effect: 'clearnegativeboost'},
+		contestType: "Clever",
+	},
+	betterheal: {
+		num: -52,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "BetterHeal",
+		shortDesc: "Recover 50% of max HP.",
+		pp: 8,
+		priority: 0,
+		flags: {snatch: 1, heal: 1, metronome: 1},
+		heal: [1, 2],
+		secondary: null,
+		target: "self",
+		type: "Fairy",
+		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Clever",
 	},
 	rightbehindyou: {

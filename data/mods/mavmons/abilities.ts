@@ -299,7 +299,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -11,
 	},
 	chargingego: {
-		shortDesc: "Boosts the Pokémon's Atk, Sp.Atk and Accuracy by 2, reduces evasion by 1, the first time it KOs an opponent.",
+		shortDesc: "Boosts the Pokemon's Atk, Sp.Atk and Accuracy by 2, reduces evasion by 1, the first time it KOs an opponent.",
 		onSourceAfterFaint(length, target, source, effect) {
 			if (!effect || effect.effectType !== 'Move') return;
 			if (source.abilityState.activated) return;
@@ -427,6 +427,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			if (pokemon.m.guardBroken === undefined) {
 				pokemon.m.guardBroken = false;
 			}
+			if (this.field.isWeather('roaring')) return;
 			this.field.addPseudoWeather('darkness');
 		},
 		onSourceModifyDamage(damage, source, target, move) {
@@ -579,18 +580,18 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	devilsknife: {
 		onStart(pokemon) {
 			const quotes = [
-				"Jevil: I CAN DO ANYTHING",
-				"Jevil: UEE HEE HEE!",
-				"Jevil: CHAOS, CHAOS!",
-				"Jevil: METAMORPHOSIS!",
-				"Jevil: THE TRUE AND NEO CHAOS!",
-				"Jevil: BYE-BYE!",
+				"I CAN DO ANYTHING",
+				"UEE HEE HEE!",
+				"CHAOS, CHAOS!",
+				"METAMORPHOSIS!",
+				"THE TRUE AND NEO CHAOS!",
+				"BYE-BYE!",
 			];
 			this.add('c', 'Jevil', quotes[this.random(quotes.length)]);
 		},
 		onModifyMove(move) {
 				if (move.id === 'rudebuster') {
-					move.basePower = 100;
+					move.basePower = 150;
 				}
 
 				if (move.type === 'Dragon' && move.accuracy !== true) {
@@ -598,7 +599,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				}
 			},
 		name: "DevilsKnife",
-		shortDesc: "Boosts Rude Buster's power by 1.25x. Dragon type attacks have 100% accuracy.",
+		shortDesc: "Boosts Rude Buster's power by 50%. Dragon type attacks have 100% accuracy.",
 		rating: 3.5,
 		num: -22,
 	},
@@ -661,11 +662,31 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -25,
 	},
-	// This isn't a doubles mod!
-	refresher: {
-		name: "Refresher",
-		shortDesc: "30% chance to restore ally's health for 1/4 at the end of each turn",
-		rating: 1,
+	darkestdark: {
+		onStart(pokemon) {
+			if (pokemon.m.guardBroken === undefined) {
+				pokemon.m.guardBroken = false;
+			}
+			this.field.addPseudoWeather('roaring');
+		},
+		onModifyAtkPriority: 5,
+		onSourceModifyDamage(damage, source, target, move) {
+			if (!target.m.guardBroken) {
+				return this.chainModify(0.5);
+			}
+		},
+		onDamagingHit(damage, target, source, move) {
+			const hitData = target.getMoveHitData(move);
+			if (!target.m.guardBroken && hitData?.typeMod > 0) {
+				target.m.guardBroken = true;
+				this.add('-activate', target, 'ability: Darkest Dark');
+				this.add('-message', `${target.name} let its guard down!`);
+			}
+		},
+		flags: {},
+		name: "Darkest Dark",
+		shortDesc: "Begins the Roaring upon switch in, 1/2 damage from attacks until Super Effective hit.",
+		rating: 4,
 		num: -26,
 	},
 	autobuild: {

@@ -18,11 +18,28 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			}
 		},
 	},
-
+	roaring: {
+		name: 'Roaring',
+		duration: 5,
+		onFieldStart(field, source) {
+			this.add('-fieldstart', 'Roaring');
+			this.add('-message', 'The Roaring engulfs the field!');
+		},
+		onFieldResidualOrder: 27,
+		onFieldResidualSubOrder: 8,
+		onFieldEnd() {
+			this.add('-fieldend', 'Roaring');
+			this.add('-message', 'The Roaring fades.');
+		},
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.type === 'Dark') {
+				return this.chainModify(1.5);
+			}
+		},
+	},
 	balefulomen: {
         name: "Baleful Omen",
         duration: 5,
-
         onFieldStart(field, source) {
             this.add('-fieldstart', 'Baleful Omen', '[from] ability: Shard of Euthymia');
 			this.add('-message', 'Thunder crackles through intense winds!');
@@ -195,5 +212,21 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			const fairyCount = pokemon.volatiles['solidarity'].fairyCount;
 			this.add('-start', pokemon, 'Solidarity', `[${fairyCount}]`);
 		},
+	},
+	wavebreaker: {
+    duration: 4,
+    onStart(side) {
+        this.add('-sidestart', side, 'Wavebreaker');
+    },
+    onSwitchIn(pokemon) {
+        if (!pokemon.isGrounded()) return;
+        this.damage(pokemon.baseMaxhp / 4, pokemon);
+        this.boost({
+            evasion: -2,
+        }, pokemon);
+    },
+    onEnd(side) {
+        this.add('-sideend', side, 'Wavebreaker');
+    },
 	},
 };
