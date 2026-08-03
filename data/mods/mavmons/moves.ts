@@ -986,7 +986,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Electric Fence",
 		pp: 10,
 		priority: 0,
-		flags: {reflectable},
+		flags: {reflectable: 1},
 		self: {
 			onHit(source) {
 				for (const side of source.side.foeSidesWithConditions()) {
