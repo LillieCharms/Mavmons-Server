@@ -935,7 +935,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			} else if (spa >= atk && def < spd) {
 				move.category = "Physical";
 			}
-		}
+		},
 		onModifyType(move, pokemon) {
 			const plate = pokemon.getItem().onPlate;
 			if (plate) move.type = plate;
