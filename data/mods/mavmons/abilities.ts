@@ -470,7 +470,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
                 }
         },
         flags: {},
-        name: "We Can't Afford Not To Try!",
+        name: `"We can't afford not to try!"`,
 		shortDesc: "This Pokemon has a 21% chance to attack again upon landing an attack, and has its accuracy multiplied by 0.79x.",
         rating: 4.5,
         num: -18,
@@ -761,7 +761,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1}, pokemon);
 			}
 		},
-	name: "Strengthen me, Shadow Dragons!",
+	name: '"Strengthen me, Shadow Dragons!"',
     shortDesc: "Once per battle, at 1/2 HP or less, restores full HP and raises all stats by 1.",
 	rating: 5,
 	num: -29,
@@ -790,5 +790,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	shortDesc: "This Pokemon's stats are boosted by 2% each turn, up to turn 100.",
 	rating: 5,
 	num: -30,
+	},
+	lifefiberinfusion: {
+		onModifyDamage(damage, source, target, move) {
+			if (move && target.getMoveHitData(move).typeMod > 0) {
+				return this.chainModify([1, 10]);
+			}
+		},
+		name: "Life Fiber Infusion",
+		shortDesc: "Boost Super Effective attacks by 10%.",
+		rating: 2.5,
+		num: -31,
 	},
 };

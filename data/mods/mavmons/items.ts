@@ -1,10 +1,10 @@
 export const Items: {[itemid: string]: ModdedItemData} = {
 	starniumz: {
 		name: "Starnium Z",
-		desc: "If held by Charms with Falling Star, it can use Stars That Pierce the Heavens.",
+		desc: "If held by Charms with Falling Star, it can use Stars That Pierce the Sky.",
 		spritenum: 687,
 		onTakeItem: false,
-		zMove: "Stars That Pierce the Heavens",
+		zMove: "Stars That Pierce the Sky",
 		zMoveFrom: "Falling Star",
 		itemUser: ["Charms"],
 		num: -1,
@@ -61,18 +61,160 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	justiceaxe: {
 		name: "Justice Axe",
 		desc: "If held by Susie, turn Slash into Rude Buster, turn OKHeal into BetterHeal.",
-		onModifyMove(move, pokemon) {
-			if (pokemon.species.id !== 'susie') return;
-			if (move.id === 'slash') {
-				move = this.dex.getActiveMove('rudebuster');
-			} else if (move.id === 'okheal') {
-				move = this.dex.getActiveMove('betterheal');
+		onStart(pokemon) {
+			for (const moveSlot of pokemon.moveSlots) {
+				if (moveSlot.id === 'slash') {
+					moveSlot.id = 'rudebuster';
+					moveSlot.move = this.dex.moves.get('rudebuster').name;
+				}
+
+				if (moveSlot.id === 'okheal') {
+					moveSlot.id = 'betterheal';
+					moveSlot.move = this.dex.moves.get('betterheal').name;
+				}
 			}
-			return move;
+		},
+		onTakeItem(item, source) {
+			this.add('c', 'Susie',`As if I would let YOU take this from me!`);
+			if (!this.activeMove) return false;
+			if (this.activeMove.id !== 'knockoff' && this.activeMove.id !== 'thief' && this.activeMove.id !== 'covet') return false;
 		},
 		num: -6,
 		gen: 9,
 	},
+	kyuremscoldbrew: {
+        name: "Kyurem's Cold Brew",
+		desc: "Boosts the power of Ice type moves by 1.2x.",
+        onPlate: "Ice",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Ice') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Ice",
+		num: -7,
+		gen: 9,
+    },
+	braziliandarkroast: {
+        name: "Brazilian Dark Roast",
+		desc: "Boosts the power of Dark type moves by 1.2x.",
+        onPlate: "Dark",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Dark') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Dark",
+		num: -8,
+		gen: 9,
+    },
+	dianthasauroralfrappe: {
+        name: "Diantha's Auroral Frappe",
+		desc: "Boosts the power of Fairy type moves by 1.2x.",
+        onPlate: "Fairy",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Fairy') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Fairy",
+		num: -9,
+		gen: 9,
+    },
+	hexmaniacsphantasmalespresso: {
+        name: "Hex Maniac's Phantasmal Espresso",
+		desc: "Boosts the power of Ghost type moves by 1.2x.",
+        onPlate: "Ghost",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Ghost') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Ghost",
+		num: -10,
+		gen: 9,
+    },
+	earthysumatra: {
+        name: "Earthy Sumatra",
+		desc: "Boosts the power of Ground type moves by 1.2x.",
+        onPlate: "Ground",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Ground') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Ground",
+		num: -11,
+		gen: 9,
+    },
+	klarasintoxicatingjava: {
+        name: "Klara's Intoxicating Java",
+		desc: "Boosts the power of Poison type moves by 1.2x.",
+        onPlate: "Poison",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Poison') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Poison",
+		num: -12,
+		gen: 9,
+    },
+	americano: {
+        name: "Americano",
+		desc: "Boosts the power of Water type moves by 1.2x.",
+        onPlate: "Water",
+        onBasePower(basePower, user, target, move) {
+			if (move.type === 'Water') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 2008) || pokemon.baseSpecies.num === 2008) {
+				return false;
+			}
+			return true;
+		},
+        forcedForme: "Randeez-Water",
+		num: -13,
+		gen: 9,
+    },
 	nahidiumz: {
 		name: "Nahidium Z",
 		desc: "If held by Nahida with Scheme of Acuity, it can use Illusory rtburst.",

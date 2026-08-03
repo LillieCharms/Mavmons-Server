@@ -43,24 +43,22 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
         onFieldStart(field, source) {
             this.add('-fieldstart', 'Baleful Omen', '[from] ability: Shard of Euthymia');
 			this.add('-message', 'Thunder crackles through intense winds!');
-            this.effectState.sourceSide = source.side;
+            this.effectState.source = source;
         },
 
         onResidualOrder: 27,
         onResidualSubOrder: 9,
         onResidual() {
+			this.add('-message', 'Baleful Omen residual');
             const targetSide = this.effectState.sourceSide.foe;
-
             for (const pokemon of targetSide.active) {
                 if (!pokemon || pokemon.fainted) continue;
-
-                const immune = !pokemon.runImmunity('Electric');
-				const resisted = pokemon.runEffectiveness('Electric') < 0;
-
-                this.damage(
-                    pokemon.baseMaxhp / (immune || resisted ? 24 : 16),
-                    pokemon
-                );
+			const modifier =
+				!pokemon.runImmunity('Electric') ||
+				pokemon.runEffectiveness('Electric') < 0
+					? 24
+					: 16;
+			this.damage(pokemon.baseMaxhp / modifier, pokemon);
             }
         },
 		onFieldEnd() {

@@ -11,6 +11,10 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
+	benben: {
+		tier: "T MV",
+		doublesTier: "DMV Ubers",
+	},
 	zeya: {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
@@ -51,6 +55,10 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
+	ryukosyncronized: {
+		tier: "T MV",
+		doublesTier: "DMV Ubers",
+	},
 	raidenshogun: {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
@@ -60,7 +68,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	cutsceneroaringknight: {
-		tier: "MV Ubers",
+		tier: "T MV",
 		doublesTier: "DMV Ubers",
 	},
 	soren: {
@@ -68,7 +76,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	omegashenron: {
-		tier: "MV Ubers",
+		tier: "T MV",
 		doublesTier: "DMV Ubers",
 	},
 };

@@ -31,7 +31,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Special",
 		shortDesc: "Deals x2 damage and grounds levitating/flying Pokemon.",
 		name: "Falling Star",
-		pp: 15,
+		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
@@ -189,7 +189,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Special",
 		shortDesc: "Super effective on Dragon-type Pokemon.",
 		name: "Sublime Heaven",
-		pp: 15,
+		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
@@ -218,7 +218,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Status",
 		shortDesc: "The foes Attack and Special Attack are lowered by 1, taunts foe for 3 turns.",
 		name: "Disarm",
-		pp: 5,
+		pp: 15,
 		priority: 1,
 		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
@@ -284,7 +284,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Dark",
 		contestType: "Cool",
 	},
-	starsthatpiercetheheavens: {
+	starsthatpiercethesky: {
 		num: -8,
 		accuracy: true,
 		basePower: 180,
@@ -561,6 +561,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Fighting') return 1;
 		},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Origin Pulse", target);
+		},
 		infiltrates: true,
 		ignoreEvasion: true,
 		ignoreDefensive: true,
@@ -611,7 +615,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Bulk Up", target);
 		},
-		heal: [1, 2],
+		heal: [3, 10],
 		sideCondition: 'safeguard',
 		condition: {
 			duration: 5,
@@ -657,7 +661,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		secondary: null,
 		target: "allySide",
-		type: "Normal",
+		type: "Psychic",
 		zMove: {boost: {spe: 1}},
 		contestType: "Beautiful",
 	},
@@ -744,7 +748,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 45,
 		category: "Special",
 		shortDesc: "Hits 2 times, each hit has a 20% chance to burn.",
-		name: "Elemental Bomb",
+		name: "Elemental Bomb Bottle",
 		pp: 5,
 		multihit: 2,
 		priority: 0,
@@ -800,7 +804,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			source.addVolatile('pitchingchange');
 		},
 	},
-	fullchargeshot: {
+	fullchargedshot: {
 		num: -21,
 		accuracy: 80,
 		basePower: 180,
@@ -820,7 +824,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "???",
 		contestType: "Cute",
 	},
-	quicksuperjump: {
+	wavebreaker: {
 		num: -22,
 		accuracy: true,
 		basePower: 0,
@@ -919,8 +923,23 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Hyperspace Fury", target);
 			this.add('-anim', source, "Spacial Rend", target);
 		},
-		onModifyMove(move, pokemon) {
-			if (pokemon.getStat('atk', false, true) > pokemon.getStat('spa', false, true)) move.category = 'Physical';
+		onTryMove(source, target, move) {
+			const atk = source.getStat('atk', false, true);
+			const spa = source.getStat('spa', false, true);
+
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+
+			if (atk > spa && spd < def) {
+				move.category = "Special";
+			} else if (spa >= atk && def < spd) {
+				move.category = "Physical";
+			}
+		}
+		onModifyType(move, pokemon) {
+			const plate = pokemon.getItem().onPlate;
+			if (plate) move.type = plate;
+			else move.type = "Steel";
 		},
 		secondary: null,
 		target: "normal",
@@ -929,73 +948,33 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		maxMove: {basePower: 130},
 		contestType: "Tough",
 	},
-	recuerdame: {
+	dragonspear: {
 		num: -26,
-		accuracy: true,
-		basePower: 0,
-		category: "Status",
-		shortDesc: "Defog, Healing Wish, next Pokemon +2 Spe +6 Acc.",
-		name: "Recuerdame",
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		shortDesc: "Lowers the PP of the target's last move by 3. Ignores Sub.",
+		name: "Dragon Spear",
 		pp: 10,
 		priority: 0,
-		flags: {},
+		flags: {protect: 1, bypasssub: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Clangorous Soul", target);
 			this.add('-anim', source, "Doom Desire", target);
 		},
-		onTryHit(source) {
-			if (!this.canSwitch(source.side)) {
-				this.attrLastMove('[still]');
-				this.add('-fail', source);
-				return this.NOT_FAIL;
-			}
-		},
-		onHit(target, source, move) {
-			let success = false;
-			if (!target.volatiles['substitute'] || move.infiltrates) success = !!this.boost({evasion: -1});
-			const removeTarget = [
-				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence',
-			];
-			const removeAll = [
-				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence',
-			];
-			for (const targetCondition of removeTarget) {
-				if (target.side.removeSideCondition(targetCondition)) {
-					if (!removeAll.includes(targetCondition)) continue;
-					this.add('-sideend', target.side, this.dex.conditions.get(targetCondition).name, '[from] move: Defog', '[of] ' + source);
-					success = true;
-				}
-			}
-			for (const sideCondition of removeAll) {
-				if (source.side.removeSideCondition(sideCondition)) {
-					this.add('-sideend', source.side, this.dex.conditions.get(sideCondition).name, '[from] move: Defog', '[of] ' + source);
-					success = true;
-				}
-			}
-			this.field.clearTerrain();
-			return success;
-		},
-		selfdestruct: "ifHit",
-		slotCondition: 'healingwish',
-		condition: {
-			onSwap(target) {
-				if (!target.fainted && (target.hp < target.maxhp || target.status)) {
-					target.heal(target.maxhp);
-					target.clearStatus();
+		onHit(target) {
+			let move: Move | ActiveMove | null = target.lastMove;
+			if (!move || move.isZ) return false;
+			if (move.isMax && move.baseMove) move = this.dex.moves.get(move.baseMove);
 
-
-					this.add('-heal', target, target.getHealth, '[from] move: Healing Wish');
-					this.boost({spe: 4}, target);
-					this.boost({evasion: 12}, target);
-					target.side.removeSlotCondition(target, 'healingwish');
-					
-				}
-			},
+			const ppDeducted = target.deductPP(move.id, 3);
+			if (!ppDeducted) return false;
+			this.add("-activate", target, 'move: Dragon Spear', move.name, ppDeducted);
 		},
 		secondary: null,
-		target: "self",
-		type: "Ghost",
+		target: "normal",
+		type: "Dragon",
 		contestType: "Beautiful",
 	},
 		electricfence: {
@@ -1007,7 +986,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Electric Fence",
 		pp: 10,
 		priority: 0,
-		flags: {},
+		flags: {reflectable},
 		self: {
 			onHit(source) {
 				for (const side of source.side.foeSidesWithConditions()) {
@@ -1033,7 +1012,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		secondary: null,
 		target: "adjacentFoe",
-		type: "Steel",
+		type: "Electric",
 		contestType: "Cool",
 	},
 	canopyhunter: {
@@ -1049,6 +1028,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onEffectiveness(typeMod, target, type) {
 				if (type === 'Fire') return 1;
 			},
+			onPrepareHit(target, source, pokemon) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Drum Beating", target);
+		},
 			target: "normal",
 			type: "Grass",
 			contestType: "Beautiful",
@@ -1120,7 +1103,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Special",
 		name: "Flame of Ideals",
 		shortDesc: "No additional effect.",
-		pp: 1,
+		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
 		secondary: null,
@@ -1169,7 +1152,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Cargo Throw",
 		shortDesc: "Switches the opponent out. If the opponent is under half HP, always crits. Hits Ghost-types.",
-		pp: 16,
+		pp: 15,
 		priority: -6,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
 		onModifyMovePriority: -5,
@@ -1578,17 +1561,17 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onAfterHit(target, source, move) {
 				// Kill quote
 				if (target.hp <= 0) {
-					this.add('message', `"Heh... you're never gonna win, you hear me?!"`);
+					this.add('c', 'Susie', `"Heh... you're never gonna win, you hear me?!"`);
 					return;
 				}
 				// Super effective quote
 				if (target.getMoveHitData(move).typeMod > 0) {
-					this.add('message', `"Your weakness? Oh yeah, Flowery told me."`);
+					this.add('c', 'Susie', `"Your weakness? Oh yeah, Flowery told me."`);
 					return;
 				}
 				// Low HP quote
 				if (source.hp <= source.maxhp / 4) {
-					this.add('message', `"Didn't... think I'd still be standing, did you?"`);
+					this.add('c', 'Susie', `"Didn't... think I'd still be standing, did you?"`);
 					return;
 				}
 				// Misc quotes
@@ -2024,10 +2007,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	dragonflashbullet: {
 		num: -57,
 		accuracy: 100,
-		basePower: 10,
+		basePower: 100,
 		category: "Special",
-		name: "Dragon Flash Bullet Punch",
-		shortDesc: "Hits 7 times.",
+		name: "Dragon Flash Bullet",
+		shortDesc: "Hits until user or opponent faint.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', target, "Hyper Beam", target);
