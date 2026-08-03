@@ -767,24 +767,20 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	num: -29,
 	},
 	endofdormancy: {
-		onModifyAtk(atk, pokemon) {
-			return this.chainModify(this.getTurnBoost(pokemon));
+		 onModifyAtk(atk, pokemon) {
+        return this.chainModify(1 + Math.min(this.turn, 100) * 0.02);
 		},
 		onModifyDef(def, pokemon) {
-			return this.chainModify(this.getTurnBoost(pokemon));
+			return this.chainModify(1 + Math.min(this.turn, 100) * 0.02);
 		},
 		onModifySpA(spa, pokemon) {
-			return this.chainModify(this.getTurnBoost(pokemon));
+			return this.chainModify(1 + Math.min(this.turn, 100) * 0.02);
 		},
 		onModifySpD(spd, pokemon) {
-			return this.chainModify(this.getTurnBoost(pokemon));
+			return this.chainModify(1 + Math.min(this.turn, 100) * 0.02);
 		},
 		onModifySpe(spe, pokemon) {
-			return this.chainModify(this.getTurnBoost(pokemon));
-		},
-		getTurnBoost(pokemon) {
-			const turns = Math.min(this.turn, 100);
-			return 1 + (turns * 0.02);
+			return this.chainModify(1 + Math.min(this.turn, 100) * 0.02);
 		},
 	name: "End of Dormancy",
 	shortDesc: "This Pokemon's stats are boosted by 2% each turn, up to turn 100.",

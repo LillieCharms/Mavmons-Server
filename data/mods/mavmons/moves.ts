@@ -2034,7 +2034,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 120,
 		category: "Special",
 		name: "Dragon Thunder",
-		shortDesc: "Paralyzes Target. Boost Def and SpDef by 1.",
+		shortDesc: "Paralyzes Target. Boost Def and Sp. Def by 1.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', target, "Thunder Punch", target);

@@ -575,7 +575,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 	},
 	soren: {
 		learnset: {
-			Defog: ["9L1"],
+			defog: ["9L1"],
 			flamethrower: ["9L1"],
 			heatwave: ["9L1"],
 			icebeam: ["9L1"],
