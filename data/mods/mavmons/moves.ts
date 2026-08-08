@@ -300,79 +300,68 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Light That Burns the Sky", target);
 		},
 		onHit(target, source, move) {
+			let success = false;
+
 			const removeTarget = [
-				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence',
+				'reflect',
+				'lightscreen',
+				'auroraveil',
+				'safeguard',
+				'mist',
+				'spikes',
+				'toxicspikes',
+				'stealthrock',
+				'stickyweb',
+				'gmaxsteelsurge',
+				'electricfence',
 			];
+
 			const removeAll = [
-				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence',
+				'spikes',
+				'toxicspikes',
+				'stealthrock',
+				'stickyweb',
+				'gmaxsteelsurge',
+				'electricfence',
 			];
+
 			for (const targetCondition of removeTarget) {
-				if (target.side.removeSideCondition(targetCondition)) {
-					if (!removeAll.includes(targetCondition)) continue;
-					this.add('-sideend', target.side, this.dex.conditions.get(targetCondition).name, '[from] move: Defog', '[of] ' + source);
-					success = true;
+				if (!target.side.removeSideCondition(targetCondition)) continue;
+
+				if (removeAll.includes(targetCondition)) {
+					const condition = this.dex.conditions.get(targetCondition);
+
+					this.add(
+						'-sideend',
+						target.side,
+						condition?.name || targetCondition,
+						'[from] move: Stars That Pierce The Sky',
+						'[of] ' + source
+					);
 				}
+
+				success = true;
 			}
+
 			for (const sideCondition of removeAll) {
 				if (source.side.removeSideCondition(sideCondition)) {
-					this.add('-sideend', source.side, this.dex.conditions.get(sideCondition).name, '[from] move: Defog', '[of] ' + source);
+					const condition = this.dex.conditions.get(sideCondition);
+
+					this.add(
+						'-sideend',
+						source.side,
+						condition?.name || sideCondition,
+						'[from] move: Stars That Pierce The Sky',
+						'[of] ' + source
+					);
+
 					success = true;
 				}
 			}
+
 			this.field.clearTerrain();
+
 			return success;
-		},
-		volatileStatus: 'healblock',
-		condition: {
-			duration: 5,
-			durationCallback(target, source, effect) {
-				if (effect?.name === "Psychic Noise") {
-					return 2;
-				}
-				if (source?.hasAbility('persistent')) {
-					this.add('-activate', source, 'ability: Persistent', '[move] Heal Block');
-					return 7;
-				}
-				return 5;
-			},
-			onStart(pokemon, source) {
-				this.add('-start', pokemon, 'move: Heal Block');
-				source.moveThisTurnResult = true;
-			},
-			onDisableMove(pokemon) {
-				for (const moveSlot of pokemon.moveSlots) {
-					if (this.dex.moves.get(moveSlot.id).flags['heal']) {
-						pokemon.disableMove(moveSlot.id);
-					}
-				}
-			},
-			onBeforeMovePriority: 6,
-			onBeforeMove(pokemon, target, move) {
-				if (move.flags['heal'] && !move.isZ && !move.isMax) {
-					this.add('cant', pokemon, 'move: Heal Block', move);
-					return false;
-				}
-			},
-			onModifyMove(move, pokemon, target) {
-				if (move.flags['heal'] && !move.isZ && !move.isMax) {
-					this.add('cant', pokemon, 'move: Heal Block', move);
-					return false;
-				}
-			},
-			onResidualOrder: 20,
-			onEnd(pokemon) {
-				this.add('-end', pokemon, 'move: Heal Block');
-			},
-			onTryHeal(damage, target, source, effect) {
-				if ((effect?.id === 'zpower') || this.effectState.isZ) return damage;
-				return false;
-			},
-			onRestart(target, source) {
-				this.add('-fail', target, 'move: Heal Block'); // Succeeds to supress downstream messages
-				if (!source.moveThisTurnResult) {
-					source.moveThisTurnResult = false;
-				}
-			},
 		},
 		isZ: "starniumz",
 		secondary: null,
@@ -1588,68 +1577,57 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			contestType: "Cool",
 	},
 	giantpunch: {
-	num: -47,
+    num: -47,
     accuracy: 100,
     basePower: 50,
-		onTry(pokemon) {
-			if (!pokemon.volatiles.giantpunchstacks) {
-				pokemon.addVolatile("giantpunchstacks");
-			}
-		},
-
 		basePowerCallback(pokemon) {
-			// Smash Rage override
 			if (pokemon.volatiles.smashrage) {
 				return 350;
 			}
 
-			// Normal Giant Punch scaling
 			const stacks =
 				pokemon.volatiles.giantpunchstacks?.stacks || 0;
 
-			return Math.min(
-				350,
-				50 + (stacks * 30)
-			);
+			return Math.min(350, 50 + (stacks * 30));
 		},
 
 		onAfterMove(pokemon) {
-			const volatile =
-				pokemon.volatiles.giantpunchstacks;
+			const volatile = pokemon.volatiles.giantpunchstacks;
 			if (!volatile) return;
-			const stacks = volatile.stacks;
+
+			const stacks = volatile.stacks || 0;
+
 			if (stacks > 0) {
 				this.add(
-					"-message",
+					'-message',
 					`${pokemon.name} used all Giant Punch's charge!`
 				);
 			}
-			// Smash Rage prevents Giant Punch boosts
+
 			if (!pokemon.volatiles.smashrage) {
 				if (stacks >= 10) {
 					this.boost({
 						atk: 2,
 						def: 2,
-						spd: 2,
+						spe: 2,
 					}, pokemon);
-
 				} else if (stacks >= 5) {
 					this.boost({
 						atk: 1,
 						def: 1,
-						spd: 1,
+						spe: 1,
 					}, pokemon);
 				}
 			}
 
-			// Reset stacks
 			volatile.stacks = 0;
 
-			 this.add(
-				"-message",
+			this.add(
+				'-message',
 				`${pokemon.name}'s Giant Punch charge reset to 0!`
 			);
 		},
+
 		target: "normal",
 		category: "Physical",
 		name: "Giant Punch",
@@ -1964,6 +1942,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			};
 			this.add('-start', source, 'Substitute');
 		},
+	priority: -1,
 	target: "self",
     type: "Normal",
 	contestType: "Smart",

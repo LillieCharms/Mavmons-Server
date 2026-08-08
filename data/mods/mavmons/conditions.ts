@@ -41,9 +41,10 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
         name: "Baleful Omen",
         duration: 5,
         onFieldStart(field, source) {
+            this.effectState.source = source;
+    		this.effectState.sourceSide = source.side;
             this.add('-fieldstart', 'Baleful Omen', '[from] ability: Shard of Euthymia');
 			this.add('-message', 'Thunder crackles through intense winds!');
-            this.effectState.source = source;
         },
 
         onResidualOrder: 27,

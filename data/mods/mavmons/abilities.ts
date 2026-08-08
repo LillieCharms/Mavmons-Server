@@ -709,12 +709,18 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -26,
 	},
 	divisiveresourcefulness: {
-		onTryHeal(damage, target, source, effect) {
-			const pokemon = this.effectState.target;
-			if (target.side === pokemon.side) return;
-			if (!pokemon.hp || !pokemon.hasAbility('divisiveresourcefulness')) return;
+		onStart(pokemon) {
+        this.add('-ability', pokemon, 'Divisive Resourcefulness');
+    	},
+		onAnyTryHeal(damage, target, source, effect) {
+			const holder = this.effectState.target;
+			// Don't block the ability holder's own healing.
+			if (target === holder) return;
+			// Only block foes.
+			if (target.side === holder.side) return;
+			// Allow healing at 25% HP or below.
 			if (target.hp <= target.maxhp / 4) return;
-			this.add('-ability', pokemon, 'Divisive Resourcefulness');
+			this.add('-ability', holder, 'Divisive Resourcefulness');
 			return false;
 		},
 		name: "Divisive Resourcefulness",
