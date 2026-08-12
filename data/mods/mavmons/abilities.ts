@@ -279,19 +279,23 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		onAnyModifyAtk(atk, target, source, move) {
 			const abilityHolder = this.effectState.target;
-			if (target.hasAbility('Laser Pressure')) return;
-			if (!move.pressuredAtk?.hasAbility('Laser Pressure')) move.pressuredAtk = abilityHolder;
+			// Don't affect the Laser Pressure holder.
+			if (target === abilityHolder) return;
+			if (!move.pressuredAtk?.hasAbility('Laser Pressure')) {
+				move.pressuredAtk = abilityHolder;
+			}
 			if (move.pressuredAtk !== abilityHolder) return;
-			this.debug('Laser Pressure Atk drop');
-			return this.chainModify(0.20);
+			return this.chainModify(0.8);
 		},
-		onAnyModifySpa(spa, target, source, move) {
+		onAnyModifySpA(spa, target, source, move) {
 			const abilityHolder = this.effectState.target;
-			if (target.hasAbility('Laser Pressure')) return;
-			if (!move.pressuredSpa?.hasAbility('Laser Pressure')) move.pressuredSpa = abilityHolder;
-			if (move.pressuredSpa !== abilityHolder) return;
-			this.debug('Laser Pressure Spa drop');
-			return this.chainModify(0.20);
+			// Don't affect the Laser Pressure holder.
+			if (target === abilityHolder) return;
+			if (!move.pressuredSpA?.hasAbility('Laser Pressure')) {
+				move.pressuredSpA = abilityHolder;
+			}
+			if (move.pressuredSpA !== abilityHolder) return;
+			return this.chainModify(0.8);
 		},
 		flags: {},
 		name: "Laser Pressure",
@@ -627,6 +631,19 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				}
 			}
 		},
+		onDamagingHit(damage, target) {
+			if (!damage) return;
+
+			target.giantPunchStacks = Math.min(
+				10,
+				(target.giantPunchStacks || 0) + 1
+			);
+
+			this.add(
+				'-message',
+				`${target.name} has ${target.giantPunchStacks} Giant Punch charge!`
+			);
+		},
 		name: "Smash Rage",
 		shortDesc: "35% hp, next Physical attack does 20% more. Custom moves have additional effects.",
 		rating: 4,
@@ -634,15 +651,26 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	cheezesports: {
 		onDamagingHit(damage, target, source, move) {
-        if (!move.type) return;
+			if (!damage) return;
 
-        const effectiveness =
-            this.dex.getEffectiveness(move.type, target);
+			target.giantPunchStacks = Math.min(
+				10,
+				(target.giantPunchStacks || 0) + 1
+			);
 
-        if (effectiveness > 0) {
-            target.addVolatile("cheezesports");
-        }
-    },
+			this.add(
+				'-message',
+				`${target.name} has ${target.giantPunchStacks} Giant Punch charge!`
+			);
+			if (!move.type) return;
+
+			const effectiveness =
+				this.dex.getEffectiveness(move.type, target);
+
+			if (effectiveness > 0) {
+				target.addVolatile("cheezesports");
+			}
+		},
 		name: "CheezEsports",
 		shortDesc: "When hit by a supereffective move, sign attacker up to CheezEsports.",
 		rating: 4,
@@ -796,12 +824,32 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	lifefiberinfusion: {
 		onModifyDamage(damage, source, target, move) {
 			if (move && target.getMoveHitData(move).typeMod > 0) {
-				return this.chainModify([1, 10]);
+				return this.chainModify([11, 10]);
 			}
 		},
 		name: "Life Fiber Infusion",
 		shortDesc: "Boost Super Effective attacks by 10%.",
 		rating: 2.5,
 		num: -31,
+	},
+	quicksuperjump: {
+    onSwitchOut(pokemon) {
+        if (pokemon.hp >= pokemon.maxhp / 2) return;
+        if (pokemon.abilityState.activated) return;
+
+        pokemon.abilityState.activated = true;
+        this.add('-ability', pokemon, 'Quick Super Jump');
+
+        this.heal(Math.floor(pokemon.maxhp / 2), pokemon);
+
+        if (pokemon.status) {
+            this.add('-curestatus', pokemon, pokemon.status);
+            pokemon.setStatus('');
+        }
+    },
+	name: "Quick Super Jump",
+    shortDesc: "Once per battle, switch out if below 50% HP, heal 50% HP and cure status.",
+	rating: 2.5,
+	num: -31,	
 	},
 };

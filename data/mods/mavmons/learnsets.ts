@@ -86,10 +86,8 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			darkpulse: ["9L1"],
 			surf: ["9L1"],
 			volttackle: ["9L1"],
-			zippyzap: ["9L1"],
 			baddybad: ["9L1"],
 			floatyfall: ["9L1"],
-			splishysplash: ["9L1"],
 			splash: ["9L1"],
 			nuzzle: ["9L1"],
 			darkestlariat: ["9L1"],
@@ -199,7 +197,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			protect: ["9L1"],
 			anxietypills: ["9L1"],
 			killerwail51: ["9L1"],
-			elementalbomb: ["9L1"],
+			elementalbombbottle: ["9L1"],
 		},
 	},
 	katie: {
@@ -247,6 +245,9 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 	lewyn: {
 		learnset: {
 			hydropump: ["9L1"],
+			assurance: ["9L1"],
+			ragepowder: ["9L1"],
+			chargebeam: ["9L1"],
 			steelbeam: ["9L1"],
 			flashcannon: ["9L1"],
 			smartstrike: ["9L1"],

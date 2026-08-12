@@ -56,7 +56,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	ryukosyncronized: {
-		tier: "T MV",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	raidenshogun: {
@@ -68,7 +68,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	cutsceneroaringknight: {
-		tier: "T MV",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	soren: {
@@ -76,7 +76,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	omegashenron: {
-		tier: "T MV",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 };

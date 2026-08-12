@@ -57,8 +57,8 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			const modifier =
 				!pokemon.runImmunity('Electric') ||
 				pokemon.runEffectiveness('Electric') < 0
-					? 24
-					: 16;
+					? 48
+					: 32;
 			this.damage(pokemon.baseMaxhp / modifier, pokemon);
             }
         },
@@ -66,39 +66,6 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
     	    this.add('-fieldend', 'Baleful Omen');
         },
     },
-	giantpunchstacks: {
-		name: "Giant Punch Stacks",
-
-		onStart(pokemon) {
-			this.effectState.stacks = 0;
-
-			this.add(
-				"-message",
-				`${pokemon.name} has no Giant Punch charge!`
-			);
-		},
-
-		onDamagingHit(damage, target) {
-			if (!damage) return;
-
-			let gain = 1;
-
-			// CheezEsports interaction
-			if (target.volatiles.chezesports) {
-				gain = 2;
-			}
-
-			this.effectState.stacks = Math.min(
-				10,
-				this.effectState.stacks + gain
-			);
-
-			this.add(
-				"-message",
-				`${target.name} has ${this.effectState.stacks} Giant Punch charge!`
-			);
-		},
-	},
 	smashrage: {
 		name: "Smash Rage",
 		onStart(pokemon) {
@@ -168,16 +135,9 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		onStart(pokemon, source) {
 			this.add('-start', pokemon, 'move: Killer Wail 5.1', '[of] ' + source);
 		},
-
 		onResidualOrder: 14,
-
 		onResidual(pokemon) {
 			const source = this.effectState.source;
-			if (!source || source.hp <= 0 || !source.isActive) {
-				this.add('-end', pokemon, 'move: Killer Wail 5.1');
-				return;
-			}
-
 			this.boost(
 				{def: -1, spd: -1},
 				pokemon,
@@ -185,24 +145,8 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 				this.dex.getActiveMove('Killer Wail 5.1')
 			);
 		},
-
 		onEnd(target) {
 			this.add('-end', target, 'move: Killer Wail 5.1');
-		},
-	},
-	pitchingchange: {
-		duration: 2,
-		onStart(side) {
-			this.effectState.used = false;
-		},
-		onSwitchIn(pokemon) {
-			if (this.effectState.used) return;
-			this.heal(pokemon.baseMaxhp / 16, pokemon);
-			this.add('-heal', pokemon, pokemon.getHealth(), '[from] move: Pitching Change');
-			this.effectState.used = true;
-		},
-		onEnd(side) {
-			this.add('-end', side, 'move: Pitching Change');
 		},
 	},
 	solidarity: {
