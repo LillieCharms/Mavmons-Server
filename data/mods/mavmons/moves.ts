@@ -545,7 +545,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Electric",
 		contestType: "Cool",
 	},
-		: {
+		trizooka: {
 		num: -13,
 		accuracy: 90,
 		basePower: 120,
