@@ -1021,6 +1021,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Thunder Cage", target);
+			this.add('-anim', source, "Electric Fence", target);
 		},
 		self: {
 			onHit(source) {
