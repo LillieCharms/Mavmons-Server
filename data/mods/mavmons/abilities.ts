@@ -104,7 +104,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: 281,
 	},
 	starstruckveil: {
-		shortDesc: "Cosmic moves become Special, Resist Fire & Dark.",
+		shortDesc: "Cosmic moves become special, half damage from Fire & Dark-type attacks.",
 		onModifyMove(move) {
 			const cosmicMoves = [
 				'sunsteelstrike',
@@ -166,12 +166,12 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {failroleplay: 1, noreceiver: 1, noentrain: 1, notrace: 1, failskillswap: 1, cantsuppress: 1},
 		name: "Ben Mode",
-		shortDesc: "When at <50% HP, unleash Ben Mode.",
+		shortDesc: "When under half HP, transforms into Ben-Ben.",
 		rating: 5,
 		num: -2,
 	},
 	harmfulmental: {
-		shortDesc: "The users attacks are powered up by 20%, but they take 10% recoil after attacking.",
+		shortDesc: "The user's attacks are powered up by 20%, but they take 10% recoil after attacking.",
 		onModifyDamage(damage, source, target, move) {
 			return this.chainModify([1200, 1000]);
 		},
@@ -185,7 +185,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -3,
 	},
 	halaltrip: {
-		shortDesc: "This Pokémon restores 3% of its HP at the end of every turn.",
+		shortDesc: "This Pokémon restores 3% max HP at the end of every turn.",
 		onResidualOrder: 5,
 		onResidualSubOrder: 4,
 		onResidual(pokemon) {
@@ -196,7 +196,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -4,
 	},
 	anticipatedstrikes: {
-		shortDesc: "Deals 2.1x (instead of 1.5x) for STAB moves.",
+		shortDesc: "This Pokemon's same-type attack bonus (STAB) is 2.1 instead of 1.5.",
 		onModifySTAB(stab, source, target, move) {
 			if (move.forceSTAB || source.hasType(move.type)) {
 				if (stab === 2) {
@@ -210,7 +210,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -5,
 	},
 	colorpulse: {
-		shortDesc: "When this Pokemon is hit by an attack, the effect of Psychic Terrain begins.",
+		shortDesc: "When this Pokemon is hit by an attack, it sets Psychic Terrain.",
 		onDamagingHit(damage, target, source, move) {
 			this.field.setTerrain('psychicterrain');
 		},
@@ -220,7 +220,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -6,
 	},
 	serenity: {
-		shortDesc: "This Pokemon’s Normal type moves become Psychic type and have 1.2x power",
+		shortDesc: "This Pokemon’s Normal type moves become Psychic type and have 1.2x power.",
 		onModifyTypePriority: -1,
 		onModifyType(move, pokemon) {
 			const noModifyType = [
@@ -242,7 +242,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -7,
 	},
 	cageddemon: {
-		shortDesc: "When hit by a super effective attack, raises Atk/SpA by 2, lowers Def/SpD by 2, user slowly perishes. ",		
+		shortDesc: "When hit by supereffective attack, user gets +2 Atk/SpA, Perish, and is trapped.",		
 		onDamagingHit(damage, target, source, move) {
 			if (target.volatiles['cageddemon']) return;
 			if (target.getMoveHitData(move).typeMod > 0) {
@@ -263,7 +263,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -8,
 	},
 	katieluck: {
-		shortDesc: "This pokemon has their secondary effect chance raised by 1.5x, crit chance raised by one stage, and multi hit moves hit at least 3 times.",
+		shortDesc: "peepnuts",
 		onModifyMovePriority: -2,
 		onModifyMove(move) {
 			if (move.secondaries) {
@@ -285,7 +285,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -10,
 	},
 	laserpressure: {
-		shortDesc: "Decreases Atk and SpAtk of all opponents on the field by 20% each.",
+		shortDesc: "Decreases Atk and SpAtk of all opponents on the field by 20%.",
 		onStart(pokemon) {
 			if (this.suppressingAbility(pokemon)) return;
 			this.add('-ability', pokemon, 'Laser Pressure');
@@ -443,7 +443,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {},
 		name: "Multi-Faceted",
-		shortDesc: "This Pokemon's offensive stat is multiplied by 1.5 while using a Fighting or Psychic-Type attack.",
+		shortDesc: "The user deals 50% more damage with Fighting and Psychic-type attacks.",
 		rating: 3.5,
 		num: -16,
 	},
@@ -470,7 +470,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {},
 		name: "Yet Darker",
-		shortDesc: "Sets Darkness upon switch in, 3/4 damage from attacks until Super Effective hit.",
+		shortDesc: "Sets Darkness (1.3x Dark damage) on entry, takes 3/4 damage until supereffective.",
 		rating: 4,
 		num: -17,
 	},
@@ -488,7 +488,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
         },
         flags: {},
         name: `"We can't afford not to try!"`,
-		shortDesc: "This Pokemon has a 21% chance to attack again upon landing an attack, and has its accuracy multiplied by 0.79x.",
+		shortDesc: "User has a 21% chance to attack again on hit, accuracy multiplied by 0.79x.",
         rating: 4.5,
         num: -18,
     },
@@ -573,7 +573,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			},
 		flags: {},
 		name: "Lady's Iron Will",
-		shortDesc: "When this Pokemon switches out, it restores 33% of its HP and cures all status conditions. This Pokemon takes double damage from Electric-type attacks.",
+		shortDesc: "Restores 33% max HP and status on switch out. Double damage from Electric.",
 		rating: 4.5,
 		num: -19,
 		},
@@ -658,7 +658,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			);
 		},
 		name: "Smash Rage",
-		shortDesc: "35% hp, next Physical attack does 20% more. Custom moves have additional effects.",
+		shortDesc: "When <35% HP, next physical +20% power & 50% drain. Sig moves get more buffs.",
 		rating: 4,
 		num: -23,
 	},
@@ -718,7 +718,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				}
 			},
 		name: "CTE Distributor",
-		shortDesc: "When this Pokemon reaches 25% HP or less, lowers the opponent's Atk and SpA by 1 stage.",
+		shortDesc: "When the user reaches 25% HP or less, lowers opponent's Atk and SpA by 1.",
 		rating: 3.5,
 		num: -25,
 	},
@@ -745,7 +745,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		flags: {},
 		name: "Darkest Dark",
-		shortDesc: "Begins the Roaring upon switch in, 1/2 damage from attacks until Super Effective hit.",
+		shortDesc: "Sets Darkness (1.5x Dark damage) on entry, takes 1/2 damage until supereffective.",
 		rating: 4,
 		num: -26,
 	},
@@ -841,7 +841,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			}
 		},
 		name: "Life Fiber Infusion",
-		shortDesc: "Boost Super Effective attacks by 10%.",
+		shortDesc: "The user's supereffective attacks do 10% more damage.",
 		rating: 2.5,
 		num: -31,
 	},
@@ -861,7 +861,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
         }
     },
 	name: "Quick Super Jump",
-    shortDesc: "Once per battle, switch out if below 50% HP, heal 50% HP and cure status.",
+    shortDesc: "Once per battle, when switched out if below 50% HP, heal 50% HP and cure status.",
 	rating: 2.5,
 	num: -31,	
 	},
@@ -883,7 +883,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 
 	flags: {breakable: 1},
 	name: "My Design",
-    shortDesc: "Steel types can get hit by poison status moves, poison status move can't miss.",
+    shortDesc: "Can poison Poison and Steel-types. Poison-type status moves never miss.",
 	rating: 4,
 	num: -32,	
 	},
@@ -899,7 +899,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	flags: {breakable: 1},
 	name: '"This is not a weapon."',
-    shortDesc: "When landing a Super Effective move, reduce all of the targets PP by 1.",
+    shortDesc: "When landing a supereffective move, reduce all of the target's PP by 1.",
 	rating: 4,
 	num: -33,	
 	},
@@ -924,7 +924,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 
 	flags: {breakable: 1},
 	name: "Your Idol",
-    shortDesc: "Users attacks can't miss, if the opponent switches out, deal 25% more damage.",
+    shortDesc: "User's attacks can't miss. If the opponent switches, +25% damage.",
 	rating: 4,
 	num: -34,	
 	},
@@ -946,7 +946,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 
 	flags: {breakable: 1},
 	name: "To Kill Dracula",
-    shortDesc: "Reduces damage from Dark and Ghost type attacks.",
+    shortDesc: "Takes half damage from Ghost and Dark-type attacks.",
 	rating: 4,
 	num: -35,	
 	},
@@ -959,7 +959,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	flags: {breakable: 1},
 	name: "Backdash",
-    shortDesc: "All attacks turn into pivot attacks.",
+    shortDesc: "The user switches out after attacking.",
 	rating: 4,
 	num: -35,	
 	},
