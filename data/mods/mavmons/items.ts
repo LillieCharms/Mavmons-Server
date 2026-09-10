@@ -17,6 +17,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		fling: {
 			basePower: 80,
 		},
+		itemUser: ["Alexis"],
 		num: -2,
 		gen: 9,
 		rating: 3,
@@ -79,6 +80,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 			if (!this.activeMove) return false;
 			if (this.activeMove.id !== 'knockoff' && this.activeMove.id !== 'thief' && this.activeMove.id !== 'covet') return false;
 		},
+		itemUser: ["Susie"],
 		num: -6,
 		gen: 9,
 	},
@@ -213,6 +215,26 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		},
         forcedForme: "Randeez-Water",
 		num: -13,
+		gen: 9,
+    },
+	holybreastplate: {
+        name: "Holy Breastplate",
+		desc: "Boosts damage by 1.2x, ignore indirect damage.",
+        onBasePower(basePower, user, target, move) {
+			if (user.baseSpecies.name.startsWith('Alucard')) {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect && effect.effectType === 'Move') {
+					return damage;
+			}
+			if (effect && effect.effectType !== 'Move') {
+					return 0;
+			}
+		},
+		itemUser: ["Alucard"],
+		num: -14,
 		gen: 9,
     },
 	nahidiumz: {

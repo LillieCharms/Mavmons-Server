@@ -287,6 +287,24 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "End of Dormancy", 1: "Prism Armor", H: '"Strengthen me, Shadow Dragons!"'},
 		weightkg: 175,
 	},
+	frost: {
+		num: 2018,
+		name: "Frost",
+		types: ["Poison"],
+		gender: "M",
+		baseStats: {hp: 120, atk: 100, def: 120, spa: 90, spd: 120, spe: 115},
+		abilities: {0: "My Design", 1: '"This is not a weapon."', H: "Your Idol"},
+		weightkg: 75,
+	},
+	alucard: {
+		num: 2018,
+		name: "Alucard",
+		types: ["Ghost"],
+		gender: "M",
+		baseStats: {hp: 100, atk: 100, def: 100, spa: 100, spd: 100, spe: 160},
+		abilities: {0: "Sword of Ruin", 1: "To Kill Dracula", H: "Backdash"},
+		weightkg: 75,
+	},
 
 	wochien: {
 		num: 1001,

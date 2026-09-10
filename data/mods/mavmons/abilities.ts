@@ -104,21 +104,34 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: 281,
 	},
 	starstruckveil: {
-		shortDesc: "Fire absorb. Special Justified. Ignore other abilities.",
-		onTryHit(target, source, move) {
-			if (target !== source && move.type === 'Fire') {
-				if (!this.heal(target.baseMaxhp / 4)) {
-					this.add('-immune', target, '[from] ability: Starstruck Veil');
-				}
-				return null;
+		shortDesc: "Cosmic moves become Special, Resist Fire & Dark.",
+		onModifyMove(move) {
+			const cosmicMoves = [
+				'sunsteelstrike',
+				'dragonascent',
+				'hyperspacefury',
+				'aurorabeam',
+				'fallingstar',
+				'hyperspacehole',
+				'meteorassault',
+				'meteorbeam',
+				'meteormash',
+				'moonblast',
+				'moongeistbeam',
+				'rainbowroad',
+				'spacialRend',
+				'superstarsurge',
+				'swift',
+			];
+
+			if (cosmicMoves.includes(move.id)) {
+					move.category = 'Special';
 			}
 		},
-		onModifyMove(move) {
-			move.ignoreAbility = true;
-		},
-		onDamagingHit(damage, target, source, move) {
-			if (move.type === 'Dark') {
-				this.boost({spa: 1});
+
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.type === 'Fire' || move.type === 'Dark') {
+					return this.chainModify(0.5);
 			}
 		},
 		name: "Starstruck Veil",
@@ -851,5 +864,103 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
     shortDesc: "Once per battle, switch out if below 50% HP, heal 50% HP and cure status.",
 	rating: 2.5,
 	num: -31,	
+	},
+	mydesign: {
+    onSetStatus(stats, target, source, effect) {
+			if (
+					(status.id === 'psn' || status.id === 'tox')
+					(effect as Move)?.type === 'Poison'
+			) {
+				return true;
+			}
+	},
+
+	onModifyAccuracy(accuracy, target, source, move) {
+			if (move.type === 'Poison' && move.category === 'Status') {
+					return true;
+			}
+	},
+
+	flags: {breakable: 1},
+	name: "My Design",
+    shortDesc: "Steel types can get hit by poison status moves, poison status move can't miss.",
+	rating: 4,
+	num: -32,	
+	},
+	thisisnotaweapon: {
+    onAfterDamage(damage, target, source, move) {
+		if (damage > 0 && move.effectiveness > 0) {
+			for (const moveSlot of target.moveSlots) {
+				if (moveSlot.pp > 0) {
+						moveSlot.pp--;
+				}
+			}
+		}
+	},
+	flags: {breakable: 1},
+	name: '"This is not a weapon."',
+    shortDesc: "When landing a Super Effective move, reduce all of the targets PP by 1.",
+	rating: 4,
+	num: -33,	
+	},
+	youridol: {
+    onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender) {
+			if (!defender.activeTurns) {
+				this.debug('Stakeout boost');
+				return this.chainModify(1.25);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender) {
+			if (!defender.activeTurns) {
+				this.debug('Stakeout boost');
+				return this.chainModify(1.25);
+			}
+		},
+		onModifyAccuracy(accuracy, target, source, move) {
+				return true:
+		},
+
+	flags: {breakable: 1},
+	name: "Your Idol",
+    shortDesc: "Users attacks can't miss, if the opponent switches out, deal 25% more damage.",
+	rating: 4,
+	num: -34,	
+	},
+	tokilldracula: {
+    onSourceModifyAtkPriority: 6,
+		onSourceModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Dark' || move.type === 'Ghost') {
+				this.debug('Dracula Weakened');
+				return this.chainModify(0.5);
+			}
+		},
+		onSourceModifySpAPriority: 5,
+		onSourceModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Dark' || move.type === 'Ghost') {
+				this.debug('Dracula Weakened');
+				return this.chainModify(0.5);
+			}
+		},
+
+	flags: {breakable: 1},
+	name: "To Kill Dracula",
+    shortDesc: "Reduces damage from Dark and Ghost type attacks.",
+	rating: 4,
+	num: -35,	
+	},
+	backdash: {
+	onAfterMove(source, target, move) {
+    if (move.category !== 'Status' && source.hp > 0 && source.isActive && target.isActive)
+		{
+			this.switchFlag = true;
+		}
+	},
+	flags: {breakable: 1},
+	name: "Backdash",
+    shortDesc: "All attacks turn into pivot attacks.",
+	rating: 4,
+	num: -35,	
 	},
 };

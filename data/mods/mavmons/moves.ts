@@ -84,26 +84,20 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Fairy",
 		contestType: "Cute",
 	},
-	faeflood: {
+	superstarsurge: {
 		num: -2,
-		accuracy: 95,
-		basePower: 90,
+		accuracy: 100,
+		basePower: 100,
 		category: "Special",
-		shortDesc: "Removes field Effects. Lowers foe speed by 1.",
-		name: "Fae Flood",
+		shortDesc: "Lowers foe speed by 1.",
+		name: "Superstar Surge",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Lunar Blessing", target);
 			this.add('-anim', source, "Surf", target);
-		},
-		onHit() {
-			this.field.clearTerrain();
-		},
-		onAfterSubDamage() {
-			this.field.clearTerrain();
 		},
 		secondary: {
 			chance: 100,
@@ -121,7 +115,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 75,
 		category: "Special",
-		shortDesc: "Switch out, 50% chance to Burn, drop SpDef by 1, or Confuse opponent.",
+		shortDesc: "Switch out, drop SpDef by 1.",
 		name: "Rainbow Road",
 		pp: 10,
 		priority: 0,
@@ -133,16 +127,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		selfSwitch: true,
 		secondary: {
-			chance: 50,
-			onHit(target, source) {
-				const result = this.random(3);
-				if (result === 0) {
-					target.trySetStatus('brn', source);
-				} else if (result === 1) {
-					this.boost({spd: -1}, target, source);
-				} else {
-					target.addVolatile('confusion', source);
-				}
+			chance: 100,
+			boosts: {
+				spd: -1,
 			},
 		},
 		target: "normal",
@@ -158,7 +145,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Marketing Blast",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Moonblast", target);
@@ -478,7 +465,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Call an Uber",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Shift Gear", target);
@@ -916,7 +903,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: " restore 25% hp and cure status. If targeting self, Spe/Acc +1.",
+		shortDesc: " restore 25% hp. Spe/Acc +1.",
 		name: "Next One's On Me",
 		pp: 10,
 		priority: 0,
@@ -928,7 +915,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		onHit(pokemon) {
 			const success = !!this.heal(this.modify(pokemon.maxhp, 0.25));
-			return pokemon.cureStatus() || success;
 		},
 		boosts: {
 			spe: 1,
@@ -991,8 +977,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {protect: 1, bypasssub: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Clangorous Soul", target);
-			this.add('-anim', source, "Doom Desire", target);
+			this.add('-anim', source, "Dragon Rage", target);
 		},
 		onHit(target) {
 			let move: Move | ActiveMove | null = target.lastMove;
@@ -1001,7 +986,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 
 			const ppDeducted = target.deductPP(move.id, 3);
 			if (!ppDeducted) return false;
-			this.add("-activate", target, 'move: Dragon Spear', move.name, ppDeducted);
 		},
 		secondary: null,
 		target: "normal",
@@ -1253,6 +1237,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Swoon",
 		shortDesc: "if opponent is attempting to switch out, power doubles, hits before switching.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Pursuit", target);
+			this.add('-anim', source, "Behemoth Blade", target);
+		},
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
@@ -1314,7 +1303,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "+3 Atk/Def/SpDef until end of the turn. 15% Recoil.",
         pp: 5,
         priority: 0,
-        flags: { protect: 1},
+        flags: {protect: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Iron Defense", target);
@@ -1489,17 +1478,17 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "Can only be used by Ryuko-Syncronized, reverts back to Ryuko Matoi.",
 		pp: 1,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, slicing: 1},
+		flags: {protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, slicing: 1},
 		onTry(source) {
 			if (source.species.id !== 'ryukosyncronized') {
 				this.add('-fail', source, 'move: Senketsu Kisaragi');
 				return false;
 			}
 		},
-		onPrepareHit(source) {
+		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Extreme Evoboost", source);
-			this.add('-anim', source, "Behemoth Blade", source);
+			this.add('-anim', source, "Behemoth Blade", target);
 		},
 		secondary: null,
 		self: {
@@ -1517,10 +1506,14 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	scissorblade: {
 		num: -42,
 		accuracy: 100,
-		basePower: 90,
+		basePower: 100,
 		category: "Physical",
 		name: "Scissor Blade",
 		shortDesc: "Ignore stat changes & abilities. 20% chance to boost atk by 1.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Bitter Blade", target);
+		},
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
@@ -1544,6 +1537,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Decapitation Mode",
 		shortDesc: "Power doubles if the target's HP is 50% or less.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Brine", target);
+		},
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
@@ -1564,6 +1561,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "SEN-I-SOSHITSU",
 		shortDesc: "Raises the user's Atk by 3 if this KO's the target. Bypass Accuracy",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Bulk Up", target);
+			this.add('-anim', source, "Sacred Sword", target);
+		},
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
@@ -1611,6 +1613,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			pp: 10,
 			priority: 0,
 			flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+			onPrepareHit(target, source, move) {
+				this.attrLastMove('[still]');
+				this.add('-anim', source, "Metronome", target);
+				this.add('-anim', source, "Double Edge", target);
+			},
 			onAfterHit(target, source, move) {
 				// Kill quote
 				if (target.hp <= 0) {
@@ -1633,6 +1640,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 					`"Watch THIS! (Susie throws her axe wildly!)"`,
 					`"Talk your way out of THIS!"`,
 					`"Think fast!"`,
+					`"Happy feet, Dumbass!"`,
+					`"(Rouxls Kaard appears) Sorrye, I just wanderedeth in here. Are they... Single?"`,
 				];
 				this.add('c', 'Susie', quotes[this.random(quotes.length)]);
 			},
@@ -1863,6 +1872,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Recover", source);
 		},
+		noPPBoosts: true,
 		heal: [3, 20],
 		secondary: null,
 		target: "self",
@@ -1877,17 +1887,17 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Status",
 		name: "BetterHeal",
 		shortDesc: "Recover 50% of max HP.",
-		pp: 8,
+		pp: 5,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Moonlight", source);
+			this.add('-anim', source, "Recover", source);
 		},
 		heal: [1, 2],
 		secondary: null,
 		target: "self",
-		type: "Fairy",
+		type: "Normal",
 		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Clever",
 	},
@@ -1919,7 +1929,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			onResidual(pokemon) {
 				if (this.effectState.duration === 1) {
 					this.add('-activate', pokemon, 'move: Rewarp');
-					if (pokemon.hp && pokemon.switchFlag !== false) {
+					if (pokemon.hp) {
 						pokemon.switchFlag = true;
 					}
 				}
@@ -2023,6 +2033,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Special",
 		name: "Rexcalibur",
 		shortDesc: "Never misses.",
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', target, "Blizzard", target);
+		},
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1, wind: 1},
@@ -2101,6 +2115,62 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		target: "normal",
 		type: "Electric",
+	},
+	imbuedneedles: {
+		num: -59,
+		accuracy: 100,
+		basePower: 90,
+		category: "Physical",
+		name: "Imbued Needles",
+		pp: 10,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (target.status === 'psn' || target.status === 'tox') {
+				return this.chainModify(1.33);
+			}
+		},
+		secondary: {
+			chance: 30,
+			status: 'psn',
+		},
+		target: "normal",
+		type: "Poison",
+	},
+	batform: {
+		num: -60,
+		accuracy: 100,
+		basePower: 60,
+		category: "Physical",
+		name: "Bat Form",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, contact: 1},
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Normal') return -2;
+		},
+		selfSwitch: true,
+		target: "normal",
+		type: "Ghost",
+	},
+	holywater: {
+		num: -61,
+		accuracy: 100,
+		basePower: 40,
+		category: "Special",
+		name: "Bat Form",
+		pp: 20,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Normal') return -2;
+		},
+		secondary: {
+			chance: 100,
+			status: 'brn',
+		},
+		target: "normal",
+		type: "Fire",
 	},
 
 	
