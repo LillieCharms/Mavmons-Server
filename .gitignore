@@ -74,3 +74,4 @@ pip-log.txt
 *.rdb
 config/chatrooms.json
 logs/errors.txt
+data/mods/mavmons/DH2/
