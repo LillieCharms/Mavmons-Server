@@ -29,7 +29,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 90,
 		basePower: 100,
 		category: "Special",
-		shortDesc: "Deals x2 damage and grounds levitating/flying Pokemon.",
+		shortDesc: "Deals double damage and grounds vs airborne.",
 		name: "Falling Star",
 		pp: 10,
 		priority: 0,
@@ -89,7 +89,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Special",
-		shortDesc: "Lowers foe speed by 1.",
+		shortDesc: "Lowers foe's speed by 1.",
 		name: "Superstar Surge",
 		pp: 10,
 		priority: 0,
@@ -115,7 +115,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 75,
 		category: "Special",
-		shortDesc: "Switch out, drop SpDef by 1.",
+		shortDesc: "Switch the user out, lowers foe's SpDef by 1.",
 		name: "Rainbow Road",
 		pp: 10,
 		priority: 0,
@@ -141,7 +141,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 90,
 		category: "Special",
-		shortDesc: "Sets up a layer of spikes.",
+		shortDesc: "Sets up a layer of Spikes.",
 		name: "Marketing Blast",
 		pp: 10,
 		priority: 0,
@@ -174,7 +174,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Special",
-		shortDesc: "Super effective on Dragon-type Pokemon.",
+		shortDesc: "Super effective on Dragon-types, 1.33x on SE.",
 		name: "Sublime Heaven",
 		pp: 5,
 		priority: 0,
@@ -203,7 +203,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "The foes Attack and Special Attack are lowered by 1, taunts foe for 3 turns.",
+		shortDesc: "Lowers foe's Atk/SpA by 1 & taunts them.",
 		name: "Disarm",
 		pp: 15,
 		priority: 1,
@@ -254,7 +254,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Physical",
-		shortDesc: "When KOing a target using this move, recover 1/4th of user's max HP",
+		shortDesc: "Heals 25% max HP on KO.",
 		name: "Raging Demon",
 		pp: 10,
 		priority: 0,
@@ -277,7 +277,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 180,
 		category: "Special",
 		name: "Stars That Pierce The Sky",
-		shortDesc: "Blocks healing and removes all hazards.",
+		shortDesc: "Blocks healing and removes all hazards/screens.",
 		pp: 1,
 		priority: 0,
 		flags: {},
@@ -361,7 +361,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 90,
 		category: "Physical",
-		shortDesc: "High critical hit ratio. Does not check accuracy.",
+		shortDesc: "Always hits, 3x crit chance, 10% -1 Def.",
 		name: "Three Hit String",
 		pp: 10,
 		priority: 0,
@@ -387,7 +387,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 30,
 		category: "Physical",
 		name: "Coins!!!",
-		shortDesc: "Removes hazards from user's side and sets a layer of Steel Spikes.",
+		shortDesc: "Removes user-side hazards and sets Caltrops.",
 		pp: 10,
 		priority: -1,
 		flags: {protect: 1, mirror: 1},
@@ -461,7 +461,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 70,
 		category: "Physical",
-		shortDesc: "User switches out.",
+		shortDesc: "Switches the user out.",
 		name: "Call an Uber",
 		pp: 20,
 		priority: 0,
@@ -481,7 +481,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Protects user, if a move is blocked sets up Electric Terrain.",
+		shortDesc: "Protects user, sets Electric Terrain on block.",
 		name: "Shock Bubble",
 		pp: 15,
 		priority: 4,
@@ -537,7 +537,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 90,
 		basePower: 120,
 		category: "Special",
-		shortDesc: "Super Effective on Fighting types. High Crit Ratio. Ignores all stat changes.",
+		shortDesc: "SE on Fighting. Ignores sub/screen/SDef boosts.",
 		name: "Trizooka",
 		pp: 5,
 		priority: 0,
@@ -573,7 +573,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Hyper Beam", target);
 		},
 		secondary: {
-			chance: 10,
+			chance: 100,
 			self: {
 				boosts: {
 					spa: 1,
@@ -590,7 +590,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Heals 50% of HP, user is immune to status for the 2 turns.",
+		shortDesc: "Heal 30% max HP, user is status-proof for 1 turn.",
 		name: "Deep Breath",
 		pp: 5,
 		priority: 0,
@@ -654,7 +654,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 65,
 		category: "Special",
-		shortDesc: "At the end of the next 3 turns, lowers the foes Defense/Special Defense by 1 stage.",
+		shortDesc: "Lowers foe's Def/SpD by 1 for 3 turns.",
 		name: "Killer Wail 5.1",
 		pp: 10,
 		priority: 0,
@@ -675,7 +675,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Restores 50% of user's max HP, summons Safeguard.",
+		shortDesc: "Restores 50% max HP & summons Safeguard.",
 		name: "Anxiety Pills",
 		pp: 5,
 		priority: 0,
@@ -735,7 +735,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 45,
 		category: "Special",
-		shortDesc: "Hits 2 times, each hit has a 20% chance to burn.",
+		shortDesc: "Hits 2 times, 20% chance to burn for each.",
 		name: "Elemental Bomb Bottle",
 		pp: 5,
 		multihit: 2,
@@ -809,7 +809,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 180,
 		category: "Special",
 		name: "Full Charged Shot",
-		shortDesc: "Ignores effects of abilities and moves, can't be used twice in a row. ",
+		shortDesc: "25% damage on Protect, can't use consecutively.",
 		pp: 5,
 		priority: 0,
 		onPrepareHit(target, source, move) {
@@ -829,7 +829,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	basePower: 0,
 	category: "Status",
 	name: "Wavebreaker",
-	shortDesc: "Lowers foe's Evasion by 2. Sets Wavebreaker for 3 turns. At the end of each turn, non-Flying/Levitate foes lose 1 Evasion and 12.5% max HP.",
+	shortDesc: "-2 Eva, Wavebreaker on enemy field for 3 turns.",
 	pp: 10,
 	priority: 4,
 	flags: {snatch: 1, metronome: 1},
@@ -868,7 +868,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Special",
-		shortDesc: "Deals damage equal to 35% max HP, -1 Def/SpDef. Fails if target is not attacking.",
+		shortDesc: "If foe attacking, 35% max HP and -1 Def/SpD.",
 		name: "Ink Mine",
 		pp: 10,
 		priority: 1,
@@ -903,7 +903,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: " restore 25% hp. Spe/Acc +1.",
+		shortDesc: "Restores 25% HP and increases Spe by 1 stage.",
 		name: "Next One's On Me",
 		pp: 10,
 		priority: 0,
@@ -918,7 +918,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		boosts: {
 			spe: 1,
-			accuracy: 1,
 		},
 		secondary: null,
 		target: "allies",
@@ -944,13 +943,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			const atk = source.getStat('atk', false, true);
 			const spa = source.getStat('spa', false, true);
 
-			const def = target.getStat('def', false, true);
-			const spd = target.getStat('spd', false, true);
-
-			if (atk > spa && spd < def) {
-				move.category = "Special";
-			} else if (spa >= atk && def < spd) {
+			if (atk > spa) {
 				move.category = "Physical";
+			} else if (spa >= atk) {
+				move.category = "Special";
 			}
 		},
 		onModifyType(move, pokemon) {
@@ -970,7 +966,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 90,
 		category: "Special",
-		shortDesc: "Lowers the PP of the target's last move by 3. Ignores Sub.",
+		shortDesc: "-3 PP on foe's last move, ignores Substitute.",
 		name: "Dragon Spear",
 		pp: 10,
 		priority: 0,
@@ -1061,7 +1057,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Protects user, if a move is blocked reduces Spa by 1.",
+		shortDesc: "Protects user, -1 SpA to foe if non-contact.",
 		name: "Third Eye",
 		pp: 15,
 		priority: 4,
@@ -1141,7 +1137,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 28,
 		category: "Physical",
 		name: "Shotgun Spread Y Cross 42",
-		shortDesc: "Hits 4 times.",
+		shortDesc: "Hits 4 times, checks accuracy on each hit.",
 		pp: 10,
 		priority: 0,
 		onPrepareHit(target, source, move) {
@@ -1179,7 +1175,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 60,
 		category: "Physical",
 		name: "Cargo Throw",
-		shortDesc: "Switches the opponent out. If the opponent is under half HP, always crits. Hits Ghost-types.",
+		shortDesc: "Swaps foe out, hits Ghosts, crit on <50% foe HP.",
 		pp: 15,
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
@@ -1236,7 +1232,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		category: "Physical",
 		name: "Swoon",
-		shortDesc: "if opponent is attempting to switch out, power doubles, hits before switching.",
+		shortDesc: "If a foe is switching out, hits it at 2x power.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Pursuit", target);
@@ -1300,7 +1296,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
         basePower: 40,
         category: "Physical",
         name: "God of Lights Tyrfing",
-		shortDesc: "+3 Atk/Def/SpDef until end of the turn. 15% Recoil.",
+		shortDesc: "+3 Atk/Def/SpDef until end of turn. 15% Recoil.",
         pp: 5,
         priority: 0,
         flags: {protect: 1},
@@ -1394,7 +1390,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Eternal Patience",
-		shortDesc: "Protects from attacks. If attacked, deals 1/10th Max HP damage to opponent.",
+		shortDesc: "Protects from attacks. 10% HP to foe if blocked.",
 		pp: 10,
 		priority: 4,
 		flags: {failinstruct: 1},
@@ -1451,7 +1447,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		category: "Special",
 		name: "Musou no Hitotachi",
-		shortDesc: "Sets target's HP to 40%. Flinches.",
+		shortDesc: "Sets target's HP to 40% & flinches them.",
 		pp: 1,
 		priority: 0,
 		flags: {},
@@ -1475,7 +1471,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 150,
 		category: "Physical",
 		name: "Senketsu Kisaragi",
-		shortDesc: "Can only be used by Ryuko-Syncronized, reverts back to Ryuko Matoi.",
+		shortDesc: "Only usable by Ryuko-S, reverts back to Ryuko.",
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, failcopycat: 1, failmimic: 1, slicing: 1},
@@ -1509,7 +1505,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 100,
 		category: "Physical",
 		name: "Scissor Blade",
-		shortDesc: "Ignore stat changes & abilities. 20% chance to boost atk by 1.",
+		shortDesc: "Ignores stat changes, 20% for -1 Def to foe.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Bitter Blade", target);
@@ -1519,7 +1515,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		ignoreEvasion: true,
 		ignoreDefensive: true,
-		ignoreAbility: true,
 		secondary: {
 					chance: 20,
 						boosts: {
@@ -1560,7 +1555,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 20,
 		category: "Physical",
 		name: "SEN-I-SOSHITSU",
-		shortDesc: "Raises the user's Atk by 3 if this KO's the target. Bypass Accuracy",
+		shortDesc: "Never misses. +3 Atk on KO.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Bulk Up", target);
@@ -1581,13 +1576,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -45,
 		accuracy: 100,
 		basePower: 100,
-		category: "Special",
+		category: "Physical",
 		name: "Rude Buster",
-		shortDesc: "Uses Atk in calculation, deals Rude damage.",
+		shortDesc: "Deals Rude damage.",
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
-		overrideOffensiveStat: 'atk',
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Spatial Rend", target);
@@ -1706,7 +1700,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "normal",
 		category: "Physical",
 		name: "Giant Punch",
-		shortDesc: "+30 Power when attacked, Max 10 hits. Additional effects at 5-10 hits.",
+		shortDesc: "+30 Power when hit, resets on use. And more!",
 		type: "Fighting",
 		pp: 10,
 		contact: true,
@@ -1714,7 +1708,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	pretzeldog: {
 		num: -48,
 		name: "Pretzel Dog",
-		shortDesc: "Heals the user for 25% max HP and cures status conditions. Heals more based on user's current HP.",
+		shortDesc: "Restores 25% max HP, more at lower user HP.",
 		accuracy: true,
 		basePower: 0,
 		onPrepareHit(target, source, move) {
@@ -1768,7 +1762,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Crystal Barrage",
-		shortDesc: "No additional effects.",
+		shortDesc: "Hits 4 times, increases power by 10 each hit.",
 		pp: 10,
 		priority: 0,
 		flags: {},
@@ -1805,7 +1799,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		category: "Physical",
 		name: "Cutscene Swoon",
-		shortDesc: "if opponent is attempting to switch out, power doubles, hits before switching.",
+		shortDesc: "If a foe is switching out, hits it at 3x power.",
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
@@ -1886,7 +1880,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "BetterHeal",
-		shortDesc: "Recover 50% of max HP.",
+		shortDesc: "Recovers 50% of max HP.",
 		pp: 5,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
@@ -1906,7 +1900,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		category: "Status",
 		name: "Rewarp",
-		shortDesc: "Disappear for turn 1. At the end of the next turn, user switches out.",
+		shortDesc: "Disappears at start of turn, swaps at end of turn.",
 		pp: 1,
 		priority: 4,
 		flags: {},
@@ -1946,11 +1940,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	
 	assigndecoy: {
 	num: -54,
-    accuracy: true,
-    basePower: 0,
-    category: "Status",
-    name: "Assign Decoy",
-    pp: 10,
+   accuracy: true,
+   basePower: 0,
+ 	category: "Status",
+	name: "Assign Decoy",
+	shortDesc: "Creates a Substitute. Does not cost HP.",
+   pp: 10,
 	flags: {snatch: 1, nonsky: 1, metronome: 1},
 	onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
@@ -2071,7 +2066,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 100,
 		category: "Special",
 		name: "Dragon Flash Bullet",
-		shortDesc: "Hits until user or opponent faint.",
+		shortDesc: "Hits one additional time if foe does not faint.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', target, "Hyper Beam", target);
@@ -2095,7 +2090,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 120,
 		category: "Special",
 		name: "Dragon Thunder",
-		shortDesc: "Paralyzes Target. Boost Def and Sp. Def by 1.",
+		shortDesc: "Paralyzes foe, boosts Def and SpD by 1.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', target, "Thunder Punch", target);
@@ -2108,7 +2103,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		pp: 15,
 		priority: 0,
-		flags: { protect: 1, mirror: 1, bullet: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, bullet: 1, metronome: 1},
 		secondary: {
 			chance: 100,
 			status: 'par',
@@ -2122,6 +2117,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 90,
 		category: "Physical",
 		name: "Imbued Needles",
+		shortDesc: "30% poison, 33% more damage vs poisoned.",
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
@@ -2143,6 +2139,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 60,
 		category: "Physical",
 		name: "Bat Form",
+		shortDesc: "Switches the user out.",
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1, contact: 1},
@@ -2159,6 +2156,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 40,
 		category: "Special",
 		name: "Bat Form",
+		shortDesc: "Burns the target.",
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
