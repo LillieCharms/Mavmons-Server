@@ -1,7 +1,7 @@
 export const Items: {[itemid: string]: ModdedItemData} = {
 	starniumz: {
 		name: "Starnium Z",
-		desc: "If held by Charms with Falling Star, it can use Stars That Pierce the Sky.",
+		desc: "If held by Charms with Falling Star, can use Stars That Pierce the Sky.",
 		spritenum: 687,
 		onTakeItem: false,
 		zMove: "Stars That Pierce the Sky",
@@ -12,7 +12,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	earthlooplet: {
 		name: "Earth Looplet",
-		desc: "Ignores Hazards Like Boots",
+		desc: "If Alexis, ignores hazard damage.",
 		spritenum: 715,
 		fling: {
 			basePower: 80,
@@ -25,7 +25,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	dianthite: {
 		name: "Dianthite",
-		desc: "If held by Diantha, this item allows her to Mega Evolve in battle.",
+		desc: "If held by Diantha, can evolve into Diantha-Mega.",
 		spritenum: 625,
 		megaStone: "Diantha-Mega",
 		megaEvolves: "Diantha",
@@ -39,7 +39,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	shelteriumz: {
 		name: "Shelterium Z",
-		desc: "If held by Roaring Knight with Sword Tunnel, it can use Crystal Nova.",
+		desc: "If held by Roaring Knight with Sword Tunnel, can use Crystal Nova.",
 		spritenum: 686,
 		onTakeItem: false,
 		zMove: "Crystal Nova",
@@ -50,7 +50,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	lesbiumz: {
 		name: "Lesbium Z",
-		desc: "If held by Raiden Shogun with Musou Isshin, it can use Musou no Hitotachi.",
+		desc: "If held by Raiden Shogun with Musou Isshin, can use Musou no Hitotachi.",
 		spritenum: 634,
 		onTakeItem: false,
 		zMove: "Musou no Hitotachi",
@@ -61,7 +61,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 	justiceaxe: {
 		name: "Justice Axe",
-		desc: "If held by Susie, turn Slash into Rude Buster, turn OKHeal into BetterHeal.",
+		desc: "If held by Susie, turn Slash into Rude Buster & turn OKHeal into BetterHeal.",
 		onStart(pokemon) {
 			for (const moveSlot of pokemon.moveSlots) {
 				if (moveSlot.id === 'slash') {
@@ -219,7 +219,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
     },
 	holybreastplate: {
         name: "Holy Breastplate",
-		desc: "Boosts damage by 1.2x, ignore indirect damage.",
+		desc: "If Alucard, deals 20% more damage and ignores indirect damage.",
         onBasePower(basePower, user, target, move) {
 			if (user.baseSpecies.name.startsWith('Alucard')) {
 				return this.chainModify([4915, 4096]);
