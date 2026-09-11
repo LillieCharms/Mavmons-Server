@@ -12,7 +12,7 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	benben: {
-		tier: "T MV",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	zeya: {
@@ -40,23 +40,23 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	randeezice: {
-		tier: "MV Ubers",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	randeezwater: {
-		tier: "MV Ubers",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	randeezdark: {
-		tier: "MV Ubers",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	randeezghost: {
-		tier: "MV Ubers",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	randeezfairy: {
-		tier: "MV Ubers",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	randeezpoison: {
@@ -104,6 +104,9 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		doublesTier: "DMV Ubers",
 	},
 	frost: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	alucard: {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
