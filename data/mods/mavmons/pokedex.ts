@@ -59,7 +59,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Steel"],
 		gender: "M",
 		baseStats: {hp: 135, atk: 105, def: 110, spa: 95, spd: 110, spe: 110},
-		abilities: {0: "Halal Trip", 1: "Battle Armor", H: "Anticipated Strikes"},
+		abilities: {0: "Home Cooking", 1: "Battle Armor", H: "Anticipated Strikes"},
 		weightkg: 75,
 	},
 	vince: {
