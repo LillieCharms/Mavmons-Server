@@ -297,7 +297,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		weightkg: 75,
 	},
 	alucard: {
-		num: 2018,
+		num: 2019,
 		name: "Alucard",
 		types: ["Ghost"],
 		gender: "M",
@@ -305,6 +305,14 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		abilities: {0: "Sword of Ruin", 1: "To Kill Dracula", H: "Backdash"},
 		weightkg: 75,
 	},
+	marblestatue: {
+		num: 2020,
+		name: "Marble Statue",
+		types: ["Ground", "Steel"],
+		gender: "M",
+		baseStats: {hp: 120, atk: 170, def: 130, spa: 70, spd: 120, spe: 30},
+		abilities: {0: "Faded Glory",},
+		weightkg: 9999,
 
 	wochien: {
 		num: 1001,
