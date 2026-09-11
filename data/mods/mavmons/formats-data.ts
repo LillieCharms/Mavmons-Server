@@ -106,7 +106,12 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 	frost: {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
+	},
 	alucard: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
+	marblestatue: {
 		tier: "MV Ubers",
 		doublesTier: "DMV Ubers",
 	},
