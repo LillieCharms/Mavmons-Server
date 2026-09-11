@@ -184,15 +184,15 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -3,
 	},
-	halaltrip: {
+	homecooking: {
 		shortDesc: "This Pokémon restores 3% max HP at the end of every turn.",
 		onResidualOrder: 5,
 		onResidualSubOrder: 4,
 		onResidual(pokemon) {
 			this.heal(pokemon.baseMaxhp / 32);
 		},
-		name: "Halal Trip",
-		rating: 3,
+		name: "Home Cooking",
+		rating: 4,
 		num: -4,
 	},
 	anticipatedstrikes: {
