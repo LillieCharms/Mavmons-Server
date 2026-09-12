@@ -866,27 +866,28 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	num: -31,	
 	},
 	mydesign: {
-    onSetStatus(stats, target, source, effect) {
-			if (
-					(status.id === 'psn' || status.id === 'tox')
-					(effect as Move)?.type === 'Poison'
-			) {
-				return true;
-			}
+	onSetStatus(status, target, source, effect) {
+		if (
+			(status.id === 'psn' || status.id === 'tox') &&
+			(effect as Move)?.type === 'Poison'
+		) {
+			return true;
+		}
 	},
 
 	onModifyAccuracy(accuracy, target, source, move) {
-			if (move.type === 'Poison' && move.category === 'Status') {
-					return true;
-			}
+		if (move.type === 'Poison' && move.category === 'Status') {
+			return true;
+		}
 	},
 
 	flags: {breakable: 1},
 	name: "My Design",
-    shortDesc: "Can poison Poison and Steel-types. Poison-type status moves never miss.",
+	shortDesc: "Can poison Poison and Steel-types. Poison-type status moves never miss.",
 	rating: 4,
-	num: -32,	
-	},
+	num: -32,
+},
+
 	thisisnotaweapon: {
     onAfterDamage(damage, target, source, move) {
 		if (damage > 0 && move.effectiveness > 0) {
@@ -898,7 +899,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		}
 	},
 	flags: {breakable: 1},
-	name: '"This is not a weapon."',
+	name: `"This is not a weapon."`,
     shortDesc: "When landing a supereffective move, reduce all of the target's PP by 1.",
 	rating: 4,
 	num: -33,	
