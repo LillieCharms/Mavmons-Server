@@ -1945,7 +1945,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
  	category: "Status",
 	name: "Assign Decoy",
 	shortDesc: "Creates a Substitute. Does not cost HP.",
-   pp: 10,
+   pp: 5,
 	flags: {snatch: 1, nonsky: 1, metronome: 1},
 	onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
@@ -2017,7 +2017,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 	priority: -1,
 	target: "self",
-    type: "Normal",
+   type: "Psychic",
 	contestType: "Smart",
 	},
 
@@ -2155,7 +2155,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 40,
 		category: "Special",
-		name: "Bat Form",
+		name: "Holy Water",
 		shortDesc: "Burns the target.",
 		pp: 20,
 		priority: 0,
