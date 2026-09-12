@@ -963,4 +963,45 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 4,
 	num: -35,	
 	},
+	
+	fadedglory: {
+   onBasePower(basePower, attacker, defender, move) {
+        if (move.type === 'Fire') {
+            return this.chainModify(1.5);
+        }
+    },
+	onSourceModifyDamage(damage, source, target, move) {
+			if (target.getMoveHitData(move).typeMod > 0) {
+				this.debug('Faded Glory damage decrease');
+				return this.chainModify(0.75);
+			}
+		},
+	onUpdate(pokemon) {
+			if (pokemon.status === 'brn') {
+				this.add('-activate', pokemon, 'ability: Faded Glory');
+				pokemon.cureStatus();
+			}
+		},
+	onSetStatus(status, target, source, effect) {
+			if (status.id !== 'brn') return;
+			if ((effect as Move)?.status) {
+				this.add('-immune', target, '[from] ability: Faded Glory');
+			}
+			return false;
+		},
+	onStart(pokemon) {
+			if (pokemon.volatiles['choicelock']) {
+				this.debug('removing choicelock: ' + pokemon.volatiles['choicelock']);
+			}
+			pokemon.removeVolatile('choicelock');
+		},
+		onModifyMove(move, pokemon) {
+			pokemon.addVolatile('choicelock');
+		},
+		isChoice: true,
+	name: "Faded Glory",
+   shortDesc: "Reduces SE by 25%, boosts Fire by 50%, burn immune. Can only use first move.",
+	rating: 5,
+	num: -36,
+	},
 };
