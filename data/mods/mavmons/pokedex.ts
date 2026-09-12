@@ -95,7 +95,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Water", "Steel"],
 		gender: "M",
 		baseStats: {hp: 100, atk: 90, def: 110, spa: 165, spd: 110, spe: 92},
-		abilities: {0: "Laser Pressure", 1: "Super Quick Jump", H: "Sniper"},
+		abilities: {0: "Laser Pressure", 1: "Quick Super Jump", H: "Sniper"},
 		weightkg: 75,
 	},
 	randeez: {
