@@ -55,12 +55,16 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
+	randeezground: {
+		tier: "MV Ubers Extra",
+		doublesTier: "DMV Ubers",
+	},
 	randeezfairy: {
 		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	randeezpoison: {
-		tier: "MV Ubers",
+		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
 	andrew: {
