@@ -679,6 +679,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			batform: ["9L1"],
 			holywater: ["9L1"],
 		},
+	},
 	marblestatue: {
 		learnset: {
 			risingblade: ["9L1"],

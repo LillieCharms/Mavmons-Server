@@ -313,7 +313,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		baseStats: {hp: 120, atk: 170, def: 130, spa: 70, spd: 120, spe: 30},
 		abilities: {0: "Faded Glory",},
 		weightkg: 9999,
-
+	},
 	wochien: {
 		num: 1001,
 		name: "Wo-Chien",
