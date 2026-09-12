@@ -919,7 +919,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			}
 		},
 		onModifyAccuracy(accuracy, target, source, move) {
-				return true:
+				return true;
 		},
 
 	flags: {breakable: 1},
