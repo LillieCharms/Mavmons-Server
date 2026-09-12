@@ -276,7 +276,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			rest: ["9L1"],
 			recover: ["9L1"],
 			teleport: ["9L1"],
-			flipturn: ["9L1"],
 			raindance: ["9L1"],
 			fullchargedshot: ["9L1"],
 			wavebreaker: ["9L1"],
