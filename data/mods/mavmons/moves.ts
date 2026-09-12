@@ -1584,7 +1584,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Spatial Rend", target);
+			this.add('-anim', source, "Spacial Rend", target);
 			this.add('-anim', source, "Psywave", target);
 		},
 		onModifyMove(move, pokemon) {
@@ -2160,9 +2160,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
-		onEffectiveness(typeMod, target, type) {
-			if (type === 'Normal') return -2;
-		},
 		secondary: {
 			chance: 100,
 			status: 'brn',
@@ -2170,8 +2167,82 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "normal",
 		type: "Fire",
 	},
-
-	
+	risingblade: {
+		num: -62,
+		accuracy: 100,
+		basePower: 55,
+		category: "Physical",
+		name: "Rising Blade",
+		shortDesc: "Usually goes first.",
+		pp: 15,
+		priority: 1,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		secondary: null,
+		target: "normal",
+		type: "Ground",
+		contestType: "Cool",
+	},
+	gallantleap: {
+		num: -63,
+		accuracy: 100,
+		basePower: 70,
+		category: "Physical",
+		name: "Gallant Leap",
+		shortDesc: "Switches the user out.",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		selfSwitch: true,
+		secondary: null,
+		target: "normal",
+		type: "Steel",
+		contestType: "Cute",
+	},
+	overture: {
+		num: -64,
+		accuracy: 100,
+		basePower: 60,
+		category: "Physical",
+		name: "Overture",
+		shortDesc: "Removes the hazards on the user's side.",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onAfterHit(target, pokemon, move) {
+			if (!move.hasSheerForce) {
+				if (pokemon.hp && pokemon.removeVolatile('leechseed')) {
+					this.add('-end', pokemon, 'Leech Seed', '[from] move: Overture', '[of] ' + pokemon);
+				}
+				const sideConditions = ['spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence'];
+				for (const condition of sideConditions) {
+					if (pokemon.hp && pokemon.side.removeSideCondition(condition)) {
+						this.add('-sideend', pokemon.side, this.dex.conditions.get(condition).name, '[from] move: Overture', '[of] ' + pokemon);
+					}
+				}
+				if (pokemon.hp && pokemon.volatiles['partiallytrapped']) {
+					pokemon.removeVolatile('partiallytrapped');
+				}
+			}
+		},
+		onAfterSubDamage(damage, target, pokemon, move) {
+			if (!move.hasSheerForce) {
+				if (pokemon.hp && pokemon.removeVolatile('leechseed')) {
+					this.add('-end', pokemon, 'Leech Seed', '[from] move: Overture', '[of] ' + pokemon);
+				}
+				const sideConditions = ['spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge', 'electricfence'];
+				for (const condition of sideConditions) {
+					if (pokemon.hp && pokemon.side.removeSideCondition(condition)) {
+						this.add('-sideend', pokemon.side, this.dex.conditions.get(condition).name, '[from] move: Overture', '[of] ' + pokemon);
+					}
+				}
+				if (pokemon.hp && pokemon.volatiles['partiallytrapped']) {
+					pokemon.removeVolatile('partiallytrapped');
+				}
+			}
+		},
+		target: "normal",
+		type: "Fire",
+	},
 	
 	// Below are vanilla moves altered by custom interractions
 	bounce: {
