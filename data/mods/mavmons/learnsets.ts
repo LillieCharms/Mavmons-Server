@@ -221,7 +221,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			rest: ["9L1"],
 			calmmind: ["9L1"],
 			bulkup: ["9L1"],
-			spikes: ["9L1"],
 			psychic: ["9L1"],
 			zenheadbutt: ["9L1"],
 			mefirst: ["9L1"],
