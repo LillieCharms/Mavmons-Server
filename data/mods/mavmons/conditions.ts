@@ -40,7 +40,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 	balefulomen: {
         name: "Baleful Omen",
         duration: 5,
-        onFieldStart(field, source) {
+        onSideStart(field, source) {
             this.effectState.source = source;
     		this.effectState.sourceSide = source.side;
             this.add('-fieldstart', 'Baleful Omen', '[from] ability: Shard of Euthymia');
@@ -49,19 +49,17 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 
         onResidualOrder: 27,
         onResidualSubOrder: 9,
-        onResidual() {
-			this.add('-message', 'Baleful Omen residual');
-            const targetSide = this.effectState.sourceSide.foe;
-            for (const pokemon of targetSide.active) {
-                if (!pokemon || pokemon.fainted) continue;
-			const modifier =
-				!pokemon.runImmunity('Electric') ||
-				pokemon.runEffectiveness('Electric') < 0
-					? 48
-					: 32;
-			this.damage(pokemon.baseMaxhp / modifier, pokemon);
-            }
-        },
+        onSideResidual(side) {
+        for (const pokemon of side.active) {
+            if (!pokemon || pokemon.fainted) continue;
+            const modifier =
+                !pokemon.runImmunity('Electric') ||
+                pokemon.runEffectiveness('Electric') < 0
+                    ? 24
+                    : 16;
+            this.damage(pokemon.baseMaxhp / modifier, pokemon);
+        }
+    },
 		onFieldEnd() {
     	    this.add('-fieldend', 'Baleful Omen');
         },
@@ -69,38 +67,30 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 	smashrage: {
 		name: "Smash Rage",
 		onStart(pokemon) {
-			this.add(
-				"-start",
-				pokemon,
-				"Smash Rage"
-			);
+			this.add('-start', pokemon, 'Smash Rage');
 		},
-		onBasePower(basePower, pokemon, target, move) {
-			if (move.category !== "Physical") return;
+		onModifyDamage(damage, source, target, move) {
+			if (move.category !== 'Physical') return;
+
 			return this.chainModify(1.2);
 		},
 		onModifyMove(move, pokemon) {
-			if (move.category !== "Physical") return;
-			// Cargo Throw always crits
-			if (move.id === "cargothrow") {
+			if (move.category !== 'Physical') return;
+			// Smash Rage's 50% drain overwrites other drain values.
+			move.drain = [1, 2];
+			if (move.id === 'cargothrow') {
 				move.willCrit = true;
 			}
-			// Giant Punch override
-			if (move.id === "giantpunch") {
-				move.basePower = 350;
+		},
+		onAfterMove(source, target, move) {
+			if (move.category !== 'Physical') return;
+			if (move.id === 'giantpunch') {
+				this.boost({atk: 2}, source);
 			}
+			source.removeVolatile('smashrage');
 		},
-		onAfterMove(pokemon, target, move) {
-			if (move.category !== "Physical") return;
-			// Consume Smash Rage after first physical attack
-			pokemon.removeVolatile("smashrage");
-		},
-		onEnd(pokemon) {
-			this.add(
-				"-end",
-				pokemon,
-				"Smash Rage"
-			);
+		onSwitchOut(pokemon) {
+			pokemon.removeVolatile('smashrage');
 		},
 	},
 	cheezesports: {

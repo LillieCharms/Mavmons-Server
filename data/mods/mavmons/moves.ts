@@ -600,47 +600,19 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Bulk Up", target);
 		},
 		heal: [3, 10],
-		sideCondition: 'safeguard',
-		condition: {
-			duration: 5,
-			durationCallback(target, source, effect) {
-				if (source?.hasAbility('persistent')) {
-					this.add('-activate', source, 'ability: Persistent', '[move] Safeguard');
-					return 2;
-				}
-				return 2;
+		self: {
+			sideCondition: 'safeguard',
+			volatileStatus: 'deepbreath',
+		},
+		deepbreath: {
+			name: "Deep Breath",
+			onBeforeMovePriority: 100,
+			onBeforeMove(pokemon) {
+				pokemon.side.removeSideCondition('safeguard');
+				pokemon.removeVolatile('deepbreath');
 			},
-			onSetStatus(status, target, source, effect) {
-				if (!effect || !source) return;
-				if (effect.id === 'yawn') return;
-				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
-				if (target !== source) {
-					this.debug('interrupting setStatus');
-					if (effect.name === 'Synchronize' || (effect.effectType === 'Move' && !effect.secondaries)) {
-						this.add('-activate', target, 'move: Safeguard');
-					}
-					return null;
-				}
-			},
-			onTryAddVolatile(status, target, source, effect) {
-				if (!effect || !source) return;
-				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
-				if ((status.id === 'confusion' || status.id === 'yawn') && target !== source) {
-					if (effect.effectType === 'Move' && !effect.secondaries) this.add('-activate', target, 'move: Safeguard');
-					return null;
-				}
-			},
-			onSideStart(side, source) {
-				if (source?.hasAbility('persistent')) {
-					this.add('-sidestart', side, 'Safeguard', '[persistent]');
-				} else {
-					this.add('-sidestart', side, 'Safeguard');
-				}
-			},
-			onSideResidualOrder: 26,
-			onSideResidualSubOrder: 3,
-			onSideEnd(side) {
-				this.add('-sideend', side, 'Safeguard');
+			onSwitchOut(pokemon) {
+				pokemon.side.removeSideCondition('safeguard');
 			},
 		},
 		secondary: null,
@@ -1644,6 +1616,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			contestType: "Cool",
 	},
 	giantpunch: {
+		// This move is a mess so im adding comments lol.
 	num: -47,
 	accuracy: 100,
 	basePower: 50,
@@ -1651,52 +1624,27 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Dynamic Punch", target);
 		},
-		basePowerCallback(pokemon) {
-			// Smash Rage overrides the charge-based power.
-			if (pokemon.volatiles.smashrage) {
-				return 350;
-			}
-			const stacks = pokemon.giantPunchStacks || 0;
-			return Math.min(350, 50 + (stacks * 30));
-		},
-		// Make sure the counter exists.
-		onTryMove(pokemon) {
-			if (pokemon.giantPunchStacks === undefined) {
-				pokemon.giantPunchStacks = 0;
-			}
-		},
-		onAfterMove(pokemon) {
-			const stacks = pokemon.giantPunchStacks || 0;
-
-			if (stacks > 0) {
-				this.add(
-					'-message',
-					`${pokemon.name} used all Giant Punch's charge!`
-				);
-			}
-			// Additional effects based on the charge used.
-			if (!pokemon.volatiles.smashrage) {
-				if (stacks >= 10) {
-					this.boost({
-						atk: 2,
-						def: 2,
-						spe: 2,
-					}, pokemon);
-				} else if (stacks >= 5) {
-					this.boost({
-						atk: 1,
-						def: 1,
-						spe: 1,
-					}, pokemon);
-				}
-			}
-			// Reset the charge after using Giant Punch.
-			pokemon.giantPunchStacks = 0;
-			this.add(
-				'-message',
-				`${pokemon.name}'s Giant Punch charge reset to 0!`
-			);
-		},
+	onModifyMove(move, source) {
+        const charges = source.giantPunchStacks || 0;
+        // 50 BP + 40 BP per charge, max 450 BP at 10 charges.
+        move.basePower = 50 + (charges * 40);
+        // At 5+ charges, Giant Punch has 30% drain.
+        if (charges >= 5) {
+            move.drain = [3, 10];
+        }
+    },
+    onHit(target, source) {
+        const charges = source.giantPunchStacks || 0;
+        // Heal 10% max HP per charge.
+        if (charges > 0) {
+            this.heal(
+                Math.floor(source.maxhp * 0.10 * charges),
+                source
+            );
+        }
+        // Reset charges after using Giant Punch.
+        source.giantPunchStacks = 0;
+    },
 		target: "normal",
 		category: "Physical",
 		name: "Giant Punch",
@@ -1721,9 +1669,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			return false;
 		}
 		let healAmount;
-			if (pokemon.volatiles.chezesports) {
-				const hpPercent =
-					pokemon.hp / pokemon.maxhp;
+			if (pokemon.volatiles.cheezesports) {
+				const hpPercent = pokemon.hp / pokemon.maxhp;
 				if (hpPercent <= 0.20) {
 					healAmount = 0.85;
 				} else if (hpPercent <= 0.30) {

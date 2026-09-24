@@ -377,7 +377,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onStart(pokemon) {
 			let dragonCount = 0;
 			for (const ally of pokemon.side.pokemon) {
-				if (ally.hasType('Fairy')) {
+				if (ally.hasType('Dragon')) {
 					dragonCount++;
 				}
 			}
@@ -579,8 +579,8 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 	shardofeuthymia: {
 		onStart(source) {
-			this.field.addPseudoWeather('balefulomen', source);
-		},
+        	source.side.foe.addSideCondition('balefulomen', source);
+   		},
 		flags: {},
 		name: "Shard of Euthymia",
 		shortDesc: "On entry, applies Baleful Omen to the enemy field for 5 turns.",
@@ -628,33 +628,30 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 3.5,
 		num: -22,
 	},
-	smashrage: {
+    smashrage: {
 		onDamage(damage, target, source, effect) {
 			if (target.hp <= target.maxhp * 0.35) {
 				if (!target.volatiles.smashrage) {
-					target.addVolatile("smashrage");
+					target.addVolatile('smashrage');
 				}
 			}
 		},
-
 		onResidual(pokemon) {
 			if (pokemon.hp <= pokemon.maxhp * 0.35) {
 				if (!pokemon.volatiles.smashrage) {
-					pokemon.addVolatile("smashrage");
+					pokemon.addVolatile('smashrage');
 				}
 			}
 		},
-		onDamagingHit(damage, target) {
-			if (!damage) return;
-
+		onDamagingHit(damage, target, source, move) {
+			if (!damage || !source || !source.isActive) return;
 			target.giantPunchStacks = Math.min(
 				10,
 				(target.giantPunchStacks || 0) + 1
 			);
-
 			this.add(
 				'-message',
-				`${target.name} has ${target.giantPunchStacks} Giant Punch charge!`
+				`${target.name} has ${target.giantPunchStacks} Giant Punch charge${target.giantPunchStacks === 1 ? '' : 's'}!`
 			);
 		},
 		name: "Smash Rage",
@@ -664,24 +661,21 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	cheezesports: {
 		onDamagingHit(damage, target, source, move) {
-			if (!damage) return;
-
+			if (!damage || !source || !source.isActive) return;
+			const chargesGained = target.volatiles.cheezesports ? 2 : 1;
 			target.giantPunchStacks = Math.min(
 				10,
-				(target.giantPunchStacks || 0) + 1
+				(target.giantPunchStacks || 0) + chargesGained
 			);
-
 			this.add(
 				'-message',
-				`${target.name} has ${target.giantPunchStacks} Giant Punch charge!`
+				`${target.name} has ${target.giantPunchStacks} Giant Punch charge${target.giantPunchStacks === 1 ? '' : 's'}!`
 			);
 			if (!move.type) return;
-
 			const effectiveness =
 				this.dex.getEffectiveness(move.type, target);
-
 			if (effectiveness > 0) {
-				target.addVolatile("cheezesports");
+				target.addVolatile('cheezesports');
 			}
 		},
 		name: "CheezEsports",
