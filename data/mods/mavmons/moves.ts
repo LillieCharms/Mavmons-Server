@@ -26,7 +26,7 @@ sound: Has no effect on Pokemon with the Soundproof Ability.
 export const Moves: {[k: string]: ModdedMoveData} = {
 	fallingstar: {
 		num: -1,
-		accuracy: 90,
+		accuracy: 100,
 		basePower: 100,
 		category: "Special",
 		shortDesc: "Deals double damage and grounds vs airborne.",

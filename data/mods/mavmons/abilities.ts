@@ -866,15 +866,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	num: -31,	
 	},
 	mydesign: {
-	onSetStatus(status, target, source, effect) {
-		if (
-			(status.id === 'psn' || status.id === 'tox') &&
-			(effect as Move)?.type === 'Poison'
-		) {
-			return true;
-		}
-	},
-
 	onModifyAccuracy(accuracy, target, source, move) {
 		if (move.type === 'Poison' && move.category === 'Status') {
 			return true;
@@ -887,6 +878,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 4,
 	num: -32,
 },
+
 
 	thisisnotaweapon: {
     onAfterDamage(damage, target, source, move) {
@@ -904,14 +896,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 4,
 	num: -33,	
 	},
+	
 	youridol: {
-    onModifyAtkPriority: 5,
+		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender) {
 			if (!defender.activeTurns) {
 				this.debug('Stakeout boost');
 				return this.chainModify(1.25);
 			}
 		},
+
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender) {
 			if (!defender.activeTurns) {
@@ -919,16 +913,14 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				return this.chainModify(1.25);
 			}
 		},
-		onModifyAccuracy(accuracy, target, source, move) {
-				return true;
-		},
 
-	flags: {breakable: 1},
-	name: "Your Idol",
-    shortDesc: "User's attacks can't miss. If the opponent switches, +25% damage.",
-	rating: 4,
-	num: -34,	
+		flags: {breakable: 1},
+		name: "Your Idol",
+		shortDesc: "User's attacks can't miss. If the opponent switches, +25% damage.",
+		rating: 4,
+		num: -34,
 	},
+
 	tokilldracula: {
     onSourceModifyAtkPriority: 6,
 		onSourceModifyAtk(atk, attacker, defender, move) {
@@ -951,18 +943,25 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 4,
 	num: -35,	
 	},
+
 	backdash: {
-	onAfterMove(source, target, move) {
-    if (move.category !== 'Status' && source.hp > 0 && source.isActive && target.isActive)
-		{
-			this.switchFlag = true;
-		}
-	},
-	flags: {breakable: 1},
-	name: "Backdash",
-    shortDesc: "The user switches out after attacking.",
-	rating: 4,
-	num: -35,	
+		onAfterMove(source, target, move) {
+			if (
+				move.category !== 'Status' &&
+				source.hp > 0 &&
+				source.isActive &&
+				this.canSwitch(source.side) &&
+				!source.volatiles['commanded']
+			) {
+				source.switchFlag = move.id;
+			}
+		},
+
+		flags: {breakable: 1},
+		name: "Backdash",
+		shortDesc: "The user switches out after attacking.",
+		rating: 4,
+		num: -35,
 	},
 	
 	fadedglory: {

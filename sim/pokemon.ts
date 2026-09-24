@@ -1642,8 +1642,15 @@ export class Pokemon {
 		}
 
 		if (!ignoreImmunities && status.id &&
-				!(source?.hasAbility('corrosion') && ['tox', 'psn'].includes(status.id))) {
-			// the game currently never ignores immunities
+		!(
+			(source?.hasAbility('corrosion') && ['tox', 'psn'].includes(status.id)) ||
+			(
+				source?.hasAbility('mydesign') &&
+				['tox', 'psn'].includes(status.id) &&
+				(sourceEffect as Move)?.type === 'Poison' &&
+				(sourceEffect as Move)?.category === 'Status'
+			)
+		)) {
 			if (!this.runStatusImmunity(status.id === 'tox' ? 'psn' : status.id)) {
 				this.battle.debug('immune to status');
 				if ((sourceEffect as Move)?.status) {
@@ -1652,6 +1659,8 @@ export class Pokemon {
 				return false;
 			}
 		}
+
+
 		const prevStatus = this.status;
 		const prevStatusState = this.statusState;
 		if (status.id) {
