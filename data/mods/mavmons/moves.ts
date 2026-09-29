@@ -590,7 +590,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: true,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Heal 30% max HP, user is status-proof for 1 turn.",
+		shortDesc: "Heals 30% max HP & summons Safeguard.",
 		name: "Deep Breath",
 		pp: 5,
 		priority: 0,
@@ -600,26 +600,54 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Bulk Up", target);
 		},
 		heal: [3, 10],
-		self: {
-			sideCondition: 'safeguard',
-			volatileStatus: 'deepbreath',
-		},
-		deepbreath: {
-			name: "Deep Breath",
-			onBeforeMovePriority: 100,
-			onBeforeMove(pokemon) {
-				pokemon.side.removeSideCondition('safeguard');
-				pokemon.removeVolatile('deepbreath');
+		sideCondition: 'safeguard',
+		condition: {
+			duration: 5,
+			durationCallback(target, source, effect) {
+				if (source?.hasAbility('persistent')) {
+					this.add('-activate', source, 'ability: Persistent', '[move] Safeguard');
+					return 2;
+				}
+				return 2;
 			},
-			onSwitchOut(pokemon) {
-				pokemon.side.removeSideCondition('safeguard');
+			onSetStatus(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.id === 'yawn') return;
+				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
+				if (target !== source) {
+					this.debug('interrupting setStatus');
+					if (effect.name === 'Synchronize' || (effect.effectType === 'Move' && !effect.secondaries)) {
+						this.add('-activate', target, 'move: Safeguard');
+					}
+					return null;
+				}
+			},
+			onTryAddVolatile(status, target, source, effect) {
+				if (!effect || !source) return;
+				if (effect.effectType === 'Move' && effect.infiltrates && !target.isAlly(source)) return;
+				if ((status.id === 'confusion' || status.id === 'yawn') && target !== source) {
+					if (effect.effectType === 'Move' && !effect.secondaries) this.add('-activate', target, 'move: Safeguard');
+					return null;
+				}
+			},
+			onSideStart(side, source) {
+				if (source?.hasAbility('persistent')) {
+					this.add('-sidestart', side, 'Safeguard', '[persistent]');
+				} else {
+					this.add('-sidestart', side, 'Safeguard');
+				}
+			},
+			onSideResidualOrder: 26,
+			onSideResidualSubOrder: 3,
+			onSideEnd(side) {
+				this.add('-sideend', side, 'Safeguard');
 			},
 		},
 		secondary: null,
-		target: "allySide",
+		target: "self",
 		type: "Psychic",
-		zMove: {boost: {spe: 1}},
-		contestType: "Beautiful",
+		zMove: {effect: 'clearnegativeboost'},
+		contestType: "Clever",
 	},
 	killerwail51: {
 		num: -16,
