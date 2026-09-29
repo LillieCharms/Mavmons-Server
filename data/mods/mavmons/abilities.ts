@@ -907,7 +907,17 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				return this.chainModify(1.25);
 			}
 		},
+		onAnyInvulnerability(target, source, move) {
+        if (move && source === this.effectState.target) return 0;
+    	},
 
+   	onAnyAccuracy(accuracy, target, source, move) {
+        if (move && source === this.effectState.target) {
+            return true;
+        }
+        return accuracy;
+    	},
+		
 		flags: {breakable: 1},
 		name: "Your Idol",
 		shortDesc: "User's attacks can't miss. If the opponent switches, +25% damage.",
