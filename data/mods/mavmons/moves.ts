@@ -1676,7 +1676,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "normal",
 		category: "Physical",
 		name: "Giant Punch",
-		shortDesc: "+30 Power when hit, resets on use. And more!",
+		shortDesc: "+40 Power when hit, resets on use. And more!",
 		type: "Fighting",
 		pp: 10,
 		contact: true,
