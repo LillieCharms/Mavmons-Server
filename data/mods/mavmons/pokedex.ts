@@ -197,7 +197,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fire", "Steel"],
 		genderRatio: {M: 0.5, F: 0.5},
 		baseStats: {hp: 100, atk: 144, def: 90, spa: 144, spd: 90, spe: 111},
-		abilities: {0: "Own Tempo", 1: `"We can't afford not to try!"`, H: "Multi-Faceted"},
+		abilities: {0: "Multi-Faceted", 1: `"We can't afford not to try!"`, H: "Own Tempo"},
 		weightkg: 75,
 	},
 	cheez: {
