@@ -779,7 +779,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	basePower: 0,
 	category: "Status",
 	name: "Pitching Change",
-	shortDesc: "Switches the user out. The incoming Pokemon restores 1/16 of its max HP.",
+	shortDesc: "Switches, incoming Pokemon restores 1/16th HP",
 	pp: 10,
 	priority: 0,
 	flags: {},
