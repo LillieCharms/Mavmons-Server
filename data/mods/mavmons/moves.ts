@@ -741,7 +741,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		multihit: 2,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1, bullet: 1},
- 		onHit(target, source, move) {
+ 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Mind Blown", target);
 		},
@@ -817,7 +817,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Sparkling Aria", target);
 			this.add('-anim', source, "Hyper Beam", target);
 		},
-		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1},
+		flags: {mirror: 1, metronome: 1, cantusetwice: 1},
 		ignoreAbility: true,
 		target: "normal",
 		type: "???",
@@ -1096,9 +1096,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 					if (source.volatiles['lockedmove'].duration === 2) {
 						delete source.volatiles['lockedmove'];
 					}
-				}
-				if (this.checkMoveMakesContact(move, source, target)) {
-					this.field.setTerrain('electricterrain');
 				}
 				return this.NOT_FAIL;
 			},
@@ -1856,13 +1853,14 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Status",
 		name: "BetterHeal",
 		shortDesc: "Recovers 50% of max HP.",
-		pp: 5,
+		pp: 8,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Recover", source);
 		},
+		noPPBoosts: true,
 		heal: [1, 2],
 		secondary: null,
 		target: "self",
