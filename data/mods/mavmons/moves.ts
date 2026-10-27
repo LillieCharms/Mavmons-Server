@@ -494,13 +494,13 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		stallingMove: true,
 		volatileStatus: 'shockbubble',
+		onHit(pokemon) {
+		pokemon.addVolatile('stall');
+		},
 		condition: {
 			duration: 1,
 			onStart(target) {
 				this.add('-singleturn', target, 'move: Protect');
-			},
-			onHit(pokemon) {
-			pokemon.addVolatile('stall');
 			},
 			onTryHitPriority: 3,
 			onTryHit(target, source, move) {
