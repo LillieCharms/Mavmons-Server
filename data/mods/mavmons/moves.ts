@@ -1334,12 +1334,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Behemoth Blade", target);
 		},
 		onHit(target, source) {
-				this.field.removePseudoWeather(id);
-				this.field.addPseudoWeather(id, source, null, {
+				this.field.removePseudoWeather('darkness');
+				this.field.addPseudoWeather('darkness', source, null, {
 					duration: 8,
 				});
 				this.add('-message', "The Roaring Knight keeps things interesting!");
-			}
+			},
 		isZ: "shelteriumz",
 		secondary: null,
 		target: "normal",
