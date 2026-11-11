@@ -45,6 +45,7 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
     		this.effectState.sourceSide = source.side;
             this.add('-fieldstart', 'Baleful Omen', '[from] ability: Shard of Euthymia');
 			this.add('-message', 'Thunder crackles through intense winds!');
+			
         },
 
         onResidualOrder: 27,
@@ -61,8 +62,9 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
         }
     },
 		onFieldEnd() {
-    	    this.add('-fieldend', 'Baleful Omen');
-        },
+			this.add('-fieldend', 'Baleful Omen');
+			this.add('-message', 'The lightning fades.');
+		},
     },
 	smashrage: {
 		name: "Smash Rage",
@@ -78,19 +80,6 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			if (move.category !== 'Physical') return;
 			// Smash Rage's 50% drain overwrites other drain values.
 			move.drain = [1, 2];
-			if (move.id === 'cargothrow') {
-				move.willCrit = true;
-			}
-		},
-		onAfterMove(source, target, move) {
-			if (move.category !== 'Physical') return;
-			if (move.id === 'giantpunch') {
-				this.boost({atk: 2}, source);
-			}
-			source.removeVolatile('smashrage');
-		},
-		onSwitchOut(pokemon) {
-			pokemon.removeVolatile('smashrage');
 		},
 	},
 	cheezesports: {
@@ -147,13 +136,13 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		},
 	},
 	wavebreaker: {
-    duration: 4,
+    duration: 3,
     onStart(side) {
         this.add('-sidestart', side, 'Wavebreaker');
     },
     onSwitchIn(pokemon) {
         if (!pokemon.isGrounded()) return;
-        this.damage(pokemon.baseMaxhp / 4, pokemon);
+        this.damage(pokemon.baseMaxhp / 8, pokemon);
         this.boost({
             evasion: -2,
         }, pokemon);

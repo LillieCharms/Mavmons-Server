@@ -982,6 +982,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 
 			const ppDeducted = target.deductPP(move.id, 3);
 			if (!ppDeducted) return false;
+				this.add('-activate', target, 'move: Dragon Spear', move.name, ppDeducted);
 		},
 		secondary: null,
 		target: "normal",
@@ -1015,7 +1016,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				this.add('-sidestart', side, 'move: Electric Fence');
 			},
 			onEntryHazard(pokemon) {
-				if (pokemon.hasItem('heavydutyboots') || pokemon.hasItem('earthlooplet') || pokemon.hasAbility('autobuild')) return;
+				if (pokemon.hasItem('heavydutyboots') || pokemon.hasItem('earthlooplet') || pokemon.hasAbility('autobuild') || pokemon.hasType('Ground')) return;
 				// Ice Face and Disguise correctly get typed damage from Stealth Rock
 				// because Stealth Rock bypasses Substitute.
 				// They don't get typed damage from Steelsurge because Steelsurge doesn't,
@@ -1100,7 +1101,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				return this.NOT_FAIL;
 			},
 			onHit(target, source, move) {
-							if (move.isZOrMaxPowered && this.checkMoveMakesContact(move, source, target)) {
+							if (move.isZOrMaxPowered && !this.checkMoveMakesContact(move, source, target)) {
 								this.boost({spa: -1}, source, target, this.dex.getActiveMove("Third Eye"));
 							}
 						},
@@ -1169,28 +1170,20 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	cargothrow: {
 		num: -33,
 		accuracy: 100,
-		basePower: 60,
+		basePower: 65,
 		category: "Physical",
 		name: "Cargo Throw",
-		shortDesc: "Swaps foe out, hits Ghosts, crit on <50% foe HP.",
+		shortDesc: "Swaps foe out, crits on <50% foe HP.",
 		pp: 15,
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Seismic Toss", target);
 		},
-		priority: -6,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
-		onModifyMovePriority: -5,
-		onModifyMove(move) {
-			move.ignoreEvasion = true;
-			if (!move.ignoreImmunity) move.ignoreImmunity = {};
-			if (move.ignoreImmunity !== true) {
-				move.ignoreImmunity['Fighting'] = true;
-			}
-		},
 		onModifyCritRatio(critRatio, source, target) {
 			if (target.hp * 2 <= target.maxhp) return 5;
 		},
+		priority: -6,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
 		forceSwitch: true,
 		target: "normal",
 		type: "Fighting",
@@ -1330,7 +1323,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 180,
 		category: "Physical",
 		name: "Crystal Nova",
-		shortDesc: "Adds 3 turns to Darkness.",
+		shortDesc: "Resets to 8 turns of Darkness.",
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
@@ -1341,19 +1334,11 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Behemoth Blade", target);
 		},
 		onHit(target, source) {
-			const id = 'darkness';
-			const pw = this.field.pseudoWeather[id];
-			if (pw) {
-				const remaining = pw.duration || 0;
 				this.field.removePseudoWeather(id);
 				this.field.addPseudoWeather(id, source, null, {
-					duration: remaining + 3,
+					duration: 8,
 				});
-				this.add('-message', "The Roaring extends the Darkness!");
-			} else {
-				this.field.addPseudoWeather(id, source, null, {
-					duration: 3,
-				});
+				this.add('-message', "The Roaring Knight keeps things interesting!");
 			}
 		},
 		isZ: "shelteriumz",
@@ -1644,36 +1629,34 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		// This move is a mess so im adding comments lol.
 	num: -47,
 	accuracy: 100,
-	basePower: 50,
+	basePower: 90,
+	priority: -6,
+	onTry(source) {
+			if (source.activeMoveActions < 2) {
+				this.hint("Giant Punch only works after it is charged (after your first turn out).");
+				return false;
+			}
+		},
 	onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Dynamic Punch", target);
 		},
-	onModifyMove(move, source) {
-        const charges = source.giantPunchStacks || 0;
-        // 50 BP + 40 BP per charge, max 450 BP at 10 charges.
-        move.basePower = 50 + (charges * 40);
-        // At 5+ charges, Giant Punch has 30% drain.
-        if (charges >= 5) {
-            move.drain = [3, 10];
-        }
-    },
-    onHit(target, source) {
-        const charges = source.giantPunchStacks || 0;
-        // Heal 10% max HP per charge.
-        if (charges > 0) {
-            this.heal(
-                Math.floor(source.maxhp * 0.10 * charges),
-                source
-            );
-        }
-        // Reset charges after using Giant Punch.
-        source.giantPunchStacks = 0;
-    },
+	basePowerCallback(pokemon, target, move) {
+			const damagedByTarget = pokemon.attackedBy.some(
+				p => p.source === target && p.damage > 0 && p.thisTurn
+			);
+			if (damagedByTarget) {
+				this.debug('BP doubled for getting hit by ' + target);
+				return move.basePower * 1.5;
+			}
+			return move.basePower;
+		},
+	
 		target: "normal",
 		category: "Physical",
 		name: "Giant Punch",
-		shortDesc: "+40 Power when hit, resets on use. And more!",
+		shortDesc: "Double power if being hit, cannot use consecutively or first turn.",
+		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1},
 		type: "Fighting",
 		pp: 10,
 		contact: true,
@@ -1853,14 +1836,13 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Status",
 		name: "BetterHeal",
 		shortDesc: "Recovers 50% of max HP.",
-		pp: 8,
+		pp: 5,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Recover", source);
 		},
-		noPPBoosts: true,
 		heal: [1, 2],
 		secondary: null,
 		target: "self",

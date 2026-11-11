@@ -206,7 +206,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Fighting", "Ground"],
 		gender: "M",
 		baseStats: {hp: 130, atk: 150, def: 140, spa: 80, spd: 100, spe: 80},
-		abilities: {0: "Smash Rage", 1: "Unaware", H: "CheezEsports"},
+		abilities: {0: "Smash Rage", 1: "Unaware", H: "Partial Body Intangibility"},
 		weightkg: 75,
 	},
 //saving this space for nindo if he ever does his mon, num: 2011
@@ -284,7 +284,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Dragon", "Dark"],
 		gender: "M",
 		baseStats: {hp: 255, atk: 150, def: 70, spa: 155, spd: 70, spe: 77},
-		abilities: {0: "End of Dormancy", 1: "Prism Armor", H: '"Strengthen me, Shadow Dragons!"'},
+		abilities: {0: "End of Dormancy", 1: "Prism Armor", H: `"Strengthen me, Shadow Dragons!"`},
 		weightkg: 175,
 	},
 	frost: {
@@ -293,7 +293,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Poison"],
 		gender: "M",
 		baseStats: {hp: 120, atk: 100, def: 120, spa: 90, spd: 120, spe: 115},
-		abilities: {0: "My Design", 1: '"This is not a weapon."', H: "Your Idol"},
+		abilities: {0: "My Design", 1: `"This is not a weapon."`, H: `Your Idol`},
 		weightkg: 75,
 	},
 	alucard: {

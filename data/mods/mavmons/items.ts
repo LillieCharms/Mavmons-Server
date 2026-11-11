@@ -237,6 +237,13 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		num: -14,
 		gen: 9,
     },
+	utilityumbrella: {
+		name: "Utility Umbrella",
+		desc: "If held by a Pokemon it doesn't do anything.",
+		spritenum: 718,
+		num: 1123,
+		gen: 8,
+	},
 	nahidiumz: {
 		name: "Nahidium Z",
 		desc: "If held by Nahida with Scheme of Acuity, it can use Illusory rtburst.",

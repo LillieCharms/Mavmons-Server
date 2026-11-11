@@ -487,7 +487,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
                 }
         },
         flags: {},
-        name: `"We can't afford not to try!"`,
+        name: "We can't afford not to try!",
 		shortDesc: "User has a 21% chance to attack again on hit, accuracy multiplied by 0.79x.",
         rating: 4.5,
         num: -18,
@@ -588,6 +588,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -20,
 	},
 	lifefibersyncronize: {
+		
 	onDamagingHit(damage, target, source, move) {
 		// Already transformed.
 		if (target.species.id !== 'ryuko') return;
@@ -629,57 +630,35 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -22,
 	},
     smashrage: {
-		onDamage(damage, target, source, effect) {
-			if (target.hp <= target.maxhp * 0.35) {
-				if (!target.volatiles.smashrage) {
-					target.addVolatile('smashrage');
+			onAfterMoveSecondary(target, source, move) {
+				this.effectState.checkedBerserk = true;
+				if (!source || source === target || !target.hp || !move.totalDamage) return;
+				const lastAttackedBy = target.getLastAttackedBy();
+				if (!lastAttackedBy) return;
+				const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
+				if (target.hp <= target.maxhp / 2.85 && target.hp + damage > target.maxhp / 2.85) {
+					if (!target.volatiles.smashrage) {
+						target.addVolatile('smashrage');
+					};
 				}
-			}
-		},
-		onResidual(pokemon) {
-			if (pokemon.hp <= pokemon.maxhp * 0.35) {
-				if (!pokemon.volatiles.smashrage) {
-					pokemon.addVolatile('smashrage');
-				}
-			}
-		},
-		onDamagingHit(damage, target, source, move) {
-			if (!damage || !source || !source.isActive) return;
-			target.giantPunchStacks = Math.min(
-				10,
-				(target.giantPunchStacks || 0) + 1
-			);
-			this.add(
-				'-message',
-				`${target.name} has ${target.giantPunchStacks} Giant Punch charge${target.giantPunchStacks === 1 ? '' : 's'}!`
-			);
-		},
+			},
 		name: "Smash Rage",
-		shortDesc: "When <35% HP, next physical +20% power & 50% drain. Sig moves get more buffs.",
+		shortDesc: "When <35% HP, next physical +20% power & 50% drain.",
 		rating: 4,
 		num: -23,
 	},
-	cheezesports: {
-		onDamagingHit(damage, target, source, move) {
-			if (!damage || !source || !source.isActive) return;
-			const chargesGained = target.volatiles.cheezesports ? 2 : 1;
-			target.giantPunchStacks = Math.min(
-				10,
-				(target.giantPunchStacks || 0) + chargesGained
-			);
-			this.add(
-				'-message',
-				`${target.name} has ${target.giantPunchStacks} Giant Punch charge${target.giantPunchStacks === 1 ? '' : 's'}!`
-			);
-			if (!move.type) return;
-			const effectiveness =
-				this.dex.getEffectiveness(move.type, target);
-			if (effectiveness > 0) {
-				target.addVolatile('cheezesports');
+	partialbodyintangibility: {
+		onModifyMovePriority: -5,
+		onModifyMove(move) {
+			if (!move.ignoreImmunity) move.ignoreImmunity = {};
+			if (move.ignoreImmunity !== true) {
+				move.ignoreImmunity['Fighting'] = true;
+				move.ignoreImmunity['Normal'] = true;
+				delete move.flags['contact'];
 			}
 		},
-		name: "CheezEsports",
-		shortDesc: "When hit by a supereffective move, sign attacker up to CheezEsports.",
+		name: "Partial Body Intangibility",
+		shortDesc: "Normal and Fighting can hit Ghosts, no moves make contact.",
 		rating: 4,
 		num: -24,
 	},
@@ -696,21 +675,15 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			}
 		},
 		onAfterMoveSecondary(target, source, move) {
-				this.effectState.checkedBerserk = true;
-				if (!source || source === target || !target.hp || !move.totalDamage) return;
-				const lastAttackedBy = target.getLastAttackedBy();
-				if (!lastAttackedBy) return;
-				const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
-				if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
-					for (const target of pokemon.foes()) {
-						this.boost({
-							atk: -1,
-							spa: -1,
-						}, target, pokemon);
-					}
-					this.add('-ability', pokemon, 'CTE Distributor');
-				}
-			},
+			this.effectState.checkedBerserk = true;
+			if (!source || source === target || !target.hp || !move.totalDamage) return;
+			const lastAttackedBy = target.getLastAttackedBy();
+			if (!lastAttackedBy) return;
+			const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
+			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
+				this.boost({atk: -1, spa: -1,}, target, pokemon);
+			}
+		},
 		name: "CTE Distributor",
 		shortDesc: "When the user reaches 25% HP or less, lowers opponent's Atk and SpA by 1.",
 		rating: 3.5,
@@ -802,7 +775,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1}, pokemon);
 			}
 		},
-	name: '"Strengthen me, Shadow Dragons!"',
+	name: `"Strengthen me, Shadow Dragons!"`,
     shortDesc: "Once per battle, at 1/2 HP or less, restores full HP and raises all stats by 1.",
 	rating: 5,
 	num: -29,
@@ -830,6 +803,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	lifefiberinfusion: {
 		onModifyDamage(damage, source, target, move) {
+			this.add('-activate', target, 'ability: Life Fiber Infusion');
 			if (move && target.getMoveHitData(move).typeMod > 0) {
 				return this.chainModify([11, 10]);
 			}
@@ -872,7 +846,6 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 4,
 	num: -32,
 },
-
 
 	thisisnotaweapon: {
     onAfterDamage(damage, target, source, move) {
@@ -969,6 +942,24 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	
 	fadedglory: {
+	onStart(pokemon) {
+		pokemon.abilityState.choiceLock = "";
+	},
+	onBeforeMove(pokemon, target, move) {
+			if (move.isZOrMaxPowered || move.id === 'struggle') return;
+			if (pokemon.abilityState.choiceLock && pokemon.abilityState.choiceLock !== move.id) {
+				// Fails unless ability is being ignored (these events will not run), no PP lost.
+				this.addMove('move', pokemon, move.name);
+				this.attrLastMove('[still]');
+				this.debug("Disabled by Gorilla Tactics");
+				this.add('-fail', pokemon);
+				return false;
+			}
+		},
+		onModifyMove(move, pokemon) {
+			if (pokemon.abilityState.choiceLock || move.isZOrMaxPowered || move.id === 'struggle') return;
+			pokemon.abilityState.choiceLock = move.id;
+		},
    onBasePower(basePower, attacker, defender, move) {
         if (move.type === 'Fire') {
             return this.chainModify(1.5);
@@ -993,16 +984,18 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			}
 			return false;
 		},
-	onStart(pokemon) {
-			if (pokemon.volatiles['choicelock']) {
-				this.debug('removing choicelock: ' + pokemon.volatiles['choicelock']);
+	onDisableMove(pokemon) {
+			if (!pokemon.abilityState.choiceLock) return;
+			if (pokemon.volatiles['dynamax']) return;
+			for (const moveSlot of pokemon.moveSlots) {
+				if (moveSlot.id !== pokemon.abilityState.choiceLock) {
+					pokemon.disableMove(moveSlot.id, false, this.effectState.sourceEffect);
+				}
 			}
-			pokemon.removeVolatile('choicelock');
 		},
-		onModifyMove(move, pokemon) {
-			pokemon.addVolatile('choicelock');
-		},
-		isChoice: true,
+	onEnd(pokemon) {
+		pokemon.abilityState.choiceLock = "";
+	},
 	name: "Faded Glory",
    shortDesc: "Reduces SE by 25%, boosts Fire by 50%, burn immune. Can only use first move.",
 	rating: 5,
