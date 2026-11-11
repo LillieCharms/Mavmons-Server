@@ -1340,7 +1340,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				});
 				this.add('-message', "The Roaring Knight keeps things interesting!");
 			}
-		},
 		isZ: "shelteriumz",
 		secondary: null,
 		target: "normal",
