@@ -485,6 +485,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Shock Bubble",
 		pp: 15,
 		priority: 4,
+		stallingMove: true,
+		volatileStatus: 'shockbubble',
 		flags: {protect: 1},
 		onPrepareHit(target, source, pokemon) {
 			this.attrLastMove('[still]');
@@ -492,8 +494,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Protect", target);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
-		stallingMove: true,
-		volatileStatus: 'shockbubble',
 		onHit(pokemon) {
 		pokemon.addVolatile('stall');
 		},
@@ -975,16 +975,19 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Dragon Rage", target);
 		},
-		onHit(target) {
-			let move: Move | ActiveMove | null = target.lastMove;
-			if (!move || move.isZ) return false;
-			if (move.isMax && move.baseMove) move = this.dex.moves.get(move.baseMove);
+		secondary: {
+			chance: 100,
+			onHit(target) {
+				if (!target.hp) return;
+				let move: Move | ActiveMove | null = target.lastMove;
+				if (!move || move.isZ) return;
+				if (move.isMax && move.baseMove) move = this.dex.moves.get(move.baseMove);
 
-			const ppDeducted = target.deductPP(move.id, 3);
-			if (!ppDeducted) return false;
-				this.add('-activate', target, 'move: Dragon Spear', move.name, ppDeducted);
+				const ppDeducted = target.deductPP(move.id, 3);
+				if (!ppDeducted) return;
+				this.add('-activate', target, 'move: Eerie Spell', move.name, ppDeducted);
+			},
 		},
-		secondary: null,
 		target: "normal",
 		type: "Dragon",
 		contestType: "Beautiful",
@@ -1062,6 +1065,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Third Eye",
 		pp: 15,
 		priority: 4,
+		stallingMove: true,
+		volatileStatus: 'thirdeye',
 		flags: {contact: 1, slicing: 1, heal: 1, protect: 1, mirror: 1},
 		onPrepareHit(target, source, pokemon) {
 			this.attrLastMove('[still]');
@@ -1069,8 +1074,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Protect", target);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
-		stallingMove: true,
-		volatileStatus: 'thirdeye',
+		
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
 		},
@@ -1335,7 +1339,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		onHit(target, source) {
 				this.field.removePseudoWeather('darkness');
-				this.field.addPseudoWeather('darkness', source, null, {
+				this.field.addPseudoWeather('darkness2', source, null, {
 					duration: 8,
 				});
 				this.add('-message', "The Roaring Knight keeps things interesting!");
@@ -1813,14 +1817,13 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Status",
 		name: "OKHeal",
 		shortDesc: "You are going to lose Points.",
-		pp: 1,
+		pp: 5,
 		priority: 0,
 		flags: {snatch: 1, heal: 1, metronome: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Recover", source);
 		},
-		noPPBoosts: true,
 		heal: [3, 20],
 		secondary: null,
 		target: "self",

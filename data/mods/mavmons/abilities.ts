@@ -630,8 +630,19 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		num: -22,
 	},
     smashrage: {
+		onDamage(damage, target, source, effect) {
+			if (
+				effect.effectType === "Move" &&
+				!effect.multihit &&
+				(!effect.negateSecondary && !(effect.hasSheerForce && source.hasAbility('sheerforce')))
+			) {
+				this.effectState.checkedRage = false;
+			} else {
+				this.effectState.checkedRage = true;
+			}
+		},
 			onAfterMoveSecondary(target, source, move) {
-				this.effectState.checkedBerserk = true;
+				this.effectState.checkedRage = true;
 				if (!source || source === target || !target.hp || !move.totalDamage) return;
 				const lastAttackedBy = target.getLastAttackedBy();
 				if (!lastAttackedBy) return;
@@ -669,19 +680,19 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				!effect.multihit &&
 				(!effect.negateSecondary && !(effect.hasSheerForce && source.hasAbility('sheerforce')))
 			) {
-				this.effectState.checkedBerserk = false;
+				this.effectState.checkedCTE = false;
 			} else {
-				this.effectState.checkedBerserk = true;
+				this.effectState.checkedCTE = true;
 			}
 		},
 		onAfterMoveSecondary(target, source, move) {
-			this.effectState.checkedBerserk = true;
+			this.effectState.checkedCTE = true;
 			if (!source || source === target || !target.hp || !move.totalDamage) return;
 			const lastAttackedBy = target.getLastAttackedBy();
 			if (!lastAttackedBy) return;
 			const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
-			if (target.hp <= target.maxhp / 2 && target.hp + damage > target.maxhp / 2) {
-				this.boost({atk: -1, spa: -1,}, target, pokemon);
+			if (target.hp <= target.maxhp / 4 && target.hp + damage > target.maxhp / 4) {
+				this.boost({atk: -1, spa: -1,}, target);
 			}
 		},
 		name: "CTE Distributor",
@@ -775,7 +786,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 				this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1}, pokemon);
 			}
 		},
-	name: `"Strengthen me, Shadow Dragons!"`,
+	name: "Strengthen me, Shadow Dragons!",
     shortDesc: "Once per battle, at 1/2 HP or less, restores full HP and raises all stats by 1.",
 	rating: 5,
 	num: -29,
@@ -858,7 +869,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		}
 	},
 	flags: {breakable: 1},
-	name: `"This is not a weapon."`,
+	name: "This is not a weapon.",
     shortDesc: "When landing a supereffective move, reduce all of the target's PP by 1.",
 	rating: 4,
 	num: -33,	

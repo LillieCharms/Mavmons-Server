@@ -18,6 +18,25 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			}
 		},
 	},
+	darkness2: {
+		name: 'Interesting Darkness',
+		duration: 8,
+		onFieldStart(field, source) {
+			this.add('-fieldstart', 'Interesting Darkness');
+			this.add('-message', 'Darkness engulfs the field!');
+		},
+		onFieldResidualOrder: 27,
+		onFieldResidualSubOrder: 8,
+		onFieldEnd() {
+			this.add('-fieldend', 'Interesting Darkness');
+			this.add('-message', 'The darkness fades.');
+		},
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.type === 'Dark') {
+				return this.chainModify(1.3);
+			}
+		},
+	},
 	roaring: {
 		name: 'Roaring',
 		duration: 5,
