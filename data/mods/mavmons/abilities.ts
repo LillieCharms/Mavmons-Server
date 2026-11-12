@@ -692,7 +692,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			if (!lastAttackedBy) return;
 			const damage = move.multihit && !move.smartTarget ? move.totalDamage : lastAttackedBy.damage;
 			if (target.hp <= target.maxhp / 4 && target.hp + damage > target.maxhp / 4) {
-				this.boost({atk: -1, spa: -1,}, target);
+				this.boost({atk: -1, spa: -1,}, source);
 			}
 		},
 		name: "CTE Distributor",
@@ -859,13 +859,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 },
 
 	thisisnotaweapon: {
-    onAfterDamage(damage, target, source, move) {
-		if (damage > 0 && move.effectiveness > 0) {
-			for (const moveSlot of target.moveSlots) {
+    onDamagingHit(damage, target, source, move) {
+		if (damage > 0 || move.category === 'Status') return;
+			
+		if (target.getMoveHitData(move).typeMod > 0) {
+		for (const moveSlot of target.moveSlots) {
 				if (moveSlot.pp > 0) {
 						moveSlot.pp--;
 				}
 			}
+			this.add('-activate', target, 'ability: This is not a weapon.');
 		}
 	},
 	flags: {breakable: 1},

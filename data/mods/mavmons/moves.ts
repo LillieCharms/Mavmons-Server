@@ -487,7 +487,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		priority: 4,
 		stallingMove: true,
 		volatileStatus: 'shockbubble',
-		flags: {protect: 1},
+		flags: {failinstruct: 1},
 		onPrepareHit(target, source, pokemon) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Tail Glow", target);
@@ -504,9 +504,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			},
 			onTryHitPriority: 3,
 			onTryHit(target, source, move) {
-				if (move.category === 'Status') return;
-
-				if (!move.flags['protect']) {
+				if (!move.flags['protect'] || move.category === 'Status') {
 					if (['gmaxoneblow', 'gmaxrapidflow'].includes(move.id)) return;
 					if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
 					return;
@@ -523,7 +521,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 						delete source.volatiles['lockedmove'];
 					}
 				}
-
 				this.field.setTerrain('electricterrain');
 				return this.NOT_FAIL;
 			},
@@ -975,6 +972,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Dragon Rage", target);
 		},
+
 		secondary: {
 			chance: 100,
 			onHit(target) {
@@ -1067,25 +1065,23 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		priority: 4,
 		stallingMove: true,
 		volatileStatus: 'thirdeye',
-		flags: {contact: 1, slicing: 1, heal: 1, protect: 1, mirror: 1},
+		flags: {failinstruct: 1},
 		onPrepareHit(target, source, pokemon) {
-			this.attrLastMove('[still]');
 			this.add('-anim', source, "Miracle Eye", target);
 			this.add('-anim', source, "Protect", target);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
-		
 		onHit(pokemon) {
 			pokemon.addVolatile('stall');
 		},
 		condition: {
 			duration: 1,
 			onStart(target) {
-				this.add('-singleturn', target, 'move: Protect');
+				this.add('-singleturn', target, 'Protect');
 			},
 			onTryHitPriority: 3,
 			onTryHit(target, source, move) {
-				if (!move.flags['protect']) {
+				if (!move.flags['protect'] || move.category === 'Status') {
 					if (['gmaxoneblow', 'gmaxrapidflow'].includes(move.id)) return;
 					if (move.isZ || move.isMax) target.getMoveHitData(move).zBrokeProtect = true;
 					return;
@@ -1102,13 +1098,16 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 						delete source.volatiles['lockedmove'];
 					}
 				}
+				if (!this.checkMoveMakesContact(move, source, target)) {
+					this.boost({spa: -1}, source, target, this.dex.getActiveMove("Third Eye"));
+				}
 				return this.NOT_FAIL;
 			},
 			onHit(target, source, move) {
-							if (move.isZOrMaxPowered && !this.checkMoveMakesContact(move, source, target)) {
-								this.boost({spa: -1}, source, target, this.dex.getActiveMove("Third Eye"));
-							}
-						},
+				if (!move.isZOrMaxPowered && this.checkMoveMakesContact(move, source, target)) {
+					this.boost({spa: -1}, source, target, this.dex.getActiveMove("Third Eye"));
+				}
+			},
 		},
 		target: "self",
 		type: "Psychic",
@@ -1184,7 +1183,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.add('-anim', source, "Seismic Toss", target);
 		},
 		onModifyCritRatio(critRatio, source, target) {
-			if (target.hp * 2 <= target.maxhp) return 5;
+			if (target.hp * 2 <= target.maxhp) {
+				move.willCrit = true;
+			}
 		},
 		priority: -6,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
