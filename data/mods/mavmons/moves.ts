@@ -525,6 +525,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				return this.NOT_FAIL;
 			},
 		},
+		zMove: {boost: {atk: 1}},
 		target: "self",
 		type: "Electric",
 		contestType: "Cool",
