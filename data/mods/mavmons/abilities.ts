@@ -859,20 +859,16 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 },
 
 	thisisnotaweapon: {
-    onDamagingHit(damage, target, source, move) {
-        if (damage <= 0) return;
-
-        const moveHit = target.getMoveHitData(move);
-        if (moveHit.typeMod <= 0) return;
-
-        this.add('-ability', target, 'This is not a weapon.');
-
-        for (const moveSlot of source.moveSlots) {
-            if (moveSlot.pp > 0) {
-                moveSlot.pp--;
-            }
-        }
-    },
+    onAfterDamage(damage, target, source, move) {
+		if (damage > 0 && move.effectiveness > 0) {
+			for (const moveSlot of target.moveSlots) {
+				if (moveSlot.pp > 0) {
+						moveSlot.pp--;
+				}
+			}
+			this.add('-ability', target, 'This is not a weapon.');
+		}
+	},
 	flags: {breakable: 1},
 	name: "This is not a weapon.",
     shortDesc: "When landing a supereffective move, reduce all of the target's PP by 1.",
