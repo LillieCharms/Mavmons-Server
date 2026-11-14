@@ -1659,7 +1659,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		category: "Physical",
 		name: "Giant Punch",
 		shortDesc: "Double power if being hit, cannot use consecutively or first turn.",
-		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1, cantusetwice: 1, contact: 1},
 		type: "Fighting",
 		pp: 10,
 		contact: true,
