@@ -860,7 +860,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 
 	thisisnotaweapon: {
     onDamagingHit(damage, target, source, move) {
-		if (damage > 0 || move.category === 'Status') return;
+		if (damage <= 0 || move.category === 'Status') return;
 			
 		if (target.getMoveHitData(move).typeMod > 0) {
 		for (const moveSlot of target.moveSlots) {

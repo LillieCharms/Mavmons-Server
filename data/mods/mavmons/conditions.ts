@@ -90,6 +90,11 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 		onStart(pokemon) {
 			this.add('-start', pokemon, 'Smash Rage');
 		},
+		onResidual(pokemon) {
+			if (pokemon.hp / pokemon.maxhp > 0.35) {
+				pokemon.removeVolatile('smashrage');
+			}
+		},
 		onModifyDamage(damage, source, target, move) {
 			if (move.category !== 'Physical') return;
 

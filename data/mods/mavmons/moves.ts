@@ -488,10 +488,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		stallingMove: true,
 		volatileStatus: 'shockbubble',
 		flags: {failinstruct: 1},
-		onPrepareHit(target, source, pokemon) {
+		onPrepareHit(pokemon) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Tail Glow", target);
-			this.add('-anim', source, "Protect", target);
+			this.add('-anim', pokemon, "Tail Glow", pokemon);
+			this.add('-anim', pokemon, "Protect", pokemon);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
@@ -1066,9 +1066,9 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		stallingMove: true,
 		volatileStatus: 'thirdeye',
 		flags: {failinstruct: 1},
-		onPrepareHit(target, source, pokemon) {
-			this.add('-anim', source, "Miracle Eye", target);
-			this.add('-anim', source, "Protect", target);
+		onPrepareHit(pokemon) {
+			this.add('-anim', pokemon, "Miracle Eye", target);
+			this.add('-anim', pokemon, "Protect", target);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
@@ -1184,7 +1184,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		onModifyCritRatio(critRatio, source, target) {
 			if (target.hp * 2 <= target.maxhp) {
-				move.willCrit = true;
+				return 5;
 			}
 		},
 		priority: -6,
