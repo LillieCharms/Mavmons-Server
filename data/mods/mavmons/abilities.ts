@@ -859,15 +859,20 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 },
 
 	thisisnotaweapon: {
-     onDamagingHit(damage, target, source, move) {
-        if (damage > 0 && target.getMoveHitData(move).typeMod > 0) {
-            for (const moveSlot of source.moveSlots) {
-                if (moveSlot.pp > 0) {
-                    moveSlot.pp--;
-                }
+    onDamagingHit(damage, target, source, move) {
+        if (!source || !damage || !move) return;
+
+        const typeMod = target.getMoveHitData(move).typeMod;
+
+        if (typeMod <= 0) return;
+
+        for (const slot of source.moveSlots) {
+            if (slot.pp > 0) {
+                slot.pp--;
             }
-            this.add('-ability', target, 'This is not a weapon.');
         }
+
+        this.add('-ability', target, 'This is not a weapon.');
     },
 	flags: {breakable: 1},
 	name: "This is not a weapon.",
