@@ -126,7 +126,6 @@ export const Formats: FormatList = [
 		unbanlist: ['Yveltal','Walking Wake','Ursaluna-Bloodmoon','Ogerpon-Hearthflame','Urshifu-Single-Strike','Naganadel'],
 		teambuilderFormat: "National Dex",
 	},
-	...BadNBoosted,
 	{
 		name: "[Gen 9] Custom Game",
 
