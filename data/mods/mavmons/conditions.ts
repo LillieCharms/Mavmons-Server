@@ -95,6 +95,9 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 				pokemon.removeVolatile('smashrage');
 			}
 		},
+		onEnd(pokemon) {
+			this.add('-end', pokemon, 'Smash Rage');
+		},
 		onModifyDamage(damage, source, target, move) {
 			if (move.category !== 'Physical') return;
 

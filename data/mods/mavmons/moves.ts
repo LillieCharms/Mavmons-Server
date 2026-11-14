@@ -1067,8 +1067,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		volatileStatus: 'thirdeye',
 		flags: {failinstruct: 1},
 		onPrepareHit(pokemon) {
-			this.add('-anim', pokemon, "Miracle Eye", target);
-			this.add('-anim', pokemon, "Protect", target);
+			this.add('-anim', pokemon, "Miracle Eye", pokemon);
+			this.add('-anim', pokemon, "Protect", pokemon);
 			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
 		},
 		onHit(pokemon) {
@@ -1182,10 +1182,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Seismic Toss", target);
 		},
-		onModifyCritRatio(critRatio, source, target) {
-			if (target.hp * 2 <= target.maxhp) {
-				return 5;
-			}
+		willCrit(source, target) {
+			return target.hp * 2 <= target.maxhp;
 		},
 		priority: -6,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},

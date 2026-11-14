@@ -863,7 +863,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		if (damage <= 0 || move.category === 'Status') return;
 			
 		if (target.getMoveHitData(move).typeMod > 0) {
-		for (const moveSlot of target.moveSlots) {
+		for (const moveSlot of source.moveSlots) {
 				if (moveSlot.pp > 0) {
 						moveSlot.pp--;
 				}
