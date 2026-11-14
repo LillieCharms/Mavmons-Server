@@ -1182,8 +1182,8 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Seismic Toss", target);
 		},
-		willCrit(source, target) {
-			return target.hp * 2 <= target.maxhp;
+		onTryHit(target, source, move) {
+			move.willCrit = target.hp * 2 <= target.maxhp;
 		},
 		priority: -6,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, noassist: 1, failcopycat: 1},
