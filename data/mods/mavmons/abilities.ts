@@ -861,9 +861,12 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	thisisnotaweapon: {
     onDamagingHit(damage, target, source, move) {
         if (damage <= 0) return;
+
         const moveHit = target.getMoveHitData(move);
         if (moveHit.typeMod <= 0) return;
-        this.add('-activate', target, 'ability: This is not a weapon.');
+
+        this.add('-ability', target, 'This is not a weapon.');
+
         for (const moveSlot of source.moveSlots) {
             if (moveSlot.pp > 0) {
                 moveSlot.pp--;
