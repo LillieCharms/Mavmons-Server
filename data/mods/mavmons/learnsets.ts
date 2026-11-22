@@ -388,7 +388,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			punishment: ["9L1"],
 			falsesurrender: ["9L1"],
 			kowtowcleave: ["9L1"],
-			pursuit: ["9L1"],
 			psychocut: ["9L1"],
 			psyblade: ["9L1"],
 			confusion: ["9L1"],
