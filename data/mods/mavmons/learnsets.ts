@@ -90,9 +90,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			darkpulse: ["9L1"],
 			surf: ["9L1"],
 			volttackle: ["9L1"],
-			baddybad: ["9L1"],
 			floatyfall: ["9L1"],
-			splash: ["9L1"],
 			nuzzle: ["9L1"],
 			darkestlariat: ["9L1"],
 			crunch: ["9L1"],
@@ -137,6 +135,8 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			threehitstring: ["9L1"],
 			coins: ["9L1"],
 			protect: ["9L1"],
+			roar: ["9L1"],
+			flamethrower: ["9L1"],
 		},
 	},
 	vince: {
@@ -162,6 +162,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			spiritbreak: ["9L1"],
 			knockoff: ["9L1"],
 			aquaring: ["9L1"],
+			aurasphere: ["9L1"],
 			burstbomb: ["9L1"],
 			trizooka: ["9L1"],
 			deepbreath: ["9L1"],
@@ -268,7 +269,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			overheat: ["9L1"],
 			terrainpulse: ["9L1"],
 			camouflage: ["9L1"],
-			chillyreception: ["9L1"],
 			toxic: ["9L1"],
 			detect: ["9L1"],
 			terablast: ["9L1"],
@@ -314,7 +314,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			nextonesonme: ["9L1"],
 			ashesanddust: ["9L1"],
 			dragonspear: ["9L1"],
-
 		},
 	},
 	andrew: {
@@ -356,7 +355,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			icepunch: ["9L1"],
 			thunderpunch: ["9L1"],
 			bulletpunch: ["9L1"],
-			yawn: ["9L1"],
 			substitute: ["9L1"],
 			explosion: ["9L1"],
 			outrage: ["9L1"],
@@ -375,7 +373,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			giantpunch: ["9L1"],
 			pretzeldog: ["9L1"],
 			cargothrow: ["9L1"],
-
 		},
 	},
 	roaringknight: {
@@ -415,7 +412,8 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			uturn: ["9L1"],
 			aerialace: ["9L1"],
 			swordtunnel: ["9L1"],
-			swoon: ["9L1"],
+			leafittome: ["9L1"],
+			distortedroar: ["9L1"],
 		},
 	},
 	cutsceneroaringknight: {
@@ -487,13 +485,11 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			heatcrash: ["9L1"],
 			slash: ["9L1"],
 			fly: ["9L1"],
-			pursuit: ["9L1"],
 			thrash: ["9L1"],
 			scissorblade: ["9L1"],
 			decapitationmode: ["9L1"],
 			senisoshitsu: ["9L1"],
 			senketsukisaragi: ["9L1"],
-
 		},
 	},
 	raidenshogun: {
@@ -594,6 +590,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			mysticalfire: ["9L1"],
 			shockwave: ["9L1"],
 			slash: ["9L1"],
+			aurasphere: ["9L1"],
 			rexcalibur: ["9L1"],
 			assigndecoy: ["9L1"],
 			rewarp: ["9L1"],
@@ -660,7 +657,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			venoshock: ["9L1"],
 			vitalthrow: ["9L1"],
 			imbuedneedles: ["9L1"],
-
 		},
 	},
 	alucard: {
