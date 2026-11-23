@@ -310,7 +310,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		name: "Marble Statue",
 		types: ["Ground", "Steel"],
 		gender: "N",
-		baseStats: {hp: 120, atk: 170, def: 130, spa: 70, spd: 120, spe: 30},
+		baseStats: {hp: 120, atk: 160, def: 130, spa: 70, spd: 120, spe: 30},
 		abilities: {0: "Faded Glory",},
 		weightkg: 9999,
 	},
