@@ -685,7 +685,6 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 			blazingtorque: ["9L1"],
 			earthquake: ["9L1"],
 			flareblitz: ["9L1"],
-			headlongrush: ["9L1"],
 			ragingfury: ["9L1"],
 			closecombat: ["9L1"],
 			sacredsword: ["9L1"],
