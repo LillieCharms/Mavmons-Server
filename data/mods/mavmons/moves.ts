@@ -2127,7 +2127,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	risingblade: {
 		num: -62,
 		accuracy: 100,
-		basePower: 55,
+		basePower: 50,
 		category: "Physical",
 		name: "Rising Blade",
 		shortDesc: "Usually goes first.",
