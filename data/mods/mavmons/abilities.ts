@@ -1041,13 +1041,15 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		onDamagingHit(damage, target, source, effect) {
 			if (
-			target.species.id !== 'Flowery' ||
+			target.species.id !== 'flowery' ||
 			target.hp <= 0 ||
 			target.hp * 2 >= target.maxhp ||
 			target.m.omegaTransformed
 			) {
 			return;
 			}
+
+			this.add('c', 'Flowery', 'With your powers combined... Omega Flowery!');
 
 			target.m.omegaTransformed = true;
 
