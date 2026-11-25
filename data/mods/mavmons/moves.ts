@@ -33,7 +33,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		name: "Falling Star",
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		flags: {protect: 1, mirror: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Draco Meteor", target);
@@ -2078,6 +2078,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Poison Jab", target);
+		},
 		onBasePower(basePower, pokemon, target) {
 			if (target.status === 'psn' || target.status === 'tox') {
 				return this.chainModify(1.33);
@@ -2100,6 +2104,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1, contact: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Infernal Parade", target);
+		},
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Normal') return -2;
 		},
@@ -2117,6 +2125,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Fling", target);
+		},
 		secondary: {
 			chance: 100,
 			status: 'brn',
@@ -2134,6 +2146,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 15,
 		priority: 1,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Quick Attack", target);
+		},
 		secondary: null,
 		target: "normal",
 		type: "Ground",
@@ -2149,6 +2165,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "U-Turn", target);
+		},
 		selfSwitch: true,
 		secondary: null,
 		target: "normal",
@@ -2165,6 +2185,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Blazing Torque", target);
+		},
 		onAfterHit(target, pokemon, move) {
 			if (!move.hasSheerForce) {
 				if (pokemon.hp && pokemon.removeVolatile('leechseed')) {
@@ -2200,7 +2224,145 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "normal",
 		type: "Fire",
 	},
-	
+	leafittome: {
+		num: -65,
+		accuracy: 100,
+		basePower: 91,
+		category: "Physical",
+		name: "Leaf it to me!",
+		shortDesc: "Flowery attack! Triple crit wow!",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Extreme Speed", target);
+		},
+		secondary: null,
+		critRatio: 2,
+		target: "normal",
+		type: "Grass",
+		contestType: "Cool",
+	},
+	jarona: {
+		num: -66,
+		accuracy: 100,
+		basePower: 120,
+		basePowerCallback(pokemon, target, move) {
+			// For the second hit
+			return move.hit === 2 ? 60 : 120;
+		},
+		category: "Physical",
+		name: "Jarona!",
+		shortDesc: "Flowery attack! Third hit has bonus damage! Nothing else!",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Wicked Blow", target);
+		},
+		secondary: null,
+		self: {
+			boosts: {
+				def: -1,
+				spd: -1,
+			},
+		},
+		onUseMoveMessage(source, target, move) {
+			if (!source.hasAbility('flowersdream')) return;
+
+			source.m.jaronaCounter =
+			(source.m.jaronaCounter || 0) + 1;
+
+				if (source.m.jaronaCounter >= 5) {
+				source.m.jaronaCounter = 0;
+				
+				move.multihit = 2;
+				// one more for the fans!
+			},
+		},
+		target: "normal",
+		type: "Fighting",
+		contestType: "Cool",
+	},
+	jastkidding: {
+		num: -67,
+		accuracy: 100,
+		basePower: 75,
+		category: "Physical",
+		name: "Ja-st Kidding!",
+		pp: 5,
+		priority: 1,
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Sucker Punch", target);
+		},
+		onTry(source, target) {
+			const action = this.queue.willMove(target);
+			const move = action?.choice === 'move' ? action.move : null;
+			if (!move || (move.category === 'Status' && move.id !== 'mefirst') || target.volatiles['mustrecharge']) {
+				return false;
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Fighting",
+		contestType: "Clever",
+	},
+	winningsmile: {
+		num: -68,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		shortDesc: "Lowers foe's Atk/SpA by 1 & taunts them.",
+		name: "WinningSmile",
+		pp: 15,
+		priority: 1,
+		flags: {protect: 1, mirror: 1},
+		onPrepareHit(target, source, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', source, "Charm", target);
+		},
+		onHit(target, source, move) {
+			const success = this.boost({atk: -1, spa: -1}, target, source);
+		},
+		volatileStatus: 'taunt',
+		condition: {
+			duration: 3,
+			onStart(target) {
+				if (target.activeTurns && !this.queue.willMove(target)) {
+					this.effectState.duration++;
+				}
+				this.add('-start', target, 'move: Taunt');
+			},
+			onResidualOrder: 15,
+			onEnd(target) {
+				this.add('-end', target, 'move: Taunt');
+			},
+			onDisableMove(pokemon) {
+				for (const moveSlot of pokemon.moveSlots) {
+					const move = this.dex.moves.get(moveSlot.id);
+					if (move.category === 'Status' && move.id !== 'mefirst') {
+						pokemon.disableMove(moveSlot.id);
+					}
+				}
+			},
+			onBeforeMovePriority: 5,
+			onBeforeMove(attacker, defender, move) {
+				if (!move.isZ && !move.isMax && move.category === 'Status' && move.id !== 'mefirst') {
+					this.add('cant', attacker, 'move: Taunt', move);
+					return false;
+				}
+			},
+		},
+		secondary: null,
+		target: "normal",
+		type: "Grass",
+		contestType: "Cute",
+	},
+
 	// Below are vanilla moves altered by custom interractions
 	bounce: {
 		num: 340,

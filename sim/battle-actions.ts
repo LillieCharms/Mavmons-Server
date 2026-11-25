@@ -176,7 +176,12 @@ export class BattleActions {
 			this.battle.runEvent('SwitchIn', pokemon);
 		}
 
+		if (
+		!pokemon.hasAbility('Flowers Dream') ||
+		pokemon.hp < pokemon.maxhp
+		) {
 		this.battle.runEvent('EntryHazard', pokemon);
+		}
 
 		if (this.battle.gen <= 4) {
 			this.battle.runEvent('SwitchIn', pokemon);

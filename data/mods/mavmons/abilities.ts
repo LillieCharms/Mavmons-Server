@@ -1018,4 +1018,49 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 5,
 	num: -36,
 	},
+	flowersdream: {
+		onSourceBasePowerPriority: 17,
+		onSourceBasePower(basePower, attacker, defender, move) {
+			if (move.type === 'Poison') {
+				return this.chainModify(2);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (['brn', 'psn', 'tox'].includes(effect.id)) {
+				return damage * 2;
+			}
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			if (target.hp >= target.maxhp) {
+				this.debug('Heh, get a chance!');
+				return this.chainModify(0.5);
+			}
+		},
+		onDamagingHit(damage, target, source, effect) {
+			if (
+			target.species.id !== 'Flowery' ||
+			target.hp <= 0 ||
+			target.hp * 2 >= target.maxhp ||
+			target.m.omegaTransformed
+			) {
+			return;
+			}
+
+			target.m.omegaTransformed = true;
+
+			target.formeChange(
+			'Omega Flowery',
+			this.effect,
+			true
+			);
+
+			this.add('-formechange', target, 'Omega Flowery');
+		},
+		//hazard ignoring handled in battle-actions.ts
+		flags: {breakable: 1},
+		name: "Flowers Dream",
+		shortDesc: "The user switches out after attacking.",
+		rating: 4,
+		num: -35,
+	},
 };
