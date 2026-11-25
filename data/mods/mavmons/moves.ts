@@ -2280,7 +2280,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 				
 				move.multihit = 2;
 				// one more for the fans!
-			},
+			}
 		},
 		target: "normal",
 		type: "Fighting",
