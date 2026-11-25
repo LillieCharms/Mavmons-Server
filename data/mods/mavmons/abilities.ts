@@ -845,11 +845,14 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	num: -31,	
 	},
 	mydesign: {
-	onModifyAccuracy(accuracy, target, source, move) {
-		if (move.type === 'Poison' && move.category === 'Status') {
-			return true;
-		}
-	},
+	onModifyMove(move) {
+        if (
+            move.category === 'Status' &&
+            (move.type === 'Poison')
+        ) {
+            move.accuracy = true;
+        }
+    },
 
 	flags: {breakable: 1},
 	name: "My Design",
