@@ -337,7 +337,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 	},
 	basil: {
 		num: 2022,
-		name: "Flowery",
+		name: "Basil",
 		types: ["Grass"],
 		gender: "M",
 		baseStats: {hp: 105, atk: 130, def: 100, spa: 90, spd: 100, spe: 130},
