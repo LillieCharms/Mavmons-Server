@@ -162,20 +162,34 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
 			this.add('-start', pokemon, 'Solidarity', `[${fairyCount}]`);
 		},
 	},
-	wavebreaker: {
-    duration: 3,
-    onStart(side) {
-        this.add('-sidestart', side, 'Wavebreaker');
+	//wavebreaker: {
+    //duration: 3,
+    //onStart(side) {
+    //    this.add('-sidestart', side, 'Wavebreaker');
+    //},
+    //onSwitchIn(pokemon) {
+    //    if (!pokemon.isGrounded()) return;
+    //    this.damage(pokemon.baseMaxhp / 8, pokemon);
+    //    this.boost({
+    //        evasion: -2,
+    //    }, pokemon);
+    //},
+    //onEnd(side) {
+    //    this.add('-sideend', side, 'Wavebreaker');
+    //},
+	//},
+	retaliatoryblowplus: {
+        name: "Retaliatory Blow+",
+
+        onBasePower(basePower, attacker, defender, move) {
+            if (attacker.hasAbility('retaliatorypower')) {
+                return this.chainModify(1.3);
+            }
+        },
+
+        onResidualOrder: 1,
+        onResidual() {
+            this.effectState.target.removeVolatile('retaliatorypower');
+        },
     },
-    onSwitchIn(pokemon) {
-        if (!pokemon.isGrounded()) return;
-        this.damage(pokemon.baseMaxhp / 8, pokemon);
-        this.boost({
-            evasion: -2,
-        }, pokemon);
-    },
-    onEnd(side) {
-        this.add('-sideend', side, 'Wavebreaker');
-    },
-	},
 };

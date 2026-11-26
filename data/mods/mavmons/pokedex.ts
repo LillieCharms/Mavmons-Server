@@ -85,8 +85,8 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		name: "Katie",
 		types: ["Electric", "Grass"],
 		gender: "F",
-		baseStats: {hp: 200, atk: 80, def: 105, spa: 80, spd: 105, spe: 80},
-		abilities: {0: "Transistor", 1: "Cheek Pouch", H: "CTE Distributor"},
+		baseStats: {hp: 160, atk: 80, def: 80, spa: 135, spd: 80, spe: 115},
+		abilities: {0: "Retaliatory Blow+", 1: "Har Hali Wisdom", H: "CTE Distributor"},
 		weightkg: 9999,
 	},
 	lewyn: {

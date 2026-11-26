@@ -1114,4 +1114,27 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -39,
 	},
+	harhaliwisdom: {
+		onModifyDamage(damage, source, target, move) {
+			this.add('-activate', source, 'ability: Har Hali Wisdom');
+			if (move && target.getMoveHitData(move).typeMod > 0) {
+				return this.chainModify([5120 / 4096]);
+			}
+		},
+		flags: {breakable: 1},
+		name: "Har Hali Wisdom",
+		shortDesc: "Super effective attacks deal 25% more damage.",
+		rating: 4,
+		num: -40,
+	},
+	retaliatoryblowplus: {
+		onDamagingHit(damage, target, source, move) {
+			target.addVolatile('retaliatorypower');
+		},
+		flags: {breakable: 1},
+		name: "Retalitory Blow+",
+		shortDesc: "If attacked first, users attacks do 30% more damage.",
+		rating: 4,
+		num: -41,
+	},
 };
