@@ -1021,7 +1021,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	rating: 5,
 	num: -37,
 	},
-	flowersdream: {
+	fragiledream: {
 		onSourceBasePowerPriority: 17,
 		onSourceBasePower(basePower, attacker, defender, move) {
 			if (move.type === 'Poison') {
@@ -1059,11 +1059,11 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			true
 			);
 
-			this.add('-formechange', target, 'Omega Flowery');
+			this.add('-formechange', target, 'Flowery-Omega');
 		},
 		//hazard ignoring handled in battle-actions.ts
 		flags: {breakable: 1},
-		name: "Flowers Dream",
+		name: "Fragie Dream",
 		shortDesc: "The user switches out after attacking.",
 		rating: 4,
 		num: -38,
@@ -1105,7 +1105,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		onStart(pokemon) {
 			for (const target of pokemon.foes()) {
-				this.boost({ def: -1, spd: -1 }, target, pokemon);
+				this.boost({ def: -1, spd: -1 }, source, pokemon);
 			}
 		},
 		flags: {breakable: 1},
@@ -1118,7 +1118,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		onModifyDamage(damage, source, target, move) {
 			this.add('-activate', source, 'ability: Har Hali Wisdom');
 			if (move && target.getMoveHitData(move).typeMod > 0) {
-				return this.chainModify([5120 / 4096]);
+				return this.chainModify([5120 , 4096]);
 			}
 		},
 		flags: {breakable: 1},
@@ -1132,7 +1132,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 			target.addVolatile('retaliatorypower');
 		},
 		flags: {breakable: 1},
-		name: "Retalitory Blow+",
+		name: "Retaliatory Blow+",
 		shortDesc: "If attacked first, users attacks do 30% more damage.",
 		rating: 4,
 		num: -41,

@@ -23,20 +23,20 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		rating: 3,
 		// Hazard Immunity implemented in moves.ts
 	},
-	dianthite: {
-		name: "Dianthite",
-		desc: "If held by Diantha, can evolve into Diantha-Mega.",
-		spritenum: 625,
-		megaStone: "Diantha-Mega",
-		megaEvolves: "Diantha",
-		itemUser: ["Diantha"],
-		onTakeItem(item, source) {
-			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
-			return true;
-		},
-		num: -3,
-		gen: 9,
-	},
+	//dianthite: {
+		//name: "Dianthite",
+		//desc: "If held by Diantha, can evolve into Diantha-Mega.",
+		//spritenum: 625,
+		//megaStone: "Diantha-Mega",
+		//megaEvolves: "Diantha",
+		//itemUser: ["Diantha"],
+		//onTakeItem(item, source) {
+			//if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
+			//return true;
+		//},
+		//num: -3,
+		//gen: 9,
+	//},
 	shelteriumz: {
 		name: "Shelterium Z",
 		desc: "If held by Roaring Knight with Sword Tunnel, can use Crystal Nova.",

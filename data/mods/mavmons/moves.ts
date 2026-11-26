@@ -829,7 +829,6 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	name: "Wavebreaker",
 	shortDesc: "-2 Eva, Wavebreaker on enemy field for 3 turns.",
 	pp: 10,
-	priority: 4,
 	flags: {snatch: 1, metronome: 1},
 	onPrepareHit(target, source, move) {
 		  this.attrLastMove('[still]');
@@ -842,7 +841,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	target: "normal",
 	type: "Water",
 		condition: {
-			duration: 3,
+			duration: 4,
 			onSideStart(side, source) {
 				this.add('-sidestart', side, 'move: Wavebreaker');
 			},
@@ -1220,13 +1219,13 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		num: -35,
 		accuracy: 100,
 		basePower: 0,
-		category: "Physical",
+		category: "Status",
 		name: "Distorted Roar",
 		shortDesc: "Lowers foe's Def by 1 & taunts them.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Night Shade", target);
-			this.add('-anim', source, "Roar", target);
+			this.add('-anim', source, "Boomburst", target);
 		},
 		pp: 10,
 		priority: 0,
@@ -1477,7 +1476,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "Ignores stat changes, 20% for -1 Def to foe.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Bitter Blade", target);
+			this.add('-anim', source, "X-Scissor", target);
 		},
 		pp: 10,
 		priority: 0,
