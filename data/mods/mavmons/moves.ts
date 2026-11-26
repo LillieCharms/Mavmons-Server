@@ -2233,7 +2233,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		shortDesc: "Flowery attack! Triple crit wow!",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, punch: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Extreme Speed", target);
@@ -2254,10 +2254,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		},
 		category: "Physical",
 		name: "Jarona!",
-		shortDesc: "Flowery attack! Third hit has bonus damage! Nothing else!",
+		shortDesc: "Flowery attack! 5th hit has bonus damage! Nothing else!",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, punch: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Wicked Blow", target);
@@ -2292,9 +2292,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		basePower: 75,
 		category: "Physical",
 		name: "Ja-st Kidding!",
+		shortDesc: "What a predictable creature! Hits before you try to!",
 		pp: 5,
 		priority: 1,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
+		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, punch: 1},
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', source, "Sucker Punch", target);
@@ -2316,7 +2317,7 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		accuracy: 100,
 		basePower: 0,
 		category: "Status",
-		shortDesc: "Lowers foe's Atk/SpA by 1 & taunts them.",
+		shortDesc: "So Charming! Lowers your Atk/SpA by 1 & taunts you!",
 		name: "WinningSmile",
 		pp: 15,
 		priority: 1,
@@ -2362,7 +2363,71 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		type: "Grass",
 		contestType: "Cute",
 	},
-
+	flowercrown: {
+			num: -69,
+			accuracy: 100,
+			basePower: 25,
+			category: "Physical",
+			name: "Flower Crown",
+			shortDesc: "Hits 4 times.",
+			pp: 5,
+			priority: 0,
+			flags: {protect: 1, mirror: 1},
+			onEffectiveness(typeMod, target, type) {
+				if (type === 'Ghost') return 1;
+			},
+			multihit: 4,
+			secondary: null,
+			target: "normal",
+			type: "Grass",
+			zMove: {basePower: 140},
+			maxMove: {basePower: 130},
+	},
+	gardensheers: {
+		num: -70,
+		accuracy: true,
+		basePower: 70,
+		category: "Physical",
+		name: "Garden Sheers",
+		shortDesc: "Always results in a critical hit.",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, slicing: 1},
+		willCrit: true,
+		secondary: null,
+		target: "normal",
+		type: "Steel",
+	},
+	herbalremedy: {
+		num: -71,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Herbal Remedy",
+		pp: 5,
+		priority: 0,
+		flags: {snatch: 1, heal: 1, metronome: 1},
+		onHit(pokemon) {
+			let factor = 0.5;
+			switch (pokemon.effectiveWeather()) {
+			case 'sunnyday':
+			case 'desolateland':
+				factor = 0.667;
+				break;
+			}
+			const success = !!this.heal(this.modify(pokemon.maxhp, factor));
+			if (!success) {
+				this.add('-fail', pokemon, 'heal');
+				return this.NOT_FAIL;
+			}
+			return success;
+		},
+		secondary: null,
+		target: "self",
+		type: "Grass",
+		zMove: {effect: 'clearnegativeboost'},
+		contestType: "Cute",
+	},
 	// Below are vanilla moves altered by custom interractions
 	bounce: {
 		num: 340,

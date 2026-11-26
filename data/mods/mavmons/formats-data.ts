@@ -127,4 +127,8 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 		tier: "MV Ubers Extra",
 		doublesTier: "DMV Ubers",
 	},
+	basil: {
+		tier: "MV Ubers",
+		doublesTier: "DMV Ubers",
+	},
 };

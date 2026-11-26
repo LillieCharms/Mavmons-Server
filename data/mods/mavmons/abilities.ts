@@ -814,7 +814,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	},
 	lifefiberinfusion: {
 		onModifyDamage(damage, source, target, move) {
-			this.add('-activate', target, 'ability: Life Fiber Infusion');
+			this.add('-activate', source, 'ability: Life Fiber Infusion');
 			if (move && target.getMoveHitData(move).typeMod > 0) {
 				return this.chainModify([11, 10]);
 			}
@@ -958,7 +958,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		name: "Backdash",
 		shortDesc: "The user switches out after attacking.",
 		rating: 4,
-		num: -35,
+		num: -36,
 	},
 	
 	fadedglory: {
@@ -1019,7 +1019,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	name: "Faded Glory",
    shortDesc: "Reduces SE by 25%, boosts Fire by 50%, burn immune. Can only use first move.",
 	rating: 5,
-	num: -36,
+	num: -37,
 	},
 	flowersdream: {
 		onSourceBasePowerPriority: 17,
@@ -1066,6 +1066,52 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		name: "Flowers Dream",
 		shortDesc: "The user switches out after attacking.",
 		rating: 4,
-		num: -35,
+		num: -38,
+	},
+	flowergarden: {
+		onStart(source) {
+			this.field.setTerrain('grassyterrain');
+		},
+		onModifyDef(def, pokemon) {
+			if (pokemon.isGrounded() && this.field.isTerrain('grassyterrain')) {
+				return this.chainModify(1.2);
+			}
+		},
+		onModifySpD(spd, pokemon) {
+			if (pokemon.isGrounded() && this.field.isTerrain('grassyterrain')) {
+				return this.chainModify(1.2);
+			}
+		},
+		flags: {breakable: 1},
+		name: "Flower Garden",
+		shortDesc: "Sets Grassy Terrain, boost Def/Sp.Def when in Grass.",
+		rating: 4,
+		num: -39,
+	},
+	thetruth: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Steel') {
+				this.debug('Steelworker boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Steel') {
+				this.debug('Steelworker boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onStart(pokemon) {
+			for (const target of pokemon.foes()) {
+				this.boost({ def: -1, spd: -1 }, target, pokemon);
+			}
+		},
+		flags: {breakable: 1},
+		name: "The Truth",
+		shortDesc: "On switch, reduce foe's Def/Sp.Def by 1, 50% boost to Steel attacks.",
+		rating: 4,
+		num: -39,
 	},
 };

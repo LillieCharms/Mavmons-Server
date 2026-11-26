@@ -335,6 +335,15 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		weightkg: 75,
 		formeOrder: ["Flowery", "Omega Flowery"],
 	},
+	basil: {
+		num: 2022,
+		name: "Flowery",
+		types: ["Grass"],
+		gender: "M",
+		baseStats: {hp: 105, atk: 130, def: 100, spa: 90, spd: 100, spe: 130},
+		abilities: {0: "Chlorophyll", 1: "Flower Garden", H: "The Truth"},
+		weightkg: 75,
+	},
 	wochien: {
 		num: 1001,
 		name: "Wo-Chien",
