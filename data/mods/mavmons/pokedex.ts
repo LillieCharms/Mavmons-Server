@@ -86,7 +86,7 @@ export const Pokedex: {[k: string]: ModdedSpeciesData} = {
 		types: ["Electric", "Grass"],
 		gender: "F",
 		baseStats: {hp: 160, atk: 80, def: 80, spa: 135, spd: 80, spe: 115},
-		abilities: {0: "Retaliatory Blow+", 1: "Har Hali Wisdom", H: "CTE Distributor"},
+		abilities: {0: "Retaliatory Blow", 1: "Har Hali Wisdom", H: "CTE Distributor"},
 		weightkg: 9999,
 	},
 	lewyn: {

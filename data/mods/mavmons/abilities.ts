@@ -1063,7 +1063,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		//hazard ignoring handled in battle-actions.ts
 		flags: {breakable: 1},
-		name: "Fragie Dream",
+		name: "Fragile Dream",
 		shortDesc: "The user switches out after attacking.",
 		rating: 4,
 		num: -38,
@@ -1105,7 +1105,7 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		},
 		onStart(pokemon) {
 			for (const target of pokemon.foes()) {
-				this.boost({ def: -1, spd: -1 }, source, pokemon);
+				this.boost({ def: -1, spd: -1 }, target, pokemon);
 			}
 		},
 		flags: {breakable: 1},
@@ -1127,12 +1127,12 @@ export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 		rating: 4,
 		num: -40,
 	},
-	retaliatoryblowplus: {
+	retaliatoryblow: {
 		onDamagingHit(damage, target, source, move) {
-			target.addVolatile('retaliatorypower');
+			target.addVolatile('retaliatoryblow');
 		},
 		flags: {breakable: 1},
-		name: "Retaliatory Blow+",
+		name: "Retaliatory Blow",
 		shortDesc: "If attacked first, users attacks do 30% more damage.",
 		rating: 4,
 		num: -41,

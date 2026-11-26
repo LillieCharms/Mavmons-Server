@@ -178,18 +178,18 @@ export const Conditions: import('../sim/dex-conditions').ConditionDataTable = {
     //    this.add('-sideend', side, 'Wavebreaker');
     //},
 	//},
-	retaliatoryblowplus: {
-        name: "Retaliatory Blow+",
+	retaliatoryblow: {
+        name: "Retaliatory Blow",
 
         onBasePower(basePower, attacker, defender, move) {
-            if (attacker.hasAbility('retaliatorypower')) {
+            if (attacker.hasAbility('retaliatoryblow')) {
                 return this.chainModify(1.3);
             }
         },
 
         onResidualOrder: 1,
         onResidual() {
-            this.effectState.target.removeVolatile('retaliatorypower');
+            this.effectState.target.removeVolatile('retaliatoryblow');
         },
     },
 };
