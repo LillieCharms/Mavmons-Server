@@ -2366,12 +2366,12 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 			zMove: {basePower: 140},
 			maxMove: {basePower: 130},
 	},
-	gardensheers: {
+	gardenshears: {
 		num: -70,
 		accuracy: true,
-		basePower: 70,
+		basePower: 80,
 		category: "Physical",
-		name: "Garden Sheers",
+		name: "Garden Shears",
 		shortDesc: "Always results in a critical hit.",
 		pp: 10,
 		priority: 0,

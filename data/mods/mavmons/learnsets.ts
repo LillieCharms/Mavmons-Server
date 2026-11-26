@@ -735,7 +735,7 @@ export const Learnsets: {[speciesid: string]: LearnsetData} = {
 	basil: {
 		learnset: {
 			flowercrown: ["9L1"],
-			gardensheers: ["9L1"],
+			gardenshears: ["9L1"],
 			scissorblade: ["9L1"],
 			herbalremedy: ["9L1"],
 			aquacutter: ["9L1"],
