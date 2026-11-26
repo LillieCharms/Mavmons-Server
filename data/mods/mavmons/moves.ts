@@ -831,6 +831,10 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 	pp: 10,
 	priority: 4,
 	flags: {snatch: 1, metronome: 1},
+	onPrepareHit(target, source, move) {
+		  this.attrLastMove('[still]');
+		  this.add('-anim', source, "Malignant Chain", target);
+		},
 	boosts: {
 		evasion: -2,
 	},
@@ -1212,77 +1216,57 @@ export const Moves: {[k: string]: ModdedMoveData} = {
 		target: "normal",
 		type: "Dark",
 	},
-	swoon: {
+	distortedroar: {
 		num: -35,
 		accuracy: 100,
-		basePower: 50,
-		basePowerCallback(pokemon, target, move) {
-			// You can't get here unless the pursuit succeeds
-			if (target.beingCalledBack || target.switchFlag) {
-				this.debug('swoon damage boost');
-				return move.basePower * 2;
-			}
-			return move.basePower;
-		},
+		basePower: 0,
 		category: "Physical",
-		name: "Swoon",
-		shortDesc: "If a foe is switching out, hits it at 2x power.",
+		name: "Distorted Roar",
+		shortDesc: "Lowers foe's Def by 1 & taunts them.",
 		onPrepareHit(target, source, move) {
 			this.attrLastMove('[still]');
-			this.add('-anim', source, "Pursuit", target);
-			this.add('-anim', source, "Behemoth Blade", target);
+			this.add('-anim', source, "Night Shade", target);
+			this.add('-anim', source, "Roar", target);
 		},
 		pp: 10,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1},
-		beforeTurnCallback(pokemon) {
-			for (const side of this.sides) {
-				if (side.hasAlly(pokemon)) continue;
-				side.addSideCondition('swoon', pokemon);
-				const data = side.getSideConditionData('swoon');
-				if (!data.sources) {
-					data.sources = [];
-				}
-				data.sources.push(pokemon);
-			}
+		flags: {protect: 1, mirror: 1, metronome: 1, sound: 1},
+		onHit(target, source, move) {
+			const success = this.boost({def: -1}, target, source);
 		},
-		onModifyMove(move, source, target) {
-			if (target?.beingCalledBack || target?.switchFlag) move.accuracy = true;
-		},
-		onTryHit(target, pokemon) {
-			target.side.removeSideCondition('swoon');
-		},
+		volatileStatus: 'taunt',
 		condition: {
-			duration: 1,
-			onBeforeSwitchOut(pokemon) {
-				this.debug('Swoon start');
-				let alreadyAdded = false;
-				pokemon.removeVolatile('destinybond');
-				for (const source of this.effectState.sources) {
-					if (!source.isAdjacent(pokemon) || !this.queue.cancelMove(source) || !source.hp) continue;
-					if (!alreadyAdded) {
-						this.add('-activate', pokemon, 'move: Swoon');
-						alreadyAdded = true;
+			duration: 3,
+			onStart(target) {
+				if (target.activeTurns && !this.queue.willMove(target)) {
+					this.effectState.duration++;
+				}
+				this.add('-start', target, 'move: Taunt');
+			},
+			onResidualOrder: 15,
+			onEnd(target) {
+				this.add('-end', target, 'move: Taunt');
+			},
+			onDisableMove(pokemon) {
+				for (const moveSlot of pokemon.moveSlots) {
+					const move = this.dex.moves.get(moveSlot.id);
+					if (move.category === 'Status' && move.id !== 'mefirst') {
+						pokemon.disableMove(moveSlot.id);
 					}
-					// Run through each action in queue to check if the Pursuit user is supposed to Mega Evolve this turn.
-					// If it is, then Mega Evolve before moving.
-					if (source.canMegaEvo || source.canUltraBurst) {
-						for (const [actionIndex, action] of this.queue.entries()) {
-							if (action.pokemon === source && action.choice === 'megaEvo') {
-								this.actions.runMegaEvo(source);
-								this.queue.list.splice(actionIndex, 1);
-								break;
-							}
-						}
-					}
-					this.actions.runMove('swoon', source, source.getLocOf(pokemon));
+				}
+			},
+			onBeforeMovePriority: 5,
+			onBeforeMove(attacker, defender, move) {
+				if (!move.isZ && !move.isMax && move.category === 'Status' && move.id !== 'mefirst') {
+					this.add('cant', attacker, 'move: Taunt', move);
+					return false;
 				}
 			},
 		},
 		secondary: null,
 		target: "normal",
 		type: "Dark",
-		contestType: "Clever",
+		contestType: "Tough",
 	},
 	godoflightstyrfing: {
         num: -36,
